@@ -1,6 +1,8 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+const webpack = require("webpack");
+require("dotenv").config();
 
 const isDev = process.env.NODE_ENV !== "production";
 
@@ -25,6 +27,10 @@ module.exports = {
     extensions: [".ts", ".tsx", ".js", ".jsx"],
     alias: {
       "@": path.resolve(__dirname, "src"),
+      services: path.resolve(__dirname, "src/services"),
+      utils: path.resolve(__dirname, "src/utils"),
+      model: path.resolve(__dirname, "src/model"),
+      env: path.resolve(__dirname, "src/env/index.ts"),
     },
   },
   module: {
@@ -59,6 +65,11 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({ template: path.resolve(__dirname, "index.html") }),
+    new webpack.DefinePlugin({
+      __ENV__: JSON.stringify({
+        API_URL: process.env.API_URL || "http://localhost:3000",
+      }),
+    }),
     isDev && new ReactRefreshWebpackPlugin(),
   ].filter(Boolean),
   devServer: {
