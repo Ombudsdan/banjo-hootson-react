@@ -1,6 +1,6 @@
 export type SubscriptionTier = "standard" | "supporter";
 
-export interface IUserProfile {
+export interface IUserServiceProfile {
   uid: string;
   email: string;
   subscriptionTier: SubscriptionTier;
@@ -12,4 +12,6 @@ export interface IUserProfile {
   };
 }
 
-export type IUserUpdate = Partial<Omit<IUserProfile, "uid" | "createdAt">>;
+export type IUserUpdate = Partial<
+  Omit<IUserServiceProfile, "uid" | "createdAt">
+>;

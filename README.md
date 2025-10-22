@@ -1,26 +1,46 @@
 # banjo-hootson-react
 
-A minimal React 19 + Webpack 5 + TypeScript app to live alongside the Angular 20 app. This keeps both apps separate so you can migrate features gradually.
+React 19 + Webpack 5 + TypeScript app that lives alongside the Angular 20 app for gradual migration.
 
 ## Quick start (PowerShell)
 
 ```powershell
 cd C:\Users\Dangr\Git\banjo-hootson\banjo-hootson-react
 npm install
-npm run dev
+npm run start
 ```
 
-- Dev server: http://localhost:5173 (Webpack devServer)
+- Dev server: http://localhost:5173 (configurable via `.env` `PORT`)
 - Build:
 
 ```powershell
 npm run build
 ```
 
-## Notes
+### Configure dev server port
 
-- React: ^19.x (latest via Vite template)
-- Bundler: Vite 7 (fast, modern alternative to Webpack)
-- TypeScript: 5.8
+- Create or edit `.env` and set `PORT` (or `port`):
 
-If you’d prefer Webpack instead of Vite, I can scaffold Webpack 5 + SWC/TS config to match your past workflow.
+```env
+PORT=5174
+```
+
+### Centralized models
+
+- Import all types from the model barrel:
+
+```ts
+import { IPlushieBirthday, ApiError, IUserProfile } from "model";
+```
+
+- Files:
+  - `src/model/api.types.ts`, `date.types.ts`, `location.types.ts`, `plushie-birthday.types.ts`, `user-profile.types.ts`, `user.types.ts`, `model/index.ts`
+
+### Type checking
+
+- Lightweight compatibility test lives at `src/model/type-compat.test.ts` (TS-only, not executed)
+- Run project-wide checks:
+
+```powershell
+npm run typecheck
+```

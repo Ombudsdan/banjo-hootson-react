@@ -7,7 +7,8 @@
     "dev": "cross-env NODE_ENV=development webpack serve --config webpack.config.cjs",
     "start": "npm run dev",
     "build": "cross-env NODE_ENV=production tsc -b && webpack --mode production --config webpack.config.cjs",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "typecheck": "tsc -p ./tsconfig.app.json --noEmit"
   },
   "dependencies": {
     "firebase": "^12.2.1",

@@ -1,17 +1,20 @@
 import { HttpClient } from "services/http-client";
-import { IUserProfile, IUserUpdate } from "model/user.types";
+import { IUserServiceProfile, IUserUpdate } from "model/user.types";
 
 export class UserService {
   static initUser() {
-    return HttpClient.request<IUserProfile>({ path: "/users", method: "POST" });
+    return HttpClient.request<IUserServiceProfile>({
+      path: "/users",
+      method: "POST",
+    });
   }
 
   static getCurrentUser() {
-    return HttpClient.request<IUserProfile>({ path: "/users/me" });
+    return HttpClient.request<IUserServiceProfile>({ path: "/users/me" });
   }
 
   static updateCurrentUser(updates: IUserUpdate) {
-    return HttpClient.request<IUserProfile, IUserUpdate>({
+    return HttpClient.request<IUserServiceProfile, IUserUpdate>({
       path: "/users/me",
       method: "PUT",
       body: updates,

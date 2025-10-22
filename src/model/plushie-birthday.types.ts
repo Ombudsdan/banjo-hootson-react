@@ -17,3 +17,12 @@ export interface IPlushieBirthdayFormData {
   username: string;
   description?: string;
 }
+
+export interface IPlushieBirthdayDisplayProperties {
+  plushieName: string;
+  possessivePlushieName: string;
+  birthYear: number | undefined;
+  age: number | undefined;
+  writtenDate: string | undefined;
+  username: string;
+}
