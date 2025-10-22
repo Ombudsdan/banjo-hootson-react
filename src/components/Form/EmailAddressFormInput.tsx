@@ -1,7 +1,7 @@
 import { InputHTMLAttributes } from 'react';
 import { useFormField } from 'hooks';
-import FormValidationErrors from '../FormValidationErrors';
 import { EmailAddressValidator } from 'validators';
+import { Form } from 'components';
 
 export default function EmailAddressFormInput({
   id,
@@ -35,7 +35,7 @@ export default function EmailAddressFormInput({
             onChange={e => setValue(e.target.value)}
             onBlur={() => setTouched(true)}
           />
-          <FormValidationErrors showErrors={showErrors} validation={validation} />
+          <Form.ValidationErrors showErrors={showErrors} validation={validation} />
         </>
       )}
     </div>

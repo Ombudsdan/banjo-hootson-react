@@ -1,11 +1,18 @@
+import DialogActionButtons from './Dialog/DialogActionButtons';
+import DialogBodyText from './Dialog/DialogBodyText';
+import DialogContainer from './Dialog/DialogContainer';
+import DialogTitle from './Dialog/DialogTitle';
 import {
   CountryFormInput,
   EmailAddressFormInput,
+  FormActionsContainer,
+  FormSectionHeader,
+  FormValidationErrors,
   PlushieInstagramAccountFormInput,
   PlushieInstagramAccountsSelector,
   TownOrCityInput,
   UsernameFormInput
-} from './FormInputs';
+} from './Form';
 
 /**
  * Barrel for UI components. Import via the path alias:
@@ -24,47 +31,46 @@ export { default as ClickableActionPanelGroup } from './ClickableActionPanelGrou
 export * from './DashboardCard';
 export { default as DashboardCard } from './DashboardCard';
 
-export * from './DialogActionButtons';
-export { default as DialogActionButtons } from './DialogActionButtons';
-
-export * from './DialogBodyText';
-export { default as DialogBodyText } from './DialogBodyText';
-
-export * from './DialogContainer';
-export { default as DialogContainer } from './DialogContainer';
-
-export * from './DialogTitle';
-export { default as DialogTitle } from './DialogTitle';
+export const Dialog = {
+  ActionButtons: DialogActionButtons,
+  BodyText: DialogBodyText,
+  Container: DialogContainer,
+  Title: DialogTitle
+};
+export * from './Dialog/DialogActionButtons';
+export * from './Dialog/DialogBodyText';
+export * from './Dialog/DialogContainer';
+export * from './Dialog/DialogTitle';
 
 export * from './ErrorCard';
 export { default as ErrorCard } from './ErrorCard';
 
-export * from './Form';
-export { default as Form } from './Form';
-
-export * from './FormActionsContainer';
-export { default as FormActionsContainer } from './FormActionsContainer';
-
-export const FormInput = {
+export const Form = {
+  ActionsContainer: FormActionsContainer,
   Country: CountryFormInput,
   EmailAddress: EmailAddressFormInput,
   PlushieInstagramAccount: PlushieInstagramAccountFormInput,
   PlushieInstagramAccounts: PlushieInstagramAccountsSelector,
+  SectionHeader: FormSectionHeader,
   TownOrCity: TownOrCityInput,
-  Username: UsernameFormInput
+  Username: UsernameFormInput,
+  ValidationErrors: FormValidationErrors
 };
-
-export * from './FormSectionHeader';
-export { default as FormSectionHeader } from './FormSectionHeader';
-
-export * from './FormValidationErrors';
-export { default as FormValidationErrors } from './FormValidationErrors';
+export * from './Form/FormActionsContainer';
+export * from './Form/CountryFormInput';
+export * from './Form/EmailAddressFormInput';
+export * from './Form/PlushieInstagramAccountFormInput';
+export * from './Form/PlushieInstagramAccountsSelector';
+export * from './Form/FormSectionHeader';
+export * from './Form/TownOrCityInput';
+export * from './Form/UsernameFormInput';
+export * from './Form/FormValidationErrors';
 
 export * from './Gallery';
 export { default as Gallery } from './Gallery';
 
-export * from './GoogleCalendar';
-export { default as GoogleCalendar } from './GoogleCalendar';
+export * from './GoogleCalendarIFrame';
+export { default as GoogleCalendarIFrame } from './GoogleCalendarIFrame';
 
 export * from './Heading';
 export { default as Heading } from './Heading';

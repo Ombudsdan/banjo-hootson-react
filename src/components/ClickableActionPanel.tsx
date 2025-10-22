@@ -1,48 +1,60 @@
-import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ClickableActionPanelController, ActionPanelOption } from "controllers";
+import { useMemo } from 'react';
+import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ClickableActionPanelController, ActionPanelOption, IActionPanel } from 'controllers';
+import { generateClassName } from 'utils';
 
-export default function ClickableActionPanel({
-  option,
-}: IClickableActionPanel) {
+export default function ClickableActionPanel({ option }: IClickableActionPanel) {
   const content = ClickableActionPanelController.getPanelContent(option);
 
-  if (!content) {
-    return null;
-  }
+  if (!content) return null;
 
-  const themeClass = content.theme
-    ? `clickable-action-panel--${content.theme}`
-    : "";
-  const className = `clickable-action-panel ${themeClass}`.trim();
-  const body = (
-    <>
-      {content.icon && (
-        <FontAwesomeIcon
-          className="clickable-action-panel__icon"
-          icon={content.icon}
-          title={content.text}
-        />
-      )}
-      <span className="clickable-action-panel__text">{content.text}</span>
-    </>
-  );
-  return content.isExternal ? (
-    <a
-      className={className}
-      href={content.link}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      {body}
-    </a>
+  const { icon, text, link, isExternal, theme } = content;
+  const bodyProps = { icon, text };
+
+  const className = useMemo(() => {
+    return generateClassName(['clickable-action-panel', theme && `clickable-action-panel--${theme}`]);
+  }, [content.theme]);
+
+  return isExternal ? (
+    <ClickableActionPanelExternalLink link={link} className={className} bodyProps={bodyProps} />
   ) : (
-    <Link className={className} to={content.link}>
-      {body}
+    <ClickableActionPanelInternalLink link={link} className={className} bodyProps={bodyProps} />
+  );
+}
+
+function ClickableActionPanelExternalLink({ link, className, bodyProps }: IClickableActionPanelLink) {
+  return (
+    <a className={className} href={link} target="_blank" rel="noopener noreferrer">
+      <ClickableActionPanelBody {...bodyProps} />
+    </a>
+  );
+}
+
+function ClickableActionPanelInternalLink({ link, className, bodyProps }: IClickableActionPanelLink) {
+  return (
+    <Link className={className} to={link}>
+      <ClickableActionPanelBody {...bodyProps} />
     </Link>
+  );
+}
+
+function ClickableActionPanelBody({ icon, text }: IClickableActionPanelBody) {
+  return (
+    <>
+      {icon && <FontAwesomeIcon className="clickable-action-panel__icon" icon={icon} title={text} />}
+      <span className="clickable-action-panel__text">{text}</span>
+    </>
   );
 }
 
 interface IClickableActionPanel {
   option: ActionPanelOption;
 }
+
+interface IClickableActionPanelLink extends Pick<IActionPanel, 'link'> {
+  className: string;
+  bodyProps: IClickableActionPanelBody;
+}
+
+interface IClickableActionPanelBody extends Pick<IActionPanel, 'icon' | 'text'> {}

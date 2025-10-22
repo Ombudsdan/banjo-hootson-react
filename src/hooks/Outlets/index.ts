@@ -4,6 +4,9 @@ export { default as BackdropOutlet } from './BackdropOutlet';
 export * from './DialogOutlet';
 export { default as DialogOutlet } from './DialogOutlet';
 
+export * from './FormOutlet';
+export { default as FormOutlet } from './FormOutlet';
+
 export * from './FormDialogOutlet';
 export { default as FormDialogOutlet } from './FormDialogOutlet';
 

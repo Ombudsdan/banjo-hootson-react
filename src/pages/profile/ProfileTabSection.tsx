@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useState } from 'react';
-import { FormSectionHeader, FormActionsContainer } from 'components';
+import { Form } from 'components';
 import { PageSectionContainer, PageContentContainer } from 'framework';
 import { UserController, LocationController } from 'controllers';
 import { Validation, runValidators, firstErrorMessage } from 'utils';
@@ -63,7 +63,7 @@ export default function ProfileTabSection() {
 
         <PageSectionContainer>
           {/* Personal Information */}
-          <FormSectionHeader title="Personal Information" />
+          <Form.SectionHeader title="Personal Information" />
 
           <div className="form-group">
             <label className="form-group__label form-group__label--required">Email Address</label>
@@ -120,7 +120,7 @@ export default function ProfileTabSection() {
 
         <PageSectionContainer>
           {/* Plushie Instagram Accounts */}
-          <FormSectionHeader title="Plushie Instagram Accounts" />
+          <Form.SectionHeader title="Plushie Instagram Accounts" />
           <div className="plushie-instagram-account-section__description">
             No plushie Instagram accounts added yet. Connect one or more of your Instagram accounts to your profile
           </div>
@@ -131,11 +131,11 @@ export default function ProfileTabSection() {
           </div>
         </PageSectionContainer>
 
-        <FormActionsContainer>
+        <Form.ActionsContainer>
           <button type="submit" className="form__button form__button--primary" disabled={!formValid && submitted}>
             Save Profile
           </button>
-        </FormActionsContainer>
+        </Form.ActionsContainer>
       </PageContentContainer>
     </form>
   );

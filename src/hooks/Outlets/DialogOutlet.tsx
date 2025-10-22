@@ -1,4 +1,4 @@
-import { DialogActionButtons, DialogBodyText, DialogContainer, DialogTitle } from 'components';
+import { Dialog } from 'components';
 import { useDialog } from 'hooks';
 
 const DEFAULT_DIALOG_TITLE_ID = 'dialog-title';
@@ -24,14 +24,14 @@ export default function DialogOutlet() {
   const actionButtonsProps = { confirmType, confirmText, confirmLoadingText, cancelText, isLoading };
 
   return (
-    <DialogContainer onClose={handleClose} titleId={DEFAULT_DIALOG_TITLE_ID} bodyTextId={DEFAULT_DIALOG_BODY_TEXT_ID}>
-      {title && <DialogTitle title={title} id={DEFAULT_DIALOG_TITLE_ID} />}
-      {message && <DialogBodyText text={message} id={DEFAULT_DIALOG_BODY_TEXT_ID} />}
+    <Dialog.Container onClose={handleClose} titleId={DEFAULT_DIALOG_TITLE_ID} bodyTextId={DEFAULT_DIALOG_BODY_TEXT_ID}>
+      {title && <Dialog.Title title={title} id={DEFAULT_DIALOG_TITLE_ID} />}
+      {message && <Dialog.BodyText text={message} id={DEFAULT_DIALOG_BODY_TEXT_ID} />}
       {children}
       {!hideDefaultActions && (
-        <DialogActionButtons {...actionButtonsProps} onClose={handleClose} onConfirm={handleConfirmClick} />
+        <Dialog.ActionButtons {...actionButtonsProps} onClose={handleClose} onConfirm={handleConfirmClick} />
       )}
-    </DialogContainer>
+    </Dialog.Container>
   );
 
   function handleConfirmClick() {
