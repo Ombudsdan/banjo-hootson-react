@@ -1,11 +1,11 @@
-import { ReactNode } from "react";
-import { createEnum, ValueOf } from "utils";
+import { PropsWithChildren, ReactNode } from 'react';
+import { createEnum, ValueOf } from 'utils';
 
 export const AlertCardVariant = createEnum({
-  SUCCESS: "success",
-  INFO: "info",
-  WARNING: "warning",
-  ERROR: "error",
+  SUCCESS: 'success',
+  INFO: 'info',
+  WARNING: 'warning',
+  ERROR: 'error'
 });
 
 export type AlertCardVariantType = ValueOf<typeof AlertCardVariant>;
@@ -24,3 +24,5 @@ export interface IValidationAlertContext {
   setValidationAlert: (cfg: IAlertCard | null) => void;
   clearValidationAlert: () => void;
 }
+
+export interface IPageValidationAlertProvider extends PropsWithChildren {}

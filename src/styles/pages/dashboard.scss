@@ -129,3 +129,11 @@
     transform: rotate(360deg);
   }
 }
+
+.plushie-instagram-account-list {
+  &__item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}

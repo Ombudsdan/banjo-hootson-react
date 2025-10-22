@@ -10,5 +10,11 @@
       "path": "../../../banjo-hootson-react"
     }
   ],
-  "settings": {}
+  "settings": {},
+  "extensions": {
+    "recommendations": [
+      "github.copilot",
+      "esbenp.prettier-vscode"
+    ]
+  }
 }

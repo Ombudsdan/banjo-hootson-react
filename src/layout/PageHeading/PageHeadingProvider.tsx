@@ -1,14 +1,13 @@
-import { FC, ReactNode, useCallback, useState } from "react";
-import PageHeadingContext from "./PageHeadingContext";
-import { IPageHeadingContainer } from "model/page-heading";
+import { FC, useCallback, useState } from 'react';
+import { IPageHeadingContainer, IPageHeadingProvider } from 'model/page-heading';
+import PageHeadingContext from './PageHeadingContext';
 
-const PageHeadingProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const [headingConfig, setHeadingConfig] =
-    useState<IPageHeadingContainer | null>(null);
+const PageHeadingProvider: FC<IPageHeadingProvider> = ({ children }) => {
+  const [headingConfig, setHeadingConfig] = useState<IPageHeadingContainer | null>(null);
 
   const setHeading = useCallback((cfg: IPageHeadingContainer | null) => {
     // Prevent infinite update loops by avoiding setting identical objects
-    setHeadingConfig((prev) => {
+    setHeadingConfig(prev => {
       if (!prev && !cfg) return prev; // both null/undefined
       if (!prev || !cfg) return cfg; // one is null, other isn't
       if (
@@ -26,9 +25,7 @@ const PageHeadingProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const clearHeading = useCallback(() => setHeadingConfig(null), []);
 
   return (
-    <PageHeadingContext.Provider
-      value={{ headingConfig, setHeading, clearHeading }}
-    >
+    <PageHeadingContext.Provider value={{ headingConfig, setHeading, clearHeading }}>
       {children}
     </PageHeadingContext.Provider>
   );

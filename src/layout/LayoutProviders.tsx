@@ -1,11 +1,3 @@
-import { FC, ReactNode } from "react";
-import {
-  PageAlertProvider,
-  PageContainerProvider,
-  PageHeadingProvider,
-} from "layout";
-import { PageValidationAlertProvider } from "./PageValidationAlert";
-
 /**
  * UIProviders
  * Thin composition component to reduce provider nesting noise in layout.
@@ -13,12 +5,28 @@ import { PageValidationAlertProvider } from "./PageValidationAlert";
  * (avoids large monolithic context objects & unrelated re-renders), while
  * giving layouts a single wrapper for common UI scaffolding.
  */
-const LayoutProviders: FC<{ children: ReactNode }> = ({ children }) => {
+
+import { FC } from 'react';
+import {
+  BackdropProvider,
+  DialogProvider,
+  PageAlertProvider,
+  PageContainerProvider,
+  PageHeadingProvider,
+  PageValidationAlertProvider
+} from 'layout';
+import { ILayoutProviders } from 'model/layout';
+
+const LayoutProviders: FC<ILayoutProviders> = ({ children }) => {
   return (
     <PageHeadingProvider>
       <PageValidationAlertProvider>
         <PageAlertProvider>
-          <PageContainerProvider>{children}</PageContainerProvider>
+          <BackdropProvider>
+            <DialogProvider>
+              <PageContainerProvider>{children}</PageContainerProvider>
+            </DialogProvider>
+          </BackdropProvider>
         </PageAlertProvider>
       </PageValidationAlertProvider>
     </PageHeadingProvider>

@@ -9,7 +9,9 @@ import {
   faBirthdayCake,
   faCalendarAlt,
   faCalendarPlus,
+  faEdit,
   faListCheck,
+  faTrash,
   faUser,
   faUserGear,
 } from "@fortawesome/free-solid-svg-icons";
@@ -25,7 +27,9 @@ library.add(
   faCalendarAlt,
   faUser,
   faUserGear,
-  faListCheck
+  faListCheck,
+  faEdit,
+  faTrash
 );
 
 export const ICONS = {
@@ -39,4 +43,6 @@ export const ICONS = {
   calendarAlt: faCalendarAlt,
   userGear: faUserGear,
   listCheck: faListCheck,
+  edit: faEdit,
+  trash: faTrash,
 };

@@ -1,16 +1,14 @@
 @use "../variables";
 @use "../mixins";
 
-.backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.55);
+.dialog-container {
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  position: fixed;
+  inset: 0;
+  z-index: variables.$zindex-dialog;
   padding: calc(variables.$nav-height + 2rem) 1rem 2rem;
-  z-index: 1000;
-  overflow-y: auto;
 }
 
 .dialog {

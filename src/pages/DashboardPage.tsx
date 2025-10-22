@@ -34,7 +34,8 @@ export default function DashboardPage() {
       key: "PROFILE_SETTINGS",
       title: "My Profile",
       description: "Manage your profile settings",
-      action: () => navigate({ pathname: "/profile", search: "?tab=PROFILE" }),
+      // action: () => navigate({ pathname: "/profile", search: "?tab=PROFILE" }),
+      action: () => navigate({ pathname: "/manage-profile" }),
       icon: ICONS.user,
     },
     {

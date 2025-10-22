@@ -1,23 +1,16 @@
-import { FC, ReactNode, useCallback, useState } from "react";
-import { IAlertCard } from "model/page-validation-alert";
-import { PageValidationAlertContext } from ".";
+import { FC, useCallback, useState } from 'react';
+import { IAlertCard, IPageValidationAlertProvider } from 'model/page-validation-alert';
+import { PageValidationAlertContext } from '.';
 
-const PageValidationAlertProvider: FC<{
-  children: ReactNode;
-}> = ({ children }) => {
+const PageValidationAlertProvider: FC<IPageValidationAlertProvider> = ({ children }) => {
   const [alert, setAlert] = useState<IAlertCard | null>(null);
 
-  const setValidationAlert = useCallback(
-    (cfg: IAlertCard | null) => setAlert(cfg),
-    []
-  );
+  const setValidationAlert = useCallback((cfg: IAlertCard | null) => setAlert(cfg), []);
 
   const clearValidationAlert = useCallback(() => setAlert(null), []);
 
   return (
-    <PageValidationAlertContext.Provider
-      value={{ alert, setValidationAlert, clearValidationAlert }}
-    >
+    <PageValidationAlertContext.Provider value={{ alert, setValidationAlert, clearValidationAlert }}>
       {children}
     </PageValidationAlertContext.Provider>
   );

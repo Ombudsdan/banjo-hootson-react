@@ -1,9 +1,9 @@
-import { PropsWithChildren } from "react";
-import { createEnum, ValueOf } from "utils";
+import { PropsWithChildren } from 'react';
+import { createEnum, ValueOf } from 'utils';
 
 export const PageContainerVariant = createEnum({
-  DEFAULT: "default",
-  FULL_WIDTH: "full-width",
+  DEFAULT: 'default',
+  FULL_WIDTH: 'full-width'
 });
 
 type PageContainerVariantType = ValueOf<typeof PageContainerVariant>;
@@ -19,3 +19,7 @@ export interface IPageContainerContext {
   setContainer: (cfg: Partial<IPageContainer>) => void;
   resetContainer: () => void;
 }
+
+export interface IPageContainerProvider extends PropsWithChildren {}
+
+export interface IPageContainerOutlet extends PropsWithChildren {}

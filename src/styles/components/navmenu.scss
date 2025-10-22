@@ -6,10 +6,13 @@
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1100;
+  z-index: variables.$zindex-nav;
   background: variables.$colour-bg-light;
-  border-bottom: 1px solid
-    color.mix(variables.$colour-brown, variables.$colour-white, 20%);
+  border-bottom: 1px solid color.mix(variables.$colour-brown, variables.$colour-white, 20%);
+
+  &--mobile-open {
+    z-index: variables.$zindex-nav-above-backdrop;
+  }
 
   &__inner {
     height: variables.$nav-height;
@@ -20,6 +23,7 @@
     align-items: center;
     gap: 1rem;
   }
+
   &__brand {
     font-weight: variables.$font-weight-bold;
     font-size: 1.125rem;
@@ -27,6 +31,7 @@
     text-decoration: none;
     white-space: nowrap;
   }
+
   &__toggle {
     display: none;
     margin-left: auto;
@@ -38,16 +43,19 @@
     height: 2.5rem;
     border-radius: 6px;
     cursor: pointer;
+
     &:focus {
       outline: 2px solid variables.$colour-orange-800;
       outline-offset: 2px;
     }
+
     @media (max-width: variables.$breakpoint-m) {
       display: inline-flex;
       align-items: center;
       justify-content: center;
     }
   }
+
   &__list {
     background: variables.$colour-bg-light;
     list-style: none;
@@ -56,6 +64,7 @@
     gap: 0.5rem;
     margin: 0 0 0 auto;
     padding: 0;
+
     @media (max-width: variables.$breakpoint-m) {
       align-items: flex-start;
       position: fixed;
@@ -69,17 +78,19 @@
       padding: 0.5rem;
       gap: 0.25rem;
       display: none;
-      z-index: 1001;
     }
+
     &--open {
       @media (max-width: variables.$breakpoint-m) {
         display: flex;
       }
     }
   }
+
   &__item {
     position: relative;
     padding: 0 0.75rem;
+
     @media (max-width: variables.$breakpoint-m) {
       padding: 1rem 0.75rem;
     }
@@ -90,10 +101,12 @@
     color: variables.$colour-text;
     border-radius: 8px;
     font-weight: variables.$font-weight-medium;
+
     &:hover,
     &:focus {
       background: variables.$colour-very-light;
     }
+
     @media (max-width: variables.$breakpoint-m) {
       text-align: left;
       width: 100%;
@@ -107,6 +120,7 @@
   &__item--has-dropdown {
     position: relative;
     padding: 0;
+
     .nav__dropdown-toggle {
       background: transparent;
       border-radius: 8px;
@@ -115,11 +129,13 @@
       font-weight: variables.$font-weight-medium;
       margin: 0;
       padding: 1rem 0.75rem;
+
       &:hover,
       &:focus {
         background: variables.$colour-very-light;
       }
     }
+
     .nav__caret {
       margin-left: 0.35rem;
       transition: transform 0.15s ease;
@@ -128,6 +144,7 @@
       }
     }
   }
+
   &__dropdown {
     position: absolute;
     top: calc(variables.$nav-height - 20px);
@@ -141,7 +158,7 @@
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     display: none;
-    z-index: 1001;
+
     @media (max-width: variables.$breakpoint-m) {
       position: static;
       width: 100%;
@@ -153,9 +170,11 @@
         margin-left: 0.75rem;
       }
     }
+
     &--open {
       display: block;
     }
+
     .nav__dropdown-link {
       display: block;
       padding: 1.25rem 0.75rem;
@@ -163,10 +182,12 @@
       font-weight: inherit;
       text-decoration: none;
       color: variables.$colour-text;
+
       &:hover,
       &:focus {
         background: variables.$colour-very-light;
       }
+
       @media (max-width: variables.$breakpoint-m) {
         text-align: left;
         border-radius: 0;
@@ -177,23 +198,8 @@
 
 .nav__dropdown > .nav__item {
   padding: 1rem 0.75rem;
+
   @media (max-width: variables.$breakpoint-m) {
     padding-left: 1rem;
-  }
-}
-
-.backdrop {
-  position: fixed;
-  inset: 0;
-  background: variables.$colour-overlay-backdrop;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.2s ease;
-  z-index: 900;
-  pointer-events: none;
-  &--visible {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
   }
 }

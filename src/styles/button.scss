@@ -3,34 +3,41 @@
 @use "./mixins";
 
 $button-styles: (
-  "main": (
+  'main': (
     bg: variables.$colour-button-primary,
     text: variables.$colour-button-primary-text,
     border: variables.$colour-button-primary-border,
     hover: variables.$colour-button-primary-hover,
-    active: variables.$colour-button-primary-active,
+    active: variables.$colour-button-primary-active
   ),
-  "secondary": (
+  'secondary': (
     bg: variables.$colour-button-secondary,
     text: variables.$colour-button-secondary-text,
     border: variables.$colour-button-secondary-border,
     hover: variables.$colour-button-secondary-hover,
-    active: variables.$colour-button-secondary-active,
+    active: variables.$colour-button-secondary-active
   ),
-  "tertiary": (
+  'tertiary': (
     bg: rgba(variables.$colour-orange, 0.2),
     text: variables.$colour-brown,
     border: rgba(variables.$colour-orange, 0.3),
     hover: rgba(variables.$colour-orange, 0.15),
-    active: rgba(variables.$colour-orange, 0.1),
+    active: rgba(variables.$colour-orange, 0.1)
   ),
-  "danger": (
+  'primary': (
+    bg: variables.$colour-button-primary,
+    text: variables.$colour-button-primary-text,
+    border: variables.$colour-button-primary-border,
+    hover: variables.$colour-button-primary-hover,
+    active: variables.$colour-button-primary-active
+  ),
+  'danger': (
     bg: variables.$colour-error,
     text: variables.$colour-white,
     border: variables.$colour-error-dark,
     hover: rgba(variables.$colour-error, 0.8),
-    active: rgba(variables.$colour-error, 0.7),
-  ),
+    active: rgba(variables.$colour-error, 0.7)
+  )
 );
 
 a {
@@ -204,4 +211,10 @@ button {
       @include mixins.mobile-hidden;
     }
   }
+}
+
+.icon-button {
+  background-color: unset;
+  color: variables.$colour-orange;
+  padding: 0;
 }

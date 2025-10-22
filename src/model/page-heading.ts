@@ -1,9 +1,9 @@
-import { PropsWithChildren, ReactNode } from "react";
-import { createEnum, ValueOf } from "utils";
+import { PropsWithChildren, ReactNode } from 'react';
+import { createEnum, ValueOf } from 'utils';
 
 export const PageHeadingTheme = createEnum({
-  LIGHT: "light",
-  DARK: "dark",
+  LIGHT: 'light',
+  DARK: 'dark'
 });
 
 export type PageHeadingThemeType = ValueOf<typeof PageHeadingTheme>;
@@ -20,3 +20,4 @@ export interface IPageHeadingContextValue {
   setHeading: (cfg: IPageHeadingContainer | null) => void;
   clearHeading: () => void;
 }
+export interface IPageHeadingProvider extends PropsWithChildren {}

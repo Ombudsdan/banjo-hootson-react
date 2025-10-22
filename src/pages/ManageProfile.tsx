@@ -1,26 +1,33 @@
-import { FormEvent, useEffect, useState } from "react";
-import { FormSectionHeader, FormActionsContainer } from "components";
-import { PageSectionContainer, PageContentContainer } from "framework";
-import { UserController, LocationController } from "controllers";
-import { Validation, runValidators, firstErrorMessage } from "utils";
-import { IUserProfile, IInstagramAccount } from "model/user-profile";
-import { ICountry } from "model/location";
-import { useHeading } from "hooks";
+import { FormEvent, useEffect, useState } from 'react';
+import { FormSectionHeader, FormActionsContainer, SummaryList } from 'components';
+import { useDialog } from 'hooks';
+import { PageSectionContainer, PageContentContainer } from 'framework';
+import { UserController, LocationController } from 'controllers';
+import { Validation, runValidators, firstErrorMessage } from 'utils';
+import { IUserProfile, IInstagramAccount } from 'model/user-profile';
+import { ICountry } from 'model/location';
+import { useHeading } from 'hooks';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { ICONS } from 'icons';
 
 export default function ManageProfile() {
+  const { openDialog } = useDialog();
+
+  // DialogService-based dialog handlers
   const [profile, setProfile] = useState<IUserProfile | null>(null);
   const [countries, setCountries] = useState<ICountry[]>([]);
-  const [city, setCity] = useState("");
-  const [country, setCountry] = useState("");
-  const [instagram, setInstagram] = useState("");
-  const [plushieAccounts, setPlushieAccounts] = useState<IInstagramAccount[]>(
-    []
-  );
+  const [city, setCity] = useState('');
+  const [country, setCountry] = useState('');
+  const [instagram, setInstagram] = useState('');
+  const [plushieAccounts, setPlushieAccounts] = useState<IInstagramAccount[]>([]);
   const [touched, setTouched] = useState<{
     city: boolean;
     country: boolean;
     instagram: boolean;
   }>({ city: false, country: false, instagram: false });
+  // Plushie account dialog/modal state
+  // Dialog state now handled via DialogService and handler functions
+  // Dialog state and validation now handled in dialog components
   const [submitted, setSubmitted] = useState(false);
   const { setHeading } = useHeading();
 
@@ -28,27 +35,107 @@ export default function ManageProfile() {
   const cityErrors = runValidators(city, [Validation.maxLength(80)]);
   // Instagram: allow optional; if present apply validFirstChar + validRemainingChars
   const instagramErrors = instagram
-    ? runValidators(instagram, [
-        Validation.validFirstChar,
-        Validation.validRemainingChars,
-      ])
+    ? runValidators(instagram, [Validation.validFirstChar, Validation.validRemainingChars])
     : null;
 
-  const showErrors = (field: keyof typeof touched) =>
-    touched[field] || submitted;
-  const cityErrorText = showErrors("city")
+  function handleAddPlushieAccount() {
+    let newUsername = '';
+    openDialog({
+      title: 'Add Plushie Instagram Account',
+      message: 'Enter new plushie Instagram username:',
+      children: (
+        <input
+          type="text"
+          className="form-group__input"
+          placeholder="Username"
+          autoFocus
+          onChange={e => {
+            newUsername = e.target.value;
+          }}
+        />
+      ),
+      onConfirm: () => {
+        if (!newUsername) return;
+        if (plushieAccounts.some(acc => acc.username.toLowerCase() === newUsername.toLowerCase())) {
+          // TODO: show error validation in dialog
+          return;
+        }
+        setPlushieAccounts([...plushieAccounts, { username: newUsername, isPublic: true }]);
+      },
+      onClose: () => {}
+    });
+  }
+
+  function handleEditPlushieAccount(idx: number) {
+    const current = plushieAccounts[idx];
+    let editedUsername = current.username;
+
+    openDialog({
+      title: 'Edit Plushie Instagram Account',
+      message: 'Edit plushie Instagram username:',
+      children: (
+        <input
+          type="text"
+          className="form-group__input"
+          defaultValue={current.username}
+          autoFocus
+          onChange={e => {
+            editedUsername = e.target.value;
+          }}
+        />
+      ),
+      onConfirm: () => {
+        if (!editedUsername) return;
+        if (
+          plushieAccounts.some((acc, i) => acc.username.toLowerCase() === editedUsername.toLowerCase() && i !== idx)
+        ) {
+          openDialog({
+            title: 'Error',
+            message: 'Username must be unique.',
+            confirmText: 'OK',
+            hideDefaultActions: false,
+            onConfirm: () => {},
+            onClose: () => {}
+          });
+          return;
+        }
+        const updated = plushieAccounts.slice();
+        updated[idx] = { ...current, username: editedUsername };
+        setPlushieAccounts(updated);
+      },
+      onClose: () => {}
+    });
+  }
+
+  function handleRemovePlushieAccount(idx: number) {
+    openDialog({
+      title: 'Remove Plushie Instagram Account',
+      message: 'Are you sure you want to remove this plushie Instagram account?',
+      confirmType: 'danger',
+      confirmText: 'Remove',
+      cancelText: 'Cancel',
+      onConfirm: () => {
+        setPlushieAccounts(plushieAccounts.filter((_, i) => i !== idx));
+      },
+      onClose: () => {}
+    });
+  }
+
+  const showErrors = (field: keyof typeof touched) => touched[field] || submitted;
+
+  const cityErrorText = showErrors('city')
     ? firstErrorMessage(cityErrors, {
-        maxlength: "Town or City cannot exceed 80 characters",
+        maxlength: 'Town or City cannot exceed 80 characters'
       })
-    : "";
-  const instagramErrorText = showErrors("instagram")
+    : '';
+
+  const instagramErrorText = showErrors('instagram')
     ? firstErrorMessage(instagramErrors, {
-        invalidFirstChar:
-          "Username must start with either a letter, number, @, underscore, dot or hyphen",
+        invalidFirstChar: 'Username must start with either a letter, number, @, underscore, dot or hyphen',
         invalidRemainingChars:
-          "Username must only contain letters, numbers, underscores, periods, hyphens and @ (as long as it is at the start)",
+          'Username must only contain letters, numbers, underscores, periods, hyphens and @ (as long as it is at the start)'
       })
-    : "";
+    : '';
 
   const formValid = !cityErrors && !instagramErrors;
 
@@ -61,21 +148,21 @@ export default function ManageProfile() {
   };
 
   useEffect(() => {
-    UserController.me().then((data) => setProfile(data));
+    UserController.me().then(data => setProfile(data));
     LocationController.loadCountries().then(setCountries);
   }, []);
 
   // Initialize form fields from loaded profile
   useEffect(() => {
     if (profile) {
-      setCity(profile.city || "");
-      setCountry(profile.country || "");
-      setInstagram(profile.humanInstagram || "");
+      setCity(profile.city || '');
+      setCountry(profile.country || '');
+      setInstagram(profile.humanInstagram || '');
       setPlushieAccounts(profile.plushieInstagramAccounts || []);
     }
   }, [profile]);
 
-  setHeading({ heading: "Manage Profile" });
+  setHeading({ heading: 'Manage Profile' });
 
   return (
     <form onSubmit={onSubmit}>
@@ -88,10 +175,8 @@ export default function ManageProfile() {
           <FormSectionHeader title="Personal Information" />
 
           <div className="form-group">
-            <label className="form-group__label form-group__label--required">
-              Email Address
-            </label>
-            <p>{profile?.email || ""}</p>
+            <label className="form-group__label form-group__label--required">Email Address</label>
+            <p>{profile?.email || ''}</p>
           </div>
 
           <div className="form-group">
@@ -99,26 +184,24 @@ export default function ManageProfile() {
             <div className="form-group__hint">For example: Sheffield</div>
             <input
               type="text"
-              className={`form-group__input ${cityErrorText ? "error" : ""}`}
+              className={`form-group__input ${cityErrorText ? 'error' : ''}`}
               placeholder="Town or City"
               value={city}
-              onChange={(e) => setCity(e.target.value)}
-              onBlur={() => setTouched((t) => ({ ...t, city: true }))}
+              onChange={e => setCity(e.target.value)}
+              onBlur={() => setTouched(t => ({ ...t, city: true }))}
             />
-            {cityErrorText && (
-              <div className="form-group__error-message">{cityErrorText}</div>
-            )}
+            {cityErrorText && <div className="form-group__error-message">{cityErrorText}</div>}
           </div>
 
           <div className="form-group">
             <label className="form-group__label">Country</label>
             <select
               value={country}
-              onChange={(e) => setCountry(e.target.value)}
-              onBlur={() => setTouched((t) => ({ ...t, country: true }))}
+              onChange={e => setCountry(e.target.value)}
+              onBlur={() => setTouched(t => ({ ...t, country: true }))}
             >
               <option value="">Select your country</option>
-              {countries.map((c) => (
+              {countries.map(c => (
                 <option key={c.code} value={c.code}>
                   {c.name}
                 </option>
@@ -133,22 +216,14 @@ export default function ManageProfile() {
               <span className="instagram-input-group__prefix"></span>
               <input
                 type="text"
-                className={`instagram-input-group__input ${
-                  instagramErrorText ? "error" : ""
-                }`}
+                className={`instagram-input-group__input ${instagramErrorText ? 'error' : ''}`}
                 placeholder="my_human_username"
                 value={instagram}
-                onChange={(e) =>
-                  setInstagram(e.target.value.replace(/^@+/, ""))
-                }
-                onBlur={() => setTouched((t) => ({ ...t, instagram: true }))}
+                onChange={e => setInstagram(e.target.value.replace(/^@+/, ''))}
+                onBlur={() => setTouched(t => ({ ...t, instagram: true }))}
               />
             </div>
-            {instagramErrorText && (
-              <div className="form-group__error-message">
-                {instagramErrorText}
-              </div>
-            )}
+            {instagramErrorText && <div className="form-group__error-message">{instagramErrorText}</div>}
           </div>
         </PageSectionContainer>
 
@@ -156,30 +231,55 @@ export default function ManageProfile() {
           {/* Plushie Instagram Accounts */}
           <FormSectionHeader title="Plushie Instagram Accounts" />
           <div className="plushie-instagram-account-section__description">
-            {plushieAccounts.length === 0
-              ? "No plushie Instagram accounts added yet. Connect one or more of your Instagram accounts to your profile"
-              : "Connected plushie Instagram accounts:"}
+            {plushieAccounts.length === 0 &&
+              'No plushie Instagram accounts added yet. Connect one or more of your Instagram accounts to your profile'}
           </div>
           {plushieAccounts.length > 0 && (
-            <ul className="plushie-instagram-account-list">
+            <SummaryList.Container>
               {plushieAccounts.map((acc, idx) => (
-                <li key={acc.username || idx}>{acc.username}</li>
+                <SummaryList.Row key={idx}>
+                  <SummaryList.Key>{acc.username}</SummaryList.Key>
+                  <SummaryList.Actions>
+                    <button
+                      type="button"
+                      className="icon-button"
+                      aria-label="Edit account"
+                      onClick={() => {
+                        handleEditPlushieAccount(idx);
+                      }}
+                    >
+                      <FontAwesomeIcon icon={ICONS.edit} />
+                    </button>
+                    <button
+                      type="button"
+                      className="icon-button"
+                      aria-label="Remove account"
+                      onClick={() => {
+                        handleRemovePlushieAccount(idx);
+                      }}
+                    >
+                      <FontAwesomeIcon icon={ICONS.trash} />
+                    </button>
+                  </SummaryList.Actions>
+                </SummaryList.Row>
               ))}
-            </ul>
+            </SummaryList.Container>
           )}
           <div className="form-content">
-            <button className="button--link" type="button">
+            <button
+              className="button--link"
+              type="button"
+              onClick={() => {
+                handleAddPlushieAccount();
+              }}
+            >
               Add Another Account
             </button>
           </div>
         </PageSectionContainer>
 
         <FormActionsContainer>
-          <button
-            type="submit"
-            className="form__button form__button--primary"
-            disabled={!formValid && submitted}
-          >
+          <button type="submit" className="form__button form__button--primary" disabled={!formValid && submitted}>
             Save Profile
           </button>
         </FormActionsContainer>

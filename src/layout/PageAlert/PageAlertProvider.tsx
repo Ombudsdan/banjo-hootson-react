@@ -1,17 +1,9 @@
-import { PageAlertContext } from "layout";
-import { IPageAlert } from "model/page-alert";
-import {
-  FC,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-} from "react";
-import { useLocation } from "react-router-dom";
+import { FC, useCallback, useEffect, useId, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { PageAlertContext } from 'layout';
+import { IPageAlert, IPageAlertProvider } from 'model/page-alert';
 
-const PageAlertProvider: FC<{ children: ReactNode }> = ({ children }) => {
+const PageAlertProvider: FC<IPageAlertProvider> = ({ children }) => {
   const location = useLocation();
   const [alerts, setAlerts] = useState<IPageAlert[]>([]);
   const [exitingIds, setExitingIds] = useState<Set<string>>(new Set());
@@ -24,8 +16,8 @@ const PageAlertProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const ANIMATION_MS = 250;
 
   const performRemoval = useCallback((id: string) => {
-    setAlerts((prev) => prev.filter((a) => a.id !== id));
-    setExitingIds((prev) => {
+    setAlerts(prev => prev.filter(a => a.id !== id));
+    setExitingIds(prev => {
       const n = new Set(prev);
       n.delete(id);
       return n;
@@ -37,7 +29,7 @@ const PageAlertProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   const beginDismiss = useCallback(
     (id: string) => {
-      setExitingIds((prev) => {
+      setExitingIds(prev => {
         if (prev.has(id)) return prev;
         const n = new Set(prev);
         n.add(id);
@@ -57,21 +49,18 @@ const PageAlertProvider: FC<{ children: ReactNode }> = ({ children }) => {
     (alert: IPageAlert) => {
       let isExistingAlert = false;
 
-      setAlerts((prev) => {
-        isExistingAlert = prev.some((a) => a.id === alert.id);
+      setAlerts(prev => {
+        isExistingAlert = prev.some(a => a.id === alert.id);
         return isExistingAlert ? prev : [...prev, alert];
       });
 
       if (isExistingAlert) return alert.id;
 
-      setEnteringIds((prev) => new Set(prev).add(alert.id));
+      setEnteringIds(prev => new Set(prev).add(alert.id));
 
       if (alert.timeoutMs && alert.timeoutMs > 0) {
         expiryRef.current[alert.id] = Date.now() + alert.timeoutMs;
-        const handle = window.setTimeout(
-          () => beginDismiss(alert.id),
-          alert.timeoutMs
-        );
+        const handle = window.setTimeout(() => beginDismiss(alert.id), alert.timeoutMs);
         timersRef.current[alert.id] = handle;
       }
       return alert.id;
@@ -93,46 +82,50 @@ const PageAlertProvider: FC<{ children: ReactNode }> = ({ children }) => {
     setAlerts([]);
     setExitingIds(new Set());
     setEnteringIds(new Set());
-    Object.values(timersRef.current).forEach((h) => window.clearTimeout(h));
+    Object.values(timersRef.current).forEach(h => window.clearTimeout(h));
     timersRef.current = {};
     expiryRef.current = {};
     remainingRef.current = {};
   }, []);
 
   const replaceAlerts = useCallback(
-    (incoming: Omit<IPageAlert, "id">[]) => {
+    (incoming: Omit<IPageAlert, 'id'>[]) => {
       // Dismiss existing (animate out) then add new after animation for smoother swap
       if (alerts.length) {
-        alerts.forEach((a) => beginDismiss(a.id));
+        alerts.forEach(a => beginDismiss(a.id));
         window.setTimeout(() => {
-          const mapped = incoming.map((a) => ({
+          const mapped = incoming.map(a => ({
             ...a,
-            id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+            id: `${Date.now()}-${Math.random()
+              .toString(36)
+              .slice(2)}`
           }));
           setAlerts(mapped);
-          setEnteringIds(new Set(mapped.map((m) => m.id)));
+          setEnteringIds(new Set(mapped.map(m => m.id)));
         }, ANIMATION_MS);
       } else {
-        const mapped = incoming.map((a) => ({
+        const mapped = incoming.map(a => ({
           ...a,
-          id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+          id: `${Date.now()}-${Math.random()
+            .toString(36)
+            .slice(2)}`
         }));
         setAlerts(mapped);
-        setEnteringIds(new Set(mapped.map((m) => m.id)));
+        setEnteringIds(new Set(mapped.map(m => m.id)));
       }
     },
     [alerts, beginDismiss]
   );
 
   const updateAlert = useCallback(
-    (id: string, patch: Partial<Omit<IPageAlert, "id">>) => {
+    (id: string, patch: Partial<Omit<IPageAlert, 'id'>>) => {
       let updated = false;
-      setAlerts((prev) =>
-        prev.map((a) => {
+      setAlerts(prev =>
+        prev.map(a => {
           if (a.id !== id) return a;
           updated = true;
           const next: IPageAlert = { ...a, ...patch } as IPageAlert;
-          if ("timeoutMs" in patch) {
+          if ('timeoutMs' in patch) {
             if (timersRef.current[id]) {
               window.clearTimeout(timersRef.current[id]);
               delete timersRef.current[id];
@@ -141,10 +134,7 @@ const PageAlertProvider: FC<{ children: ReactNode }> = ({ children }) => {
             }
             if (patch.timeoutMs && patch.timeoutMs > 0) {
               expiryRef.current[id] = Date.now() + patch.timeoutMs;
-              const handle = window.setTimeout(
-                () => beginDismiss(id),
-                patch.timeoutMs
-              );
+              const handle = window.setTimeout(() => beginDismiss(id), patch.timeoutMs);
               timersRef.current[id] = handle;
             }
           }
@@ -191,7 +181,7 @@ const PageAlertProvider: FC<{ children: ReactNode }> = ({ children }) => {
   // Cleanup timers on unmount
   useEffect(
     () => () => {
-      Object.values(timersRef.current).forEach((h) => window.clearTimeout(h));
+      Object.values(timersRef.current).forEach(h => window.clearTimeout(h));
     },
     []
   );
@@ -216,7 +206,7 @@ const PageAlertProvider: FC<{ children: ReactNode }> = ({ children }) => {
         pauseAlertTimer,
         resumeAlertTimer,
         enteringIds,
-        exitingIds,
+        exitingIds
       }}
     >
       {children}
