@@ -1,7 +1,7 @@
 import { InputHTMLAttributes } from 'react';
 import { useFormField } from 'hooks';
 import { EmailAddressValidator } from 'validators';
-import { Form } from 'components';
+import { FormValidationErrors } from 'framework';
 
 /**
  * Email address input with validation and inline error display.
@@ -39,7 +39,7 @@ export default function EmailAddressFormInput({
             onChange={e => setValue(e.target.value)}
             onBlur={() => setTouched(true)}
           />
-          <Form.ValidationErrors showErrors={showErrors} validation={validation} />
+          <FormValidationErrors showErrors={showErrors} validation={validation} />
         </>
       )}
     </div>

@@ -1,15 +1,22 @@
 import { FormEvent, useEffect, useState } from 'react';
-import { Form } from 'components';
+import { FormActionsContainer } from 'framework';
 import { UserController } from 'controllers';
 import { FormOutlet, FormSubmitContext, useHeading, usePageAlerts } from 'hooks';
-import { IUser } from 'model/user.model';
+import { IPlushieInstagramAccount, IUser } from 'model/user.model';
+import {
+  CountryFormInput,
+  EmailAddressFormInput,
+  PlushieInstagramAccountsSelector,
+  TownOrCityInput,
+  UsernameFormInput
+} from 'components';
 
 const INPUT_ID = {
   townOrCity: 'town-or-city-input',
   country: 'country-input',
   yourInstagramAccount: 'your-instagram-account-input',
   plushieAccounts: 'plushie-accounts-input'
-};
+} as const;
 
 export default function ManageProfile() {
   useHeading({ heading: 'Manage Profile' });
@@ -20,42 +27,42 @@ export default function ManageProfile() {
   useEffect(fetchUser, []);
 
   return (
-    <FormOutlet onSubmit={onSubmit} onSubmitFailure={onSubmitFailure}>
-      <Form.EmailAddress
+    <FormOutlet<IManageProfileFormFields> onSubmit={onSubmit} onSubmitFailure={onSubmitFailure}>
+      <EmailAddressFormInput
         isReadonly={true}
         id="email-address"
         initialValue={user?.email || ''}
         label="Email Address"
         placeholder="Email Address"
       />
-      <Form.TownOrCity
+      <TownOrCityInput
         id={INPUT_ID.townOrCity}
         initialValue={user?.city || ''}
         label="Town or City"
         placeholder="Town or City"
         hint="For example: Sheffield"
       />
-      <Form.Country
+      <CountryFormInput
         id={INPUT_ID.country}
         initialValue={user?.country || ''}
         label="Country"
         hint="Your current country of residence"
       />
-      <Form.Username
+      <UsernameFormInput
         id={INPUT_ID.yourInstagramAccount}
         initialValue={user?.humanInstagram || ''}
         label="Your Instagram Account"
         hint="Your human Instagram account"
       />
-      <Form.PlushieInstagramAccounts
+      <PlushieInstagramAccountsSelector
         id={INPUT_ID.plushieAccounts}
         initialValue={user?.plushieInstagramAccounts || []}
       />
-      <Form.ActionsContainer>
+      <FormActionsContainer>
         <button type="submit" className="form__button form__button--primary">
           Save Profile
         </button>
-      </Form.ActionsContainer>
+      </FormActionsContainer>
     </FormOutlet>
   );
 
@@ -70,19 +77,18 @@ export default function ManageProfile() {
           heading: 'Failed to load user profile. Please try again later.'
         });
       }
-      return;
     });
   }
 
-  async function onSubmit(_e: FormEvent<HTMLFormElement>, form: FormSubmitContext) {
+  async function onSubmit(_e: FormEvent<HTMLFormElement>, form: FormSubmitContext<IManageProfileFormFields>) {
     const fields = form.getFormFields();
 
     await UserController.update({
       ...user,
-      city: fields[INPUT_ID.townOrCity] || user?.city || '',
-      country: fields[INPUT_ID.country] || user?.country || '',
-      humanInstagram: fields[INPUT_ID.yourInstagramAccount] || user?.humanInstagram || '',
-      plushieInstagramAccounts: fields[INPUT_ID.plushieAccounts] || user?.plushieInstagramAccounts || []
+      city: fields[INPUT_ID.townOrCity] ?? user?.city ?? '',
+      country: fields[INPUT_ID.country] ?? user?.country ?? '',
+      humanInstagram: fields[INPUT_ID.yourInstagramAccount] ?? user?.humanInstagram ?? '',
+      plushieInstagramAccounts: fields[INPUT_ID.plushieAccounts] ?? user?.plushieInstagramAccounts ?? []
     });
 
     addAlert({
@@ -100,4 +106,11 @@ export default function ManageProfile() {
       messages: [...(err?.message || [])]
     });
   }
+}
+
+interface IManageProfileFormFields {
+  [INPUT_ID.townOrCity]: string;
+  [INPUT_ID.country]: string;
+  [INPUT_ID.yourInstagramAccount]: string;
+  [INPUT_ID.plushieAccounts]: IPlushieInstagramAccount[];
 }

@@ -29,16 +29,13 @@ export default class HttpClientService {
     const { path, method = 'GET', body, headers, query, withCredentials = false } = options;
     const url = this.buildUrl(path, query);
     const start = typeof performance !== 'undefined' ? performance.now() : Date.now();
+
     console.debug('[HTTP] ->', method, url, body ? { body } : '');
+
     const authHeader = this.tokenProvider ? await this.tokenProvider() : null;
-    if (options.requireAuth && !authHeader) {
-      const error = new Error('No authentication token available') as Error & {
-        status?: number;
-        body?: unknown;
-      };
-      error.status = 401;
-      throw error;
-    }
+
+    if (options.requireAuth && !authHeader) this.throwError('No authentication token available', 401);
+
     const res = await fetch(url, {
       method,
       headers: {
@@ -51,45 +48,48 @@ export default class HttpClientService {
     });
 
     const text = await res.text();
-    let data: unknown = undefined;
-    try {
-      data = text ? JSON.parse(text) : undefined;
-    } catch {
-      data = text as unknown;
-    }
-
+    const data: unknown = text ? JSON.parse(text) : (text as unknown);
     const elapsed = Math.round((typeof performance !== 'undefined' ? performance.now() : Date.now()) - start);
     const statusInfo = `${res.status} ${res.statusText}`;
+
     if (!res.ok) {
-      if (typeof window !== 'undefined' && (res.status === 401 || res.status === 403)) {
-        try {
-          const currentPath = window.location.pathname || '';
-          const isAuthRoute = currentPath.startsWith('/login') || currentPath.startsWith('/signup');
-          if (!isAuthRoute) {
-            if (res.status === 401 && currentPath !== '/login') {
-              window.location.assign('/login?expired=1');
-            } else if (res.status === 403 && currentPath !== '/unauthorized') {
-              window.location.assign('/unauthorized');
-            }
-          }
-        } catch {
-          // noop: best-effort redirect
-        }
-      }
-      const error = new Error(`HTTP ${res.status}: ${res.statusText}`) as Error & {
-        status?: number;
-        body?: unknown;
-      };
-      error.status = res.status;
-      error.body = data;
-      console.error('[HTTP] x', method, url, statusInfo, {
-        elapsedMs: elapsed,
-        response: data
+      if (typeof window !== 'undefined' && (res.status === 401 || res.status === 403))
+        this.handleUnauthorisedResponse(res);
+
+      this.throwError(`HTTP ${res.status}: ${res.statusText}`, res.status, error => {
+        error.body = data;
+        console.error('[HTTP] x', method, url, statusInfo, {
+          elapsedMs: elapsed,
+          response: data
+        });
       });
-      throw error;
     }
+
     console.debug('[HTTP] <-', method, url, statusInfo, { elapsedMs: elapsed });
     return data as TResponse;
+  }
+
+  private static throwError(message: string, status?: number | undefined, callback?: (x: MyError) => void) {
+    const error = new Error(message) as MyError;
+    error.status = status;
+    callback?.(error);
+    throw error;
+  }
+
+  private static handleUnauthorisedResponse(res: Response) {
+    try {
+      const currentPath = window.location.pathname || '';
+      const isAuthRoute = currentPath.startsWith('/login') || currentPath.startsWith('/signup');
+      if (!isAuthRoute) {
+        if (res.status === 401 && currentPath !== '/login') {
+          window.location.assign('/login?expired=1');
+        } else if (res.status === 403 && currentPath !== '/unauthorized') {
+          window.location.assign('/unauthorized');
+        }
+      }
+    } catch {
+      // noop: best-effort redirect
+    }
   }
 }
 
@@ -109,3 +109,5 @@ interface RequestOptions<TBody> {
    */
   withCredentials?: boolean;
 }
+
+type MyError = Error & { status?: number; body?: unknown };

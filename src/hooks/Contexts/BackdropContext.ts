@@ -10,4 +10,6 @@ export interface IBackdropContext {
   closeBackdrop: () => void;
   addBackdropClickListener: (cb: () => void) => void;
   removeBackdropClickListener: (cb: () => void) => void;
+  /** Internal: listeners set used by BackdropOutlet to notify subscribers */
+  _listeners?: Set<() => void>;
 }

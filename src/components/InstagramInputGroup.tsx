@@ -1,4 +1,4 @@
-import { useFormField } from 'hooks';
+import { useFormField, UseFormFieldArgsRecord } from 'hooks';
 import { InputHTMLAttributes } from 'react';
 import { BaseValidator } from 'validators';
 
@@ -27,5 +27,5 @@ export interface IBaseInstagramInput extends Pick<InputHTMLAttributes<HTMLInputE
 
 interface IInstagramInputGroup extends IBaseInstagramInput {
   validator: typeof BaseValidator;
-  args?: Record<string, any>;
+  args?: UseFormFieldArgsRecord;
 }

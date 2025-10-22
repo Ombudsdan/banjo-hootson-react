@@ -2,7 +2,7 @@ import { FC, PropsWithChildren, useCallback, useState } from 'react';
 import { PageHeadingContext } from 'hooks';
 import { IPageHeading } from 'framework';
 
-const PageHeadingProvider: FC<IPageHeadingProvider> = ({ children }) => {
+const PageHeadingProvider: FC<PageHeadingProviderProps> = ({ children }) => {
   const [headingConfig, setHeadingConfig] = useState<IPageHeading | null>(null);
 
   const setHeading = useCallback((cfg: IPageHeading | null) => {
@@ -33,4 +33,4 @@ const PageHeadingProvider: FC<IPageHeadingProvider> = ({ children }) => {
 
 export default PageHeadingProvider;
 
-export interface IPageHeadingProvider extends PropsWithChildren {}
+type PageHeadingProviderProps = PropsWithChildren;

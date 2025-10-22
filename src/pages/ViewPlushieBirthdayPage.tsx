@@ -2,7 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useMemo, useState } from 'react';
 import { BirthdayController } from 'controllers';
 import { IPlushieBirthday } from 'model/plushie-birthday.model';
-import { AlertCard } from 'components';
+import { AlertCard } from 'framework';
 import { usePageHeading } from 'hooks';
 import { AlertCardVariant } from 'enums';
 

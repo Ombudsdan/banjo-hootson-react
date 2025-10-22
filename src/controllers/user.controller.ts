@@ -1,4 +1,4 @@
-import { IUser, IUserUpdate } from 'model/user.model';
+import { IUser, UserUpdateProps } from 'model/user.model';
 import { UserService } from 'services';
 import { toISOString } from 'utils';
 
@@ -13,7 +13,7 @@ export default class UserController {
     return this.toUserProfile(user);
   }
 
-  static async update(updates: IUserUpdate): Promise<IUser> {
+  static async update(updates: UserUpdateProps): Promise<IUser> {
     const user = await UserService.updateCurrentUser(updates);
     return this.toUserProfile(user);
   }

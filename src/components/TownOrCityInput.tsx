@@ -1,7 +1,7 @@
 import { InputHTMLAttributes } from 'react';
 import { useFormField } from 'hooks';
 import { CityValidator } from 'validators';
-import { Form } from 'components';
+import { FormValidationErrors } from 'framework';
 
 /**
  * Text input for town/city with validation and inline error display.
@@ -27,7 +27,7 @@ export default function TownOrCityInput({ id, label, initialValue, hint, placeho
         onChange={e => setValue(e.target.value)}
         onBlur={() => setTouched(true)}
       />
-      <Form.ValidationErrors showErrors={showErrors} validation={validation} />
+  <FormValidationErrors showErrors={showErrors} validation={validation} />
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { InputValidationArgsRecord } from 'hooks';
 import { isEmpty } from 'utils';
 
 /**
@@ -48,7 +49,7 @@ export default abstract class BaseValidator {
    * @returns An object of failed validation rules, or `null` if no rules failed.
    */
   private static evaluateValidation(config: ValidationConfigRecord): IValidation['errors'] {
-    const invalidRules = Object.entries(config).filter(([_, isValid]) => !isValid);
+    const invalidRules = Object.entries(config).filter(([, isValid]) => !isValid);
     return invalidRules.length ? (Object.fromEntries(invalidRules) as ValidationConfigRecord) : null;
   }
 
@@ -64,7 +65,10 @@ export default abstract class BaseValidator {
    * @returns {IValidation['errors']} A record of validation errors or `null` if valid.
    * @throws {Error} Always throws unless overridden in a subclass.
    */
-  static validate(_value: any, _args?: Record<string, any>): IValidation['errors'] {
+  static validate(value: unknown, args?: InputValidationArgsRecord): IValidation['errors'] {
+    // reference arguments to satisfy no-unused-vars in the abstract base
+    void value;
+    void args;
     throw new Error(`'validate' method must be implemented in subclass.`);
   }
 

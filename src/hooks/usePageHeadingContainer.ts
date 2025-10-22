@@ -12,19 +12,15 @@ import { IPageHeading } from 'framework';
  *     usePageHeading('About Banjo');
  *     return <PageContainer>...</PageContainer>;
  *   }
- */
-export default function usePageHeadingContainer(heading: string, options?: IPageHeading) {
-  // Memoize config so effect only runs when actual values change, not on every render creating new object references
-  const memoConfig: IPageHeading = useMemo(() => {
-    return { heading, ...(options || {}) };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [heading, options?.subheading, options?.image, options?.theme]);
-
-  useHeading(memoConfig);
-}
-
-/**
+ *
  * NOTE FOR CALLERS:
  * - Pass stable references for `image` (wrap in useMemo) to avoid unnecessary re-runs.
  * - The service guards redundant updates, but memoizing prevents wasted renders.
  */
+export default function usePageHeadingContainer(heading: string, options?: IPageHeading) {
+  const memoConfig: IPageHeading = useMemo(() => {
+    return { heading, ...(options || {}) };
+  }, [heading, options?.subheading, options?.image, options?.theme]);
+
+  useHeading(memoConfig);
+}

@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { generateClassName } from 'utils';
 
 // TODO - This is going in the bin, don't bother refactoring it.
@@ -12,15 +11,12 @@ export default function PageNavigation({ tabs, activeKey, onSelect }: IPageNavig
     <nav className="page-navigation" aria-label="Page Tabs">
       <ul className="page-navigation__list">
         {tabs.map(tab => {
-          const isActive = useMemo(() => tab.key === activeKey, [tab.key, activeKey]);
-
-          const className = useMemo(() => {
-            return generateClassName([
-              'page-navigation__item',
-              isActive && 'page-navigation__item--active',
-              tab.isDisabled && 'page-navigation__item--disabled'
-            ]);
-          }, [isActive, tab.isDisabled]);
+          const isActive = tab.key === activeKey;
+          const className = generateClassName([
+            'page-navigation__item',
+            isActive && 'page-navigation__item--active',
+            tab.isDisabled && 'page-navigation__item--disabled'
+          ]);
 
           return (
             <li key={tab.key} className={className}>

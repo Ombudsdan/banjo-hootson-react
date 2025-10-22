@@ -2,7 +2,7 @@ import { useCallback, useState, useEffect, PropsWithChildren } from 'react';
 import { useBackdrop, IDialogConfig, IDialogState, DialogContext } from 'hooks';
 import { checkHasObjectChanged } from 'utils';
 
-const DialogProvider = ({ children }: IDialogProvider) => {
+const DialogProvider = ({ children }: DialogProviderProps) => {
   const [dialog, setDialog] = useState<IDialogState | null>(null);
   const { openBackdrop, closeBackdrop, addBackdropClickListener, removeBackdropClickListener } = useBackdrop();
 
@@ -88,4 +88,4 @@ const DialogProvider = ({ children }: IDialogProvider) => {
 
 export default DialogProvider;
 
-export interface IDialogProvider extends PropsWithChildren {}
+type DialogProviderProps = PropsWithChildren;

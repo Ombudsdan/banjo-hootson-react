@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { IAlertCard } from 'components';
+import { IAlertCard } from 'framework';
 
 const PageAlertContext = createContext<IPageAlertContext | undefined>(undefined);
 

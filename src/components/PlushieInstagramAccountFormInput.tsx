@@ -1,8 +1,8 @@
 import { useFormField } from 'hooks';
 import { PlushieInstagramAccountValidator } from 'validators';
-import { IBaseInstagramInput, InstagramInputGroup } from 'framework';
 import { IPlushieInstagramAccount } from 'model/user.model';
-import { Form } from 'components';
+import { FormValidationErrors } from 'framework';
+import { IBaseInstagramInput, InstagramInputGroup } from 'components';
 
 /**
  * Single plushie Instagram account input with duplicate checking against an existing list.
@@ -36,7 +36,7 @@ export default function PlushieInstagramAccountFormInput({
         args={getArgs()}
         placeholder={placeholder}
       />
-      <Form.ValidationErrors showErrors={showErrors} validation={validation} />
+      <FormValidationErrors showErrors={showErrors} validation={validation} />
     </div>
   );
 

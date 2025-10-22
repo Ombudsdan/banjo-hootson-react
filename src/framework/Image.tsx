@@ -93,7 +93,6 @@ export default function Image({ fileName, alt, usage, shape, frame, loading = 'l
 
     observerRef.current.observe(el);
     return () => observerRef.current?.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shouldUseObserver, fileName, src, startLoadingWebp]);
 
   // When fileName changes, reset state.

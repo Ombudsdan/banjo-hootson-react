@@ -18,17 +18,21 @@ export default defineConfig([
       globals: globals.browser,
     },
     rules: {
+      // There are many instances where exhaustive deps are intentionally omitted
+      'react-hooks/exhaustive-deps': 'off',
       // Keep rules minimal until Angular ruleset is mirrored (placeholder for mirroring step)
       "no-restricted-imports": [
         "error",
         {
-          patterns: [
-            // Disallow importing from the model barrel to avoid circular dependencies
+          // Precisely disallow only the model barrel import, not submodules
+          paths: [
             {
-              group: ["model"],
+              name: "model",
               message:
                 "Import from specific submodules (e.g. 'model/page-alert') instead of the 'model' barrel to avoid circular dependencies.",
             },
+          ],
+          patterns: [
             // Disallow reaching into aliased folders via relative paths from outside
             "../*/auth/*",
             "../*/components/*",

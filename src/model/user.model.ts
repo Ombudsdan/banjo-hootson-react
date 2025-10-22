@@ -1,5 +1,4 @@
 import { SubscriptionTierType } from 'enums/subscription-tier.enum';
-import { CountryCodeType } from './country.model';
 
 export type SubscriptionTier = 'standard' | 'supporter';
 
@@ -23,9 +22,9 @@ export interface IUser {
     preferences?: IUserPreferences;
   };
   city?: string;
-  country?: CountryCodeType;
+  country?: string; // ISO 3166-1 alpha-2
   humanInstagram?: string;
   plushieInstagramAccounts?: IPlushieInstagramAccount[];
 }
 
-export type IUserUpdate = Partial<Omit<IUser, 'uid' | 'createdAt'>>;
+export type UserUpdateProps = Partial<Omit<IUser, 'uid' | 'createdAt'>>;

@@ -3,7 +3,7 @@ import { PageContainer } from 'framework';
 import { PageContainerContext } from 'hooks';
 
 // Outlet that wraps page content with PageContainer unless variant is full-width
-const PageContainerOutlet: FC<IPageContainerOutlet> = ({ children }) => {
+const PageContainerOutlet: FC<PageContainerOutletProps> = ({ children }) => {
   const context = useContext(PageContainerContext);
 
   if (!context) {
@@ -15,4 +15,4 @@ const PageContainerOutlet: FC<IPageContainerOutlet> = ({ children }) => {
 
 export default PageContainerOutlet;
 
-export interface IPageContainerOutlet extends PropsWithChildren {}
+type PageContainerOutletProps = PropsWithChildren;

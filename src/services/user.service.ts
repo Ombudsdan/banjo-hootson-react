@@ -3,7 +3,7 @@
  * Handles authenticated user lifecycle operations (init, fetch profile, update, delete).
  * Does not cache locally; callers manage memoization if required.
  */
-import { IUser, IUserUpdate } from 'model/user.model';
+import { IUser, UserUpdateProps } from 'model/user.model';
 import { HttpClientService } from 'services';
 
 export default class UserService {
@@ -22,8 +22,8 @@ export default class UserService {
     });
   }
 
-  static updateCurrentUser(updates: IUserUpdate) {
-    return HttpClientService.request<IUser, IUserUpdate>({
+  static updateCurrentUser(updates: UserUpdateProps) {
+    return HttpClientService.request<IUser, UserUpdateProps>({
       path: '/users/me',
       method: 'PUT',
       body: updates,

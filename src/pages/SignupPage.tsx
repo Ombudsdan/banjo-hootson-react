@@ -1,16 +1,18 @@
-import { FormEvent, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { usePageHeading } from "hooks";
-import { PageContentContainer } from "framework";
-import { UserController, AuthController } from "controllers";
-import { Validation, runValidators, firstErrorMessage } from "utils";
+import { FormEvent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { usePageHeading } from 'hooks';
+import { PageContentContainer } from 'framework';
+import { UserController, AuthController } from 'controllers';
+import { Validation, runValidators, firstErrorMessage } from 'utils';
+
+const INPUT_ERROR_CLASS = 'signup-page__input--error';
 
 export default function SignupPage() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [displayName, setDisplayName] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [displayName, setDisplayName] = useState('');
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -25,74 +27,58 @@ export default function SignupPage() {
     password: false,
     confirmPassword: false,
     displayName: false,
-    agreeToTerms: false,
+    agreeToTerms: false
   });
   const [submitted, setSubmitted] = useState(false);
 
   // Validators
-  const emailErrors = runValidators(email, [
-    Validation.required,
-    Validation.email,
-  ]);
-  const passwordErrors = runValidators(password, [
-    Validation.required,
-    Validation.minLength(6),
-  ]);
+  const emailErrors = runValidators(email, [Validation.required, Validation.email]);
+  const passwordErrors = runValidators(password, [Validation.required, Validation.minLength(6)]);
   // Display name optional, but length limit 50
-  const displayNameErrors = runValidators(displayName, [
-    Validation.maxLength(50),
-  ]);
+  const displayNameErrors = runValidators(displayName, [Validation.maxLength(50)]);
   // Confirm password custom logic
   let confirmPasswordErrors: Record<string, boolean> | null = null;
+
   if (!confirmPassword && (submitted || touched.confirmPassword)) {
     confirmPasswordErrors = { required: true };
   } else if (password && confirmPassword && password !== confirmPassword) {
     confirmPasswordErrors = { mismatch: true };
   }
-  const agreeErrors = agreeToTerms
-    ? null
-    : submitted || touched.agreeToTerms
-    ? { required: true }
-    : null;
 
-  const showErrors = (field: keyof typeof touched) =>
-    touched[field] || submitted;
+  const agreeErrors = (submitted || touched.agreeToTerms) && !agreeToTerms ? { required: true } : null;
 
-  const emailErrorText = showErrors("email")
+  const showErrors = (field: keyof typeof touched) => touched[field] || submitted;
+
+  const emailErrorText = showErrors('email')
     ? firstErrorMessage(emailErrors, {
-        required: "Email is required",
-        email: "Please enter a valid email address",
+        required: 'Email is required',
+        email: 'Please enter a valid email address'
       })
-    : "";
-  const passwordErrorText = showErrors("password")
+    : '';
+  const passwordErrorText = showErrors('password')
     ? firstErrorMessage(passwordErrors, {
-        required: "Password is required",
-        minlength: "Password must be at least 6 characters",
+        required: 'Password is required',
+        minlength: 'Password must be at least 6 characters'
       })
-    : "";
-  const confirmPasswordErrorText = showErrors("confirmPassword")
+    : '';
+  const confirmPasswordErrorText = showErrors('confirmPassword')
     ? firstErrorMessage(confirmPasswordErrors, {
-        required: "Please confirm your password",
-        mismatch: "Passwords do not match",
+        required: 'Please confirm your password',
+        mismatch: 'Passwords do not match'
       })
-    : "";
-  const displayNameErrorText = showErrors("displayName")
+    : '';
+  const displayNameErrorText = showErrors('displayName')
     ? firstErrorMessage(displayNameErrors, {
-        maxlength: "Display name must be 50 characters or less",
+        maxlength: 'Display name must be 50 characters or less'
       })
-    : "";
-  const agreeErrorText = showErrors("agreeToTerms")
+    : '';
+  const agreeErrorText = showErrors('agreeToTerms')
     ? firstErrorMessage(agreeErrors, {
-        required: "You must agree to the terms and conditions",
+        required: 'You must agree to the terms and conditions'
       })
-    : "";
+    : '';
 
-  const formValid =
-    !emailErrors &&
-    !passwordErrors &&
-    !confirmPasswordErrors &&
-    !displayNameErrors &&
-    !agreeErrors;
+  const formValid = !emailErrors && !passwordErrors && !confirmPasswordErrors && !displayNameErrors && !agreeErrors;
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -102,43 +88,35 @@ export default function SignupPage() {
       password: true,
       confirmPassword: true,
       displayName: true,
-      agreeToTerms: true,
+      agreeToTerms: true
     });
     setErrorMessage(null);
     if (!formValid) return;
     setIsLoading(true);
     try {
-      await AuthController.signUpWithEmailPassword(
-        email,
-        password,
-        displayName || undefined
-      );
+      await AuthController.signUpWithEmailPassword(email, password, displayName || undefined);
       await UserController.init();
-      navigate("/dashboard");
+      navigate('/dashboard');
     } catch (error: unknown) {
-      let message = "An error occurred during signup. Please try again.";
-      const code = (error as { code?: string; message?: string } | undefined)
-        ?.code;
+      let message = 'An error occurred during signup. Please try again.';
+      const code = (error as { code?: string; message?: string } | undefined)?.code;
       if (code) {
         switch (code) {
-          case "auth/email-already-in-use":
-            message =
-              "An account with this email already exists. Please sign in instead.";
+          case 'auth/email-already-in-use':
+            message = 'An account with this email already exists. Please sign in instead.';
             break;
-          case "auth/invalid-email":
-            message = "Please enter a valid email address.";
+          case 'auth/invalid-email':
+            message = 'Please enter a valid email address.';
             break;
-          case "auth/weak-password":
-            message =
-              "Password is too weak. Please choose a stronger password.";
+          case 'auth/weak-password':
+            message = 'Password is too weak. Please choose a stronger password.';
             break;
-          case "auth/network-request-failed":
-            message =
-              "Network error. Please check your connection and try again.";
+          case 'auth/network-request-failed':
+            message = 'Network error. Please check your connection and try again.';
             break;
           default: {
             const m = (error as { message?: string } | undefined)?.message;
-            message = `Signup failed: ${m || "Unknown error"}`;
+            message = `Signup failed: ${m || 'Unknown error'}`;
           }
         }
       }
@@ -148,18 +126,14 @@ export default function SignupPage() {
     }
   };
 
-  usePageHeading("Create Account");
+  usePageHeading('Create Account');
 
   return (
     <PageContentContainer spacing="medium">
       <div className="signup-page">
         <div className="signup-page__container">
           <form onSubmit={onSubmit} className="signup-page__form">
-            {errorMessage && (
-              <div className="signup-page__message signup-page__message--error">
-                {errorMessage}
-              </div>
-            )}
+            {errorMessage && <div className="signup-page__message signup-page__message--error">{errorMessage}</div>}
 
             <div className="form-group">
               <label htmlFor="email" className="signup-page__label">
@@ -168,18 +142,14 @@ export default function SignupPage() {
               <input
                 type="email"
                 id="email"
-                className={`signup-page__input ${
-                  emailErrorText ? "signup-page__input--error" : ""
-                }`}
+                className={`signup-page__input ${emailErrorText ? INPUT_ERROR_CLASS : ''}`}
                 placeholder="Enter your email"
                 autoComplete="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                onBlur={() => setTouched((t) => ({ ...t, email: true }))}
+                onChange={e => setEmail(e.target.value)}
+                onBlur={() => setTouched(t => ({ ...t, email: true }))}
               />
-              {emailErrorText && (
-                <div className="signup-page__field-error">{emailErrorText}</div>
-              )}
+              {emailErrorText && <div className="signup-page__field-error">{emailErrorText}</div>}
             </div>
 
             <div className="form-group">
@@ -189,20 +159,14 @@ export default function SignupPage() {
               <input
                 type="text"
                 id="displayName"
-                className={`signup-page__input ${
-                  displayNameErrorText ? "signup-page__input--error" : ""
-                }`}
+                className={`signup-page__input ${displayNameErrorText ? INPUT_ERROR_CLASS : ''}`}
                 placeholder="Enter your display name (optional)"
                 autoComplete="name"
                 value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
-                onBlur={() => setTouched((t) => ({ ...t, displayName: true }))}
+                onChange={e => setDisplayName(e.target.value)}
+                onBlur={() => setTouched(t => ({ ...t, displayName: true }))}
               />
-              {displayNameErrorText && (
-                <div className="signup-page__field-error">
-                  {displayNameErrorText}
-                </div>
-              )}
+              {displayNameErrorText && <div className="signup-page__field-error">{displayNameErrorText}</div>}
             </div>
 
             <div className="form-group">
@@ -212,20 +176,14 @@ export default function SignupPage() {
               <input
                 type="password"
                 id="password"
-                className={`signup-page__input ${
-                  passwordErrorText ? "signup-page__input--error" : ""
-                }`}
+                className={`signup-page__input ${passwordErrorText ? INPUT_ERROR_CLASS : ''}`}
                 placeholder="Enter your password (min 6 characters)"
                 autoComplete="new-password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onBlur={() => setTouched((t) => ({ ...t, password: true }))}
+                onChange={e => setPassword(e.target.value)}
+                onBlur={() => setTouched(t => ({ ...t, password: true }))}
               />
-              {passwordErrorText && (
-                <div className="signup-page__field-error">
-                  {passwordErrorText}
-                </div>
-              )}
+              {passwordErrorText && <div className="signup-page__field-error">{passwordErrorText}</div>}
             </div>
 
             <div className="form-group">
@@ -235,22 +193,14 @@ export default function SignupPage() {
               <input
                 type="password"
                 id="confirmPassword"
-                className={`signup-page__input ${
-                  confirmPasswordErrorText ? "signup-page__input--error" : ""
-                }`}
+                className={`signup-page__input ${confirmPasswordErrorText ? INPUT_ERROR_CLASS : ''}`}
                 placeholder="Confirm your password"
                 autoComplete="new-password"
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                onBlur={() =>
-                  setTouched((t) => ({ ...t, confirmPassword: true }))
-                }
+                onChange={e => setConfirmPassword(e.target.value)}
+                onBlur={() => setTouched(t => ({ ...t, confirmPassword: true }))}
               />
-              {confirmPasswordErrorText && (
-                <div className="signup-page__field-error">
-                  {confirmPasswordErrorText}
-                </div>
-              )}
+              {confirmPasswordErrorText && <div className="signup-page__field-error">{confirmPasswordErrorText}</div>}
             </div>
 
             <div className="form-group--checkbox">
@@ -259,37 +209,23 @@ export default function SignupPage() {
                   type="checkbox"
                   className="signup-page__checkbox"
                   checked={agreeToTerms}
-                  onChange={(e) => setAgreeToTerms(e.target.checked)}
-                  onBlur={() =>
-                    setTouched((t) => ({ ...t, agreeToTerms: true }))
-                  }
+                  onChange={e => setAgreeToTerms(e.target.checked)}
+                  onBlur={() => setTouched(t => ({ ...t, agreeToTerms: true }))}
                 />
                 <span className="signup-page__checkbox-text">
                   I agree to the
-                  <a
-                    href="/terms"
-                    target="_blank"
-                    className="signup-page__link"
-                  >
+                  <a href="/terms" target="_blank" className="signup-page__link">
                     Terms and Conditions
                   </a>
                   *
                 </span>
               </label>
-              {agreeErrorText && (
-                <div className="signup-page__field-error">{agreeErrorText}</div>
-              )}
+              {agreeErrorText && <div className="signup-page__field-error">{agreeErrorText}</div>}
             </div>
 
-            <button
-              type="submit"
-              className="signup-page__submit-button"
-              disabled={isLoading}
-            >
-              {isLoading && (
-                <span className="signup-page__loading-spinner"></span>
-              )}
-              {isLoading ? "Creating Account..." : "Create Account"}
+            <button type="submit" className="signup-page__submit-button" disabled={isLoading}>
+              {isLoading && <span className="signup-page__loading-spinner"></span>}
+              {isLoading ? 'Creating Account...' : 'Create Account'}
             </button>
 
             <div className="signup-page__login-prompt">
@@ -298,9 +234,8 @@ export default function SignupPage() {
                 <button
                   type="button"
                   className="signup-page__link-button"
-                  onClick={() => navigate("/login")}
-                  disabled={isLoading}
-                >
+                  onClick={() => navigate('/login')}
+                  disabled={isLoading}>
                   Sign In
                 </button>
               </p>

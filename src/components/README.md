@@ -10,7 +10,9 @@ Presentational, reusable UI pieces. They:
 ## Import
 
 ```ts
-import { AlertCard, Dialog, Gallery } from 'components';
+import { Gallery, DashboardCard } from 'components';
+// UI primitives like AlertCard, Dialog, Heading, SummaryList come from 'framework'
+import { AlertCard, Dialog, Heading, SummaryList } from 'framework';
 ```
 
 ## Adding a component
@@ -34,40 +36,14 @@ Only exported components are covered here with brief summaries and practical exa
 
 These are the key exports from this folder (see TSDocs on hover for API details):
 
-- AlertCard, ErrorCard — page-level message surfaces (info/error variants)
-- Dialog — UI pieces: Dialog.Container, Dialog.Title, Dialog.BodyText, Dialog.ActionButtons
-- Form — re-exports common inputs and helpers: - Form.EmailAddress, Form.Username, Form.TownOrCity, Form.Country - Form.PlushieInstagramAccount, Form.PlushieInstagramAccounts - Form.SectionHeader, Form.ActionsContainer, Form.ValidationErrors
+- ErrorCard — page-level error surface built on AlertCard (from framework)
 - ClickableActionPanel, ClickableActionPanelGroup — navigational tiles
 - DashboardCard — feature entry tile
 - Gallery — image grid
 - GoogleCalendarIFrame — temporary calendar embed
-- Heading — semantic heading wrapper
 - PageNavigation — simple tab control
 - PlushieBio — profile-style card for plushies
-- SummaryList — definition-list layout (Container, Row, Key, Value, Actions)
 - UserSubscriptionTierBadge — labeled tier chip
-
-### AlertCard
-
-Accessible alert container with optional heading, message list, variant, and arbitrary children.
-
-```tsx
-import { AlertCard } from "components";
-import { AlertCardVariant } from "enums";
-
-// Basic list of messages
-<AlertCard id="profile-alert" heading="Profile Updated" messages={["Changes saved successfully."]} />
-
-// Override variant and pass children
-<AlertCard
-  id="warn-alert"
-  heading="Check details"
-  variant={AlertCardVariant.ERROR}
-  disableAutoFocus
->
-  <p>Please review your inputs below.</p>
-</AlertCard>
-```
 
 ### ErrorCard
 
@@ -85,11 +61,11 @@ Small panels that route internally or link externally based on controller option
 
 ```tsx
 import { ClickableActionPanel, ClickableActionPanelGroup } from "components";
-import { ActionPanelOption, ActionPanelGroupOption } from "controllers";
+import { ClickableActionPanelOption, ClickableActionPanelGroupOption } from "controllers";
 
-<ClickableActionPanel option={ActionPanelOption.ManageProfile} />
+<ClickableActionPanel option={ClickableActionPanelOption.ManageProfile} />
 
-<ClickableActionPanelGroup group={ActionPanelGroupOption.DashboardMain} />
+<ClickableActionPanelGroup group={ClickableActionPanelGroupOption.DashboardMain} />
 ```
 
 ### DashboardCard
@@ -140,17 +116,6 @@ import { GoogleCalendarIFrame } from "components";
 <GoogleCalendarIFrame title="Mini Calendar" source={calendarUrl} width={320} height={300} />
 ```
 
-### Heading
-
-Light wrapper for semantic headings.
-
-```tsx
-import { Heading } from 'components';
-import { HeadingLevel } from 'enums';
-
-<Heading level={HeadingLevel.H2} text="Section Title" />;
-```
-
 ### PageNavigation
 
 Tab-like navigation bar.
@@ -179,24 +144,6 @@ import { PlushieBio } from 'components';
 }
 ```
 
-### SummaryList
-
-Key-value summary list with optional actions.
-
-```tsx
-import { SummaryList } from 'components';
-
-<SummaryList.Container>
-  <SummaryList.Row>
-    <SummaryList.Key>Username</SummaryList.Key>
-    <SummaryList.Value>johnsmith123</SummaryList.Value>
-    <SummaryList.Actions>
-      <button type="button">Edit</button>
-    </SummaryList.Actions>
-  </SummaryList.Row>
-</SummaryList.Container>;
-```
-
 ### UserSubscriptionTierBadge
 
 Displays a badge for the current subscription tier; text is normalised to lowercase for styling.
@@ -206,49 +153,4 @@ import { UserSubscriptionTierBadge } from "components";
 
 <UserSubscriptionTierBadge tier="Standard" />
 <UserSubscriptionTierBadge tier="Premium" />
-```
-
-### Dialog components
-
-Composable primitives for dialogs. Prefer using the dialog providers/outlets for full behavior; these are the presentational parts:
-
-```tsx
-import { Dialog } from 'components';
-
-<Dialog.Container>
-  <Dialog.Title>Confirm action</Dialog.Title>
-  <Dialog.BodyText>This cannot be undone.</Dialog.BodyText>
-  <Dialog.ActionButtons
-    confirmType="primary"
-    confirmText="Confirm"
-    cancelText="Cancel"
-    onClose={() => {
-      /* close */
-    }}
-    onConfirm={() => {
-      /* confirm */
-    }}
-  />
-  {/* For form dialogs, render ActionButtons with isFormDialog and wrap in a <form> */}
-</Dialog.Container>;
-```
-
-### Form components (quick tour)
-
-Form inputs are controlled and designed to work with the app form context hook. Examples (simplified):
-
-```tsx
-import { Form } from "components";
-
-<Form.EmailAddress id="email" initialValue="" label="Email" placeholder="you@example.com" />
-<Form.TownOrCity id="city" initialValue="" label="Town or City" placeholder="e.g. London" />
-<Form.Country id="country" initialValue="" label="Country" />
-
-// Plushie accounts
-<Form.PlushieInstagramAccounts id="plushie-accounts" initialValue={[]} />
-
-// Actions and validation messages container
-<Form.ActionsContainer>
-  <button type="submit" className="button button--primary">Save</button>
-</Form.ActionsContainer>
 ```

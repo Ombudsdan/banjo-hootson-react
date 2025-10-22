@@ -7,16 +7,16 @@ import { Image } from 'framework';
 export default function Gallery({ items }: IGallery) {
   return (
     <div className="gallery">
-      {items.map((it, idx) => (
-        <GalleryItem fileName={it.fileName} alt={it.alt} key={idx} />
+      {items.map((item, index) => (
+        <GalleryItem key={index} fileName={item.fileName} alt={item.alt} />
       ))}
     </div>
   );
 }
 
-function GalleryItem({ fileName, alt, key }: IGalleryItem & { key: number }) {
+function GalleryItem({ fileName, alt }: GalleryItemProps) {
   return (
-    <div className="gallery__item" key={key}>
+    <div className="gallery__item">
       <Image fileName={fileName} alt={alt} usage={ImageUsage.GALLERY} />
     </div>
   );
@@ -32,3 +32,5 @@ export interface IGalleryItem {
   fileName: string;
   alt: string;
 }
+
+type GalleryItemProps = IGalleryItem;
