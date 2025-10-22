@@ -1,4 +1,4 @@
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { onAuthTokenChange } from "@/auth/firebase";
 
@@ -9,6 +9,7 @@ export function NavMenu() {
   const menuButtonRef = useRef<HTMLButtonElement | null>(null);
   const navContentRef = useRef<HTMLUListElement | null>(null);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const inertOverlayElements = useMemo<HTMLElement[]>(() => {
     const selectors = ["main", "footer"];
@@ -173,27 +174,18 @@ export function NavMenu() {
 
             <li className="nav__spacer" aria-hidden="true" />
 
-            {isAuthenticated ? (
-              <li className="nav__item">
-                <NavLink
-                  className="nav__button"
-                  to="/dashboard"
-                  onClick={onNavigate}
-                >
-                  My Account
-                </NavLink>
-              </li>
-            ) : (
-              <li className="nav__item">
-                <NavLink
-                  className="nav__button"
-                  to="/login"
-                  onClick={onNavigate}
-                >
-                  Sign In
-                </NavLink>
-              </li>
-            )}
+            <li className="nav__item">
+              <button
+                type="button"
+                className="button button--main"
+                onClick={() => {
+                  navigate(isAuthenticated ? "/dashboard" : "/login");
+                  onNavigate();
+                }}
+              >
+                {isAuthenticated ? "My Account" : "Sign In"}
+              </button>
+            </li>
           </ul>
         </div>
       </nav>

@@ -1,5 +1,6 @@
 @use "sass:color";
 @use "../variables";
+@use "../mixins";
 
 .login-page {
   display: flex;
@@ -8,8 +9,8 @@
   min-height: 60vh;
 
   &__container {
+    @include mixins.page-narrow;
     width: 100%;
-    max-width: 400px;
     background: variables.$colour-white;
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -18,12 +19,18 @@
   &__form {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    width: 100%;
+    max-width: 100%; // override generic form narrowing
+    box-sizing: border-box;
   }
   &__label {
     font-weight: 600;
     color: variables.$colour-text;
     font-size: 0.9rem;
+  }
+
+  &____message-container {
+    margin-bottom: 1.5rem;
   }
 
   &__message {
@@ -53,6 +60,7 @@
   }
 
   &__signup-prompt {
+    margin-top: 1.5rem;
     text-align: center;
     padding-top: 1rem;
     border-top: 1px solid variables.$colour-tan;

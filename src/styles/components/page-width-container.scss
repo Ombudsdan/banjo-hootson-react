@@ -2,8 +2,8 @@
 
 .page-width-container {
   max-width: variables.$page-width;
-  margin: 0 auto;
   padding: 0 1rem;
+  margin: 0 auto;
   @media screen and (max-width: variables.$breakpoint-xl) {
     padding: 0 3rem;
     max-width: variables.$width-responsive;

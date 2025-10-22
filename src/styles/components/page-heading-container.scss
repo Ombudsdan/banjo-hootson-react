@@ -4,12 +4,13 @@
 .page-heading-container {
   @include mixins.flex-column-center;
   width: 100%;
-  row-gap: 2rem;
+  padding: 1.5rem 0;
 
   &--light {
     background-color: transparent;
     color: variables.$colour-text;
   }
+
   &--dark {
     background-color: variables.$colour-brown;
     color: variables.$colour-white;
@@ -25,6 +26,7 @@
       gap: 1rem;
     }
   }
+
   &__content {
     @include mixins.flex-column-center;
     text-align: center;
@@ -32,30 +34,19 @@
     gap: 0.5rem;
     order: 1;
   }
+
   &__image {
     display: flex;
     flex: 0 0 auto;
     justify-content: center;
     order: 0;
     width: 100%;
-    padding: 0;
     @media screen and (max-width: variables.$breakpoint-m) {
       width: 50%;
     }
   }
+
   &__heading {
     text-align: center;
-    &--decorated {
-      &::after {
-        margin: 1rem auto 2rem;
-        @include mixins.heading-decoration;
-      }
-    }
-  }
-  &__subheading {
-    text-align: center;
-    &::after {
-      @include mixins.heading-decoration;
-    }
   }
 }

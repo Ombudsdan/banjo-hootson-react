@@ -100,6 +100,9 @@ $font-family-heading: "Coiny", system-ui, "Arial Black", Arial, sans-serif;
 $font-family-body: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto,
   Arial, sans-serif;
 
+// This is to accommodate for the fact Poppins font is vertically misaligned
+$line-height-override: 1.4;
+
 $font-weight-thin: 100;
 $font-weight-extra-light: 200;
 $font-weight-light: 300;

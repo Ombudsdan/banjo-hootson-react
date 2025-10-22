@@ -28,7 +28,7 @@ export class BirthdayCalendarService {
 
   static create(form: IPlushieBirthdayFormData) {
     return HttpClient.request<IPlushieBirthday, IPlushieBirthdayFormData>({
-      path: `${BASE}/`,
+      path: `${BASE}/calendar`,
       method: "POST",
       body: form,
     });

@@ -1,11 +1,5 @@
 import { PropsWithChildren, ReactNode } from "react";
-
-type Props = PropsWithChildren<{
-  variant?: "light" | "dark";
-  image?: ReactNode;
-  heading?: ReactNode;
-  subheading?: ReactNode;
-}>;
+import { PageWidthContainer } from "./PageWidthContainer";
 
 export function PageHeadingContainer({
   variant = "light",
@@ -16,27 +10,32 @@ export function PageHeadingContainer({
 }: Props) {
   return (
     <div
-      className={`page-heading-container page-heading-container--${variant}`}
+      className={`page-heading-container page-heading-container--${
+        variant || "light"
+      }`}
     >
-      {/* Angular template renders image block before row */}
-      <div className="page-heading-container__image">{image}</div>
-      <div className="page-heading-container__row">
-        <div className="page-heading-container__content">
-          {heading && (
-            <h1
-              className={`page-heading-container__heading ${
-                !subheading ? "page-heading-container__heading--decorated" : ""
-              }`}
-            >
-              {heading}
-            </h1>
-          )}
-          {subheading && (
-            <p className="page-heading-container__subheading">{subheading}</p>
-          )}
-          {children}
+      <PageWidthContainer>
+        {image && <div className="page-heading-container__image">{image}</div>}
+
+        <div className="page-heading-container__row">
+          <div className="page-heading-container__content">
+            {heading && (
+              <h1 className="page-heading-container__heading">{heading}</h1>
+            )}
+            {subheading && (
+              <p className="page-heading-container__subheading">{subheading}</p>
+            )}
+            {children}
+          </div>
         </div>
-      </div>
+      </PageWidthContainer>
     </div>
   );
 }
+
+type Props = PropsWithChildren<{
+  variant?: "light" | "dark";
+  image?: ReactNode;
+  heading?: ReactNode;
+  subheading?: ReactNode;
+}>;

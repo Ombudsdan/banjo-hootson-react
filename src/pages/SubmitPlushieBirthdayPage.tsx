@@ -3,149 +3,255 @@ import { useNavigate } from "react-router-dom";
 import { BirthdayController } from "@/controllers/birthday.controller";
 import type { IPlushieBirthdayFormData } from "model/plushie-birthday.types";
 import FormActionsContainer from "@/components/FormActionsContainer";
+import { PageWidthContainer } from "@/framework/PageWidthContainer";
+import { PageHeadingContainer } from "@/framework/PageHeadingContainer";
+import AlertCard from "@/components/AlertCard";
+import {
+  Validation,
+  runValidators,
+  firstErrorMessage,
+} from "@/utils/validation";
 
-type FormState = IPlushieBirthdayFormData;
-
-const EMPTY: FormState = {
+const EMPTY: IPlushieBirthdayFormData = {
   name: "",
   dateOfBirth: "",
   username: "",
-  description: "",
 };
 
 export default function SubmitPlushieBirthdayPage() {
-  const [form, setForm] = useState<FormState>(EMPTY);
+  const [form, setForm] = useState<IPlushieBirthdayFormData>(EMPTY);
+  // Track user interaction for each field to control when errors display
+  const [touched, setTouched] = useState<{
+    name: boolean;
+    username: boolean;
+    dateOfBirth: boolean;
+  }>({
+    name: false,
+    username: false,
+    dateOfBirth: false,
+  });
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string>("");
+  const [submitted, setSubmitted] = useState(false);
+  const [globalError, setGlobalError] = useState<string>("");
   const navigate = useNavigate();
 
-  const update = (patch: Partial<FormState>) =>
+  const update = (patch: Partial<IPlushieBirthdayFormData>) =>
     setForm((f) => ({ ...f, ...patch }));
 
-  const validate = (f: FormState) => {
-    if (!f.name.trim()) return "Plushie name is required";
-    if (!f.dateOfBirth) return "Date of birth is required";
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(f.dateOfBirth))
-      return "Date must be YYYY-MM-DD";
-    if (!f.username.trim()) return "Instagram username is required";
-    return "";
+  // Individual field validators mirroring Angular
+  const nameValidators = [
+    Validation.required,
+    Validation.maxLength(80),
+    Validation.namePattern,
+  ];
+  const usernameValidators = [
+    Validation.required,
+    Validation.validFirstChar,
+    Validation.validRemainingChars,
+  ];
+  const dateValidators = [Validation.required, Validation.noFutureDate()];
+
+  const computeErrors = () => {
+    return {
+      name: runValidators(form.name, nameValidators),
+      username: runValidators(form.username, usernameValidators),
+      dateOfBirth: runValidators(form.dateOfBirth, dateValidators),
+    } as const;
+  };
+
+  const errors = computeErrors();
+
+  const showErrors = (field: "name" | "username" | "dateOfBirth") =>
+    touched[field] || submitted;
+
+  const nameErrorText = showErrors("name")
+    ? firstErrorMessage(errors.name, {
+        required: "Name is required",
+        maxlength: "Name cannot exceed 80 characters",
+        pattern:
+          "Name can only contain letters, numbers, spaces, hyphens, and apostrophes",
+      })
+    : "";
+
+  const usernameErrorText = showErrors("username")
+    ? firstErrorMessage(errors.username, {
+        required: "Username is required",
+        invalidFirstChar:
+          "Username must start with either a letter, number, @, underscore, dot or hyphen",
+        invalidRemainingChars:
+          "Username must only contain letters, numbers, underscores, periods, hyphens and @ (as long as it is the at the start)",
+      })
+    : "";
+
+  const dateErrorText = showErrors("dateOfBirth")
+    ? firstErrorMessage(errors.dateOfBirth, {
+        required: "Date of birth is required",
+        futureDate: "Date cannot be in the future",
+      })
+    : "";
+
+  const formValid = !errors.name && !errors.username && !errors.dateOfBirth;
+
+  // Aggregate validation errors (only after submit attempt)
+  const aggregatedErrors: string[] =
+    submitted && !formValid
+      ? [
+          nameErrorText || "",
+          usernameErrorText || "",
+          dateErrorText || "",
+        ].filter(Boolean)
+      : [];
+
+  const setToday = () => {
+    const d = new Date();
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    update({ dateOfBirth: `${yyyy}-${mm}-${dd}` });
   };
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-    const message = validate(form);
-    if (message) {
-      setError(message);
-      return;
-    }
+    setSubmitted(true);
+    setGlobalError("");
+    // Mark all fields touched to reveal errors if invalid
+    setTouched({ name: true, username: true, dateOfBirth: true });
+    if (!formValid) return;
     setSubmitting(true);
     try {
-      const created = await BirthdayController.create(form);
+      const payload = {
+        ...form,
+        username: form.username.startsWith("@")
+          ? form.username.slice(1)
+          : form.username,
+      };
+      const created = await BirthdayController.create(payload);
       navigate(
         `/calendar/submit/confirmation/${encodeURIComponent(created.id)}`
       );
     } catch (err) {
-      setError((err as Error)?.message || String(err));
+      setGlobalError(
+        (err as Error)?.message ||
+          "Failed to create birthday. Please try again."
+      );
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <div className="page-section-container">
-      <div className="page-width-container">
-        <h1 className="page-heading-container__heading page-heading-container__heading--decorated">
-          Submit Plushie Birthday
-        </h1>
+    <>
+      <PageHeadingContainer heading="Submit a Birthday" />
+      <PageWidthContainer>
         <form onSubmit={onSubmit} noValidate>
-          <div className="form-section">
-            <div className="form-content">
-              <div className="form-group">
-                <label
-                  className="form-group__label form-group__label--required"
-                  htmlFor="name"
-                >
-                  Plushie Name
-                </label>
-                <input
-                  id="name"
-                  type="text"
-                  value={form.name}
-                  onChange={(e) => update({ name: e.target.value })}
-                  placeholder="e.g. Banjo"
-                />
-              </div>
-
-              <div className="form-group">
-                <label
-                  className="form-group__label form-group__label--required"
-                  htmlFor="dob"
-                >
-                  Date of Birth
-                </label>
-                <input
-                  id="dob"
-                  type="date"
-                  value={form.dateOfBirth}
-                  onChange={(e) => update({ dateOfBirth: e.target.value })}
-                />
-              </div>
-
-              <div className="form-group">
-                <label
-                  className="form-group__label form-group__label--required"
-                  htmlFor="username"
-                >
-                  Instagram Username
-                </label>
-                <div className="instagram-input-group">
-                  <span
-                    className="instagram-input-group__prefix"
-                    aria-hidden="true"
-                  />
-                  <input
-                    id="username"
-                    type="text"
-                    value={form.username}
-                    onChange={(e) =>
-                      update({ username: e.target.value.replace(/^@+/, "") })
-                    }
-                    placeholder="banjohootson"
-                  />
-                </div>
-                <small className="form-group__hint">
-                  Do not include the @ symbol
-                </small>
-              </div>
-
-              <div className="form-group">
-                <label className="form-group__label" htmlFor="description">
-                  Description (optional)
-                </label>
-                <textarea
-                  id="description"
-                  value={form.description}
-                  onChange={(e) => update({ description: e.target.value })}
-                  rows={4}
-                />
-              </div>
+          {aggregatedErrors.length > 0 && (
+            <div className="form-group">
+              <AlertCard
+                heading="Please fix the following errors"
+                messages={aggregatedErrors}
+                variant="error"
+                autoFocus
+                cardId="submit-birthday-errors"
+              />
             </div>
+          )}
+          <div className="form-group">
+            <label
+              className="form-group__label form-group__label--required"
+              htmlFor="name"
+            >
+              Plushie Name
+            </label>
+            <div className="form-group__hint">For example: Banjo Hootson</div>
+            <input
+              id="name"
+              type="text"
+              value={form.name}
+              onChange={(e) => update({ name: e.target.value })}
+              onBlur={() => setTouched((t) => ({ ...t, name: true }))}
+              placeholder="Plushie Name"
+              className={nameErrorText ? "error" : ""}
+            />
+            {nameErrorText && (
+              <div className="form-group__error-message">{nameErrorText}</div>
+            )}
           </div>
 
-          {error && (
+          <div className="form-group">
+            <label
+              className="form-group__label form-group__label--required"
+              htmlFor="username"
+            >
+              Username of Account
+            </label>
+            <div className="form-group__hint">For example: banjohootson</div>
+            <input
+              id="username"
+              type="text"
+              value={form.username}
+              onChange={(e) =>
+                update({ username: e.target.value.replace(/^@+/, "") })
+              }
+              onBlur={() => setTouched((t) => ({ ...t, username: true }))}
+              placeholder="Username"
+              className={usernameErrorText ? "error" : ""}
+            />
+            {usernameErrorText && (
+              <div className="form-group__error-message">
+                {usernameErrorText}
+              </div>
+            )}
+          </div>
+
+          <div className="form-group">
+            <label
+              className="form-group__label form-group__label--required"
+              htmlFor="dob"
+            >
+              Plushie Birth Date
+            </label>
+            <div className="form-group__hint">
+              When was your plushie born or adopted?
+            </div>
+            <div className="form-row">
+              <input
+                id="dob"
+                type="date"
+                value={form.dateOfBirth}
+                onChange={(e) => update({ dateOfBirth: e.target.value })}
+                onBlur={() => setTouched((t) => ({ ...t, dateOfBirth: true }))}
+                className={dateErrorText ? "error" : ""}
+              />
+              <button
+                type="button"
+                className="form__button form__button--secondary form__button--inline form__button--today"
+                onClick={setToday}
+              >
+                Today
+              </button>
+            </div>
+            {dateErrorText && (
+              <div className="form-group__error-message">{dateErrorText}</div>
+            )}
+          </div>
+
+          {globalError && (
             <div className="form-group__error-message" role="alert">
-              {error}
+              {globalError}
             </div>
           )}
 
           <FormActionsContainer>
-            <button className="button" type="submit" disabled={submitting}>
-              {submitting ? "Submitting..." : "Submit"}
+            <button
+              className="form__button form__button--primary"
+              type="submit"
+              disabled={submitting}
+            >
+              {submitting ? "Submitting Birthday..." : "Submit Birthday"}
             </button>
           </FormActionsContainer>
         </form>
-      </div>
-    </div>
+      </PageWidthContainer>
+    </>
   );
 }

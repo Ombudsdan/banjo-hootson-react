@@ -35,11 +35,7 @@ export const router = createBrowserRouter([
       { path: "calendar", element: <CalendarPage /> },
       {
         path: "calendar/submit",
-        element: (
-          <RequireAuth>
-            <SubmitPlushieBirthdayPage />
-          </RequireAuth>
-        ),
+        element: <SubmitPlushieBirthdayPage />,
       },
       {
         path: "calendar/submit/confirmation/:id",

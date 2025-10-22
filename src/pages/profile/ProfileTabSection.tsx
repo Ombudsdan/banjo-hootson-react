@@ -7,10 +7,60 @@ import { UserController } from "@/controllers/user.controller";
 import { LocationController } from "@/controllers/location.controller";
 import type { IUserProfile } from "model/user-profile.types";
 import type { ICountry } from "model/location.types";
+import {
+  Validation,
+  runValidators,
+  firstErrorMessage,
+} from "@/utils/validation";
 
 export default function ProfileTabSection() {
   const [profile, setProfile] = useState<IUserProfile | null>(null);
   const [countries, setCountries] = useState<ICountry[]>([]);
+  const [city, setCity] = useState("");
+  const [country, setCountry] = useState("");
+  const [instagram, setInstagram] = useState("");
+  const [touched, setTouched] = useState<{
+    city: boolean;
+    country: boolean;
+    instagram: boolean;
+  }>({ city: false, country: false, instagram: false });
+  const [submitted, setSubmitted] = useState(false);
+
+  // Validators (city optional max length / simple pattern allowing letters, spaces and hyphens; instagram username reuse username pattern rules minus leading @ enforcement handled separately)
+  const cityErrors = runValidators(city, [Validation.maxLength(80)]);
+  // Instagram: allow optional; if present apply validFirstChar + validRemainingChars
+  const instagramErrors = instagram
+    ? runValidators(instagram, [
+        Validation.validFirstChar,
+        Validation.validRemainingChars,
+      ])
+    : null;
+
+  const showErrors = (field: keyof typeof touched) =>
+    touched[field] || submitted;
+  const cityErrorText = showErrors("city")
+    ? firstErrorMessage(cityErrors, {
+        maxlength: "Town or City cannot exceed 80 characters",
+      })
+    : "";
+  const instagramErrorText = showErrors("instagram")
+    ? firstErrorMessage(instagramErrors, {
+        invalidFirstChar:
+          "Username must start with either a letter, number, @, underscore, dot or hyphen",
+        invalidRemainingChars:
+          "Username must only contain letters, numbers, underscores, periods, hyphens and @ (as long as it is at the start)",
+      })
+    : "";
+
+  const formValid = !cityErrors && !instagramErrors;
+
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitted(true);
+    setTouched({ city: true, country: true, instagram: true });
+    if (!formValid) return;
+    // TODO: hook up save call when API ready
+  };
 
   useEffect(() => {
     UserController.me().then(setProfile);
@@ -18,7 +68,7 @@ export default function ProfileTabSection() {
   }, []);
 
   return (
-    <form>
+    <form onSubmit={onSubmit}>
       <FlexColumnLayout spacing="medium">
         {/* Alerts placeholder */}
         {/* <ProfilePageAlert errorMessages={[]} successMessage={null} /> */}
@@ -39,14 +89,24 @@ export default function ProfileTabSection() {
             <div className="form-group__hint">For example: Sheffield</div>
             <input
               type="text"
-              className="form-group__input"
+              className={`form-group__input ${cityErrorText ? "error" : ""}`}
               placeholder="Town or City"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              onBlur={() => setTouched((t) => ({ ...t, city: true }))}
             />
+            {cityErrorText && (
+              <div className="form-group__error-message">{cityErrorText}</div>
+            )}
           </div>
 
           <div className="form-group">
             <label className="form-group__label">Country</label>
-            <select>
+            <select
+              value={country}
+              onChange={(e) => setCountry(e.target.value)}
+              onBlur={() => setTouched((t) => ({ ...t, country: true }))}
+            >
               <option value="">Select your country</option>
               {countries.map((c) => (
                 <option key={c.code} value={c.code}>
@@ -63,10 +123,22 @@ export default function ProfileTabSection() {
               <span className="instagram-input-group__prefix"></span>
               <input
                 type="text"
-                className="instagram-input-group__input"
+                className={`instagram-input-group__input ${
+                  instagramErrorText ? "error" : ""
+                }`}
                 placeholder="my_human_username"
+                value={instagram}
+                onChange={(e) =>
+                  setInstagram(e.target.value.replace(/^@+/, ""))
+                }
+                onBlur={() => setTouched((t) => ({ ...t, instagram: true }))}
               />
             </div>
+            {instagramErrorText && (
+              <div className="form-group__error-message">
+                {instagramErrorText}
+              </div>
+            )}
           </div>
         </PageSectionContainer>
 
@@ -85,7 +157,11 @@ export default function ProfileTabSection() {
         </PageSectionContainer>
 
         <FormActionsContainer>
-          <button type="submit" className="form__button form__button--primary">
+          <button
+            type="submit"
+            className="form__button form__button--primary"
+            disabled={!formValid && submitted}
+          >
             Save Profile
           </button>
         </FormActionsContainer>

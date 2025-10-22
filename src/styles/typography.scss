@@ -5,7 +5,7 @@
   margin: 0;
   font-family: variables.$font-family-body;
   white-space: pre-wrap;
-  line-height: 1.2;
+  line-height: variables.$line-height-override;
   font-size: $size;
 }
 
@@ -39,9 +39,9 @@ h6 {
 p {
   margin: 0;
   font-family: variables.$font-family-body;
+  line-height: variables.$line-height-override;
   font-weight: variables.$font-weight-regular;
   font-size: variables.$font-size-base;
-  line-height: 1.5;
 }
 
 @mixin link {

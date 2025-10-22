@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   ClickableActionPanelController,
   ActionPanelOption,
@@ -17,7 +18,13 @@ export function ClickableActionPanel({
   const className = `clickable-action-panel ${themeClass}`.trim();
   const body = (
     <>
-      {/* Icon omitted (no FA dependency in React build). Keep spacing consistent. */}
+      {content.icon && (
+        <FontAwesomeIcon
+          className="clickable-action-panel__icon"
+          icon={content.icon}
+          title={content.text}
+        />
+      )}
       <span className="clickable-action-panel__text">{content.text}</span>
     </>
   );
