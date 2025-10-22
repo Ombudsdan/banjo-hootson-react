@@ -7,6 +7,10 @@ import { IPlushieInstagramAccount } from 'model/user.model';
 import { excludeMatchingIndex } from 'utils';
 import { DialogConfirm } from 'enums';
 
+/**
+ * Composite control to manage a list of plushie Instagram accounts.
+ * Provides add/edit/remove via dialogs and updates the bound array value.
+ */
 export default function PlushieInstagramAccountsSelector({ id, initialValue }: IPlushieInstagramAccountsSelector) {
   const { value, setValue, showErrors, validation } = useFormField({ id, initialValue });
   const { openDialog } = useDialog();
@@ -110,11 +114,13 @@ function PlushieInstagramDialog({ id, initialValue = '', existingAccounts }: IPl
   );
 }
 
+/** Props for {@link PlushieInstagramAccountsSelector}. */
 interface IPlushieInstagramAccountsSelector {
   id: string;
   initialValue: IPlushieInstagramAccount[];
 }
 
+/** Props for {@link PlushieInstagramDialog}. */
 interface IPlushieInstagramDialog {
   id: string;
   initialValue?: string;

@@ -3,6 +3,11 @@ import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { generateClassName } from 'utils';
 
+/**
+ * Focusable dashboard card used to present a feature entry point.
+ * - Supports an icon, description and child content.
+ * - When `isLocked` is true, the button is disabled and styled as locked.
+ */
 export default function DashboardCard({ icon, description, isLocked, onClick, children }: IDashboardCard) {
   const className = useMemo(() => {
     return generateClassName(['dashboard-card', isLocked && `dashboard-card--locked`]);
@@ -19,6 +24,7 @@ export default function DashboardCard({ icon, description, isLocked, onClick, ch
   );
 }
 
+/** Props for {@link DashboardCard} */
 interface IDashboardCard extends PropsWithChildren {
   icon?: IconDefinition;
   description?: string;

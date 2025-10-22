@@ -4,6 +4,10 @@ import { Image } from 'framework';
 import { useMemo } from 'react';
 import { generateClassName } from 'utils';
 
+/**
+ * Profile-like card for a plushie with alternating left/right layout by position.
+ * Displays image, bio and birthday details.
+ */
 export default function PlushieBio({ plushie, position }: IPlushieBio) {
   const { fileName, name, bio, birthday } = plushie;
   const isEven = position % 2 === 0;
@@ -26,6 +30,7 @@ export default function PlushieBio({ plushie, position }: IPlushieBio) {
   );
 }
 
+/** Props for {@link PlushieBio}. */
 interface IPlushieBio {
   plushie: IPlushie;
   position: number;

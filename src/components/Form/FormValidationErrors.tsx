@@ -1,5 +1,8 @@
 import { IValidation } from 'validators';
 
+/**
+ * Renders a list of inline validation error messages for a field when `showErrors` is true.
+ */
 export default function FormValidationErrors({ showErrors, validation }: IFormValidationErrors) {
   if (!validation.errors || !showErrors) return null;
 
@@ -12,6 +15,7 @@ export default function FormValidationErrors({ showErrors, validation }: IFormVa
   );
 }
 
+/** Props for {@link FormValidationErrors} */
 export interface IFormValidationErrors {
   showErrors: boolean;
   validation: IValidation;

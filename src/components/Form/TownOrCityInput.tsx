@@ -3,6 +3,9 @@ import { useFormField } from 'hooks';
 import { CityValidator } from 'validators';
 import { Form } from 'components';
 
+/**
+ * Text input for town/city with validation and inline error display.
+ */
 export default function TownOrCityInput({ id, label, initialValue, hint, placeholder }: ITownOrCityFormInput) {
   const { value, setValue, setTouched, validation, showErrors } = useFormField({
     id,
@@ -29,6 +32,7 @@ export default function TownOrCityInput({ id, label, initialValue, hint, placeho
   );
 }
 
+/** Props for {@link TownOrCityInput}. */
 interface ITownOrCityFormInput extends Pick<InputHTMLAttributes<HTMLInputElement>, 'placeholder'> {
   id: string;
   initialValue: string;

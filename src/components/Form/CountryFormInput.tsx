@@ -4,6 +4,9 @@ import { useFormField } from 'hooks';
 import { Form } from 'components';
 import { ICountry } from 'model/country.model';
 
+/**
+ * Country selector bound to the form state. Populates countries via LocationController.
+ */
 export default function CountryFormInput({ id, label, initialValue, hint }: ICountryFormInput) {
   const [countries, setCountries] = useState<ICountry[]>([]);
   const { value, setValue, setTouched, validation, showErrors } = useFormField({
@@ -11,9 +14,7 @@ export default function CountryFormInput({ id, label, initialValue, hint }: ICou
     initialValue
   });
 
-  useEffect(() => {
-    LocationController.loadCountries().then(setCountries);
-  }, []);
+  useEffect(loadCountries, []);
 
   return (
     <div className="form-group">
@@ -32,8 +33,13 @@ export default function CountryFormInput({ id, label, initialValue, hint }: ICou
       <Form.ValidationErrors showErrors={showErrors} validation={validation} />
     </div>
   );
+
+  function loadCountries() {
+    LocationController.loadCountries().then(setCountries);
+  }
 }
 
+/** Props for {@link CountryFormInput}. */
 interface ICountryFormInput {
   id: string;
   initialValue: string;

@@ -1,6 +1,9 @@
 import { ImageUsage } from 'enums';
 import { Image } from 'framework';
 
+/**
+ * Simple image gallery grid. Delegates image rendering to the shared Image component.
+ */
 export default function Gallery({ items }: IGallery) {
   return (
     <div className="gallery">
@@ -19,10 +22,12 @@ function GalleryItem({ fileName, alt, key }: IGalleryItem & { key: number }) {
   );
 }
 
+/** Props for {@link Gallery} */
 interface IGallery {
   items: IGalleryItem[];
 }
 
+/** Props for {@link GalleryItem} */
 export interface IGalleryItem {
   fileName: string;
   alt: string;

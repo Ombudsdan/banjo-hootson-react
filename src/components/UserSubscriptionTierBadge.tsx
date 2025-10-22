@@ -1,6 +1,9 @@
 import { useMemo } from 'react';
 import { generateClassName } from 'utils';
 
+/**
+ * Small label showing the user's subscription tier with tier-based styling.
+ */
 export default function UserSubscriptionTierBadge({ tier }: IUserSubscriptionTierBadge) {
   const normalized = (tier || 'standard').toLowerCase();
   const className = useMemo(() => {
@@ -10,6 +13,7 @@ export default function UserSubscriptionTierBadge({ tier }: IUserSubscriptionTie
   return <span className={className}>{normalized}</span>;
 }
 
+/** Props for {@link UserSubscriptionTierBadge}. */
 interface IUserSubscriptionTierBadge {
   tier?: string | null;
 }

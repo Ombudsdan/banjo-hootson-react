@@ -3,6 +3,10 @@ import { useFormField } from 'hooks';
 import { EmailAddressValidator } from 'validators';
 import { Form } from 'components';
 
+/**
+ * Email address input with validation and inline error display.
+ * Uses form context via useFormField and EmailAddressValidator.
+ */
 export default function EmailAddressFormInput({
   id,
   initialValue,
@@ -42,6 +46,7 @@ export default function EmailAddressFormInput({
   );
 }
 
+/** Props for {@link EmailAddressFormInput}. */
 interface IEmailAddressFormInput extends Pick<InputHTMLAttributes<HTMLInputElement>, 'placeholder'> {
   id: string;
   initialValue: string;

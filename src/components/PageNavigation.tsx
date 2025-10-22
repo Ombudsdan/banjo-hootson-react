@@ -3,6 +3,10 @@ import { generateClassName } from 'utils';
 
 // TODO - This is going in the bin, don't bother refactoring it.
 
+/**
+ * Simple tabbed page navigation component.
+ * - Highlights the active tab by `activeKey` and invokes `onSelect` when a tab is clicked.
+ */
 export default function PageNavigation({ tabs, activeKey, onSelect }: IPageNavigation) {
   return (
     <nav className="page-navigation" aria-label="Page Tabs">
@@ -37,14 +41,16 @@ export default function PageNavigation({ tabs, activeKey, onSelect }: IPageNavig
   );
 }
 
-export interface INavigationTab {
+/** Props for {@link PageNavigation} */
+interface IPageNavigation {
+  tabs: IPageNavigationTab[];
+  activeKey?: string;
+  onSelect?: (tab: IPageNavigationTab) => void;
+}
+
+/** Props for a single tab inside {@link PageNavigation} */
+export interface IPageNavigationTab {
   key: string;
   title: string;
   isDisabled?: boolean;
-}
-
-interface IPageNavigation {
-  tabs: INavigationTab[];
-  activeKey?: string;
-  onSelect?: (tab: INavigationTab) => void;
 }

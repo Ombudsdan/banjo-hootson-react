@@ -2,6 +2,12 @@ import { PropsWithChildren, useEffect, useMemo, useRef } from 'react';
 import { generateClassName } from 'utils';
 import { AlertCardVariant, AlertCardVariantType } from 'enums';
 
+/**
+ * Accessible alert container used to display important page-level messages.
+ * - Renders a heading and optional list of messages; accepts arbitrary children for extra content.
+ * - Auto-focuses when mounted unless `disableAutoFocus` is true to aid screen readers.
+ * - Visual style is controlled via the `variant` (e.g., info, error).
+ */
 export default function AlertCard({
   id,
   heading,
@@ -51,6 +57,7 @@ function AlertCardMessage({ message, key }: IAlertCardMessage) {
   );
 }
 
+/** Props for {@link AlertCard} */
 export interface IAlertCard extends PropsWithChildren, Pick<Partial<IAlertCardMessageList>, 'messages'> {
   id: string;
   heading: string;
@@ -60,10 +67,12 @@ export interface IAlertCard extends PropsWithChildren, Pick<Partial<IAlertCardMe
   timeoutMs?: number;
 }
 
+/** Props for {@link AlertCardMessageList} */
 interface IAlertCardMessageList {
   messages: IAlertCardMessage['message'][];
 }
 
+/** Props for {@link AlertCardMessage} */
 interface IAlertCardMessage {
   key: number;
   message: string;
