@@ -1,26 +1,26 @@
-import { useEffect, useState } from "react";
-import { BirthdayController } from "@/controllers/birthday.controller";
-import type { IPlushieBirthday } from "model";
+import { PageWidthContainer } from "@/framework/PageWidthContainer";
+import { PageHeadingContainer } from "@/framework/PageHeadingContainer";
+import { PageSectionContainer } from "@/framework/PageSectionContainer";
+import GoogleCalendar from "@/components/GoogleCalendar";
 
 export default function CalendarPage() {
-  const [items, setItems] = useState<IPlushieBirthday[]>([]);
-  const [error, setError] = useState<string>("");
-  useEffect(() => {
-    BirthdayController.loadUpcoming()
-      .then((r: IPlushieBirthday[]) => setItems(r))
-      .catch((e: unknown) => setError(String(e)));
-  }, []);
   return (
-    <div style={{ padding: 16 }}>
-      <h1>Upcoming Birthdays</h1>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <ul>
-        {items.map((b) => (
-          <li key={b.id}>
-            {b.name} — {b.birthday}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <PageWidthContainer>
+      <PageHeadingContainer heading="Plushie Birthday Calendar" />
+      <PageSectionContainer>
+        <div className="google-calendar-container google-calendar-container--large">
+          <GoogleCalendar
+            title="Plushie Birthday Calendar (Month)"
+            source="https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=Europe%2FLondon&showPrint=0&mode=MONTH&showTitle=0&showCalendars=0&showTz=0&showTabs=0&hl=en_GB&src=Nzk4MDcxZmRiNDBkMDJmMDBmZmJhYTgyMzRkMDUyMWRmMWFjNmFhMmUzMDE1ZTU5ZmU2Y2Q0NGEwZWViZDExNUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&color=%23026f1e"
+          />
+        </div>
+        <div className="google-calendar-container google-calendar-container--small">
+          <GoogleCalendar
+            title="Plushie Birthday Calendar (Agenda)"
+            source="https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=Europe%2FLondon&showPrint=0&mode=AGENDA&showTitle=0&showCalendars=0&showTz=0&showTabs=0&hl=en_GB&src=Nzk4MDcxZmRiNDBkMDJmMDBmZmJhYTgyMzRkMDUyMWRmMWFjNmFhMmUzMDE1ZTU5ZmU2Y2Q0NGEwZWViZDExNUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&color=%23026f1e"
+          />
+        </div>
+      </PageSectionContainer>
+    </PageWidthContainer>
   );
 }

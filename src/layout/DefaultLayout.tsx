@@ -1,20 +1,17 @@
-import { Link, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+import { NavMenu } from "../framework/NavMenu";
+import { Footer } from "../framework/Footer";
+import OverlayHost from "@/components/OverlayHost";
 
 export default function DefaultLayout() {
   return (
-    <div>
-      <nav style={{ padding: 12, borderBottom: "1px solid #ddd" }}>
-        <Link to="/" style={{ marginRight: 12 }}>
-          Home
-        </Link>
-        <Link to="/calendar" style={{ marginRight: 12 }}>
-          Calendar
-        </Link>
-        <Link to="/profile">Profile</Link>
-      </nav>
+    <div className="default-page-layout">
+      <NavMenu />
+      <OverlayHost />
       <main>
         <Outlet />
       </main>
+      <Footer />
     </div>
   );
 }

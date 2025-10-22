@@ -64,6 +64,26 @@ export class HttpClient {
     );
     const statusInfo = `${res.status} ${res.statusText}`;
     if (!res.ok) {
+      if (
+        typeof window !== "undefined" &&
+        (res.status === 401 || res.status === 403)
+      ) {
+        try {
+          const currentPath = window.location.pathname || "";
+          const isAuthRoute =
+            currentPath.startsWith("/login") ||
+            currentPath.startsWith("/signup");
+          if (!isAuthRoute) {
+            if (res.status === 401 && currentPath !== "/login") {
+              window.location.assign("/login?expired=1");
+            } else if (res.status === 403 && currentPath !== "/unauthorized") {
+              window.location.assign("/unauthorized");
+            }
+          }
+        } catch {
+          // noop: best-effort redirect
+        }
+      }
       const error = new Error(
         `HTTP ${res.status}: ${res.statusText}`
       ) as Error & {

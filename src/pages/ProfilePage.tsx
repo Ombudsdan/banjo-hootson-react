@@ -1,20 +1,33 @@
-import { useEffect, useState } from "react";
-import { UserController } from "@/controllers/user.controller";
-import type { IUserProfile } from "model";
+import { useMemo } from "react";
+import { useLocation } from "react-router-dom";
+import { PageWidthContainer } from "@/framework/PageWidthContainer";
+import { PageHeadingContainer } from "@/framework/PageHeadingContainer";
+import { FlexColumnLayout } from "@/framework/FlexColumnLayout";
+import PageNavigation, { INavigationTab } from "@/components/PageNavigation";
+import ProfileTabSection from "./profile/ProfileTabSection";
+import AccountTabSection from "./profile/AccountTabSection";
+import PreferencesTabSection from "./profile/PreferencesTabSection";
 
 export default function ProfilePage() {
-  const [user, setUser] = useState<IUserProfile | null>(null);
-  const [error, setError] = useState<string>("");
-  useEffect(() => {
-    UserController.me()
-      .then((u) => setUser(u))
-      .catch((e) => setError(String(e)));
-  }, []);
+  const { search } = useLocation();
+  const params = useMemo(() => new URLSearchParams(search), [search]);
+  const activeTab = params.get("tab") || "PROFILE";
+
+  const tabs: INavigationTab[] = [
+    { key: "PROFILE", title: "Profile" },
+    { key: "ACCOUNT", title: "Account" },
+    { key: "PREFERENCES", title: "Preferences" },
+  ];
+
   return (
-    <div style={{ padding: 16 }}>
-      <h1>My Profile</h1>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <pre>{JSON.stringify(user, null, 2)}</pre>
-    </div>
+    <PageWidthContainer>
+      <PageHeadingContainer heading="Account Settings" />
+      <FlexColumnLayout spacing="small">
+        <PageNavigation tabs={tabs} activeKey={activeTab} onSelect={() => {}} />
+        {activeTab === "PROFILE" && <ProfileTabSection />}
+        {activeTab === "ACCOUNT" && <AccountTabSection />}
+        {activeTab === "PREFERENCES" && <PreferencesTabSection />}
+      </FlexColumnLayout>
+    </PageWidthContainer>
   );
 }

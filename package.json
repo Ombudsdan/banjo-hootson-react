@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack serve --config webpack.config.cjs",
     "start": "npm run dev",
-    "build": "cross-env NODE_ENV=production tsc -b && webpack --mode production --config webpack.config.cjs",
+    "build": "cross-env NODE_ENV=production tsc -b && webpack --mode production --config webpack.config.cjs && npm run sitemap",
+    "sitemap": "node ./scripts/generate-sitemap.cjs",
     "lint": "eslint .",
     "typecheck": "tsc -p ./tsconfig.app.json --noEmit"
   },
@@ -37,6 +38,7 @@
     "sass": "^1.92.1",
     "sass-loader": "^16.0.5",
     "style-loader": "^4.0.0",
+    "ts-node": "^10.9.2",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.43.0",
     "webpack": "^5.96.1",

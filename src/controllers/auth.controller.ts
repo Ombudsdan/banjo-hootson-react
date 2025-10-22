@@ -8,6 +8,9 @@ import {
   getAuth,
   signOut,
   signInWithCredential,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  updateProfile,
   AuthCredential,
   type User,
 } from "firebase/auth";
@@ -42,6 +45,30 @@ export class AuthController {
   ): Promise<{ user: IAuthUser; token: string }> {
     const auth = getAuth();
     const result = await signInWithCredential(auth, credential);
+    const token = await result.user.getIdToken();
+    return { user: this.mapUser(result.user), token };
+  }
+
+  static async signInWithEmailPassword(
+    email: string,
+    password: string
+  ): Promise<{ user: IAuthUser; token: string }> {
+    const auth = getAuth();
+    const result = await signInWithEmailAndPassword(auth, email, password);
+    const token = await result.user.getIdToken();
+    return { user: this.mapUser(result.user), token };
+  }
+
+  static async signUpWithEmailPassword(
+    email: string,
+    password: string,
+    displayName?: string
+  ): Promise<{ user: IAuthUser; token: string }> {
+    const auth = getAuth();
+    const result = await createUserWithEmailAndPassword(auth, email, password);
+    if (displayName) {
+      await updateProfile(result.user, { displayName });
+    }
     const token = await result.user.getIdToken();
     return { user: this.mapUser(result.user), token };
   }
