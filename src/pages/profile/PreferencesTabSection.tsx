@@ -1,6 +1,5 @@
 import { FormEvent, useState } from 'react';
-import { PageSectionContainer, PageContentContainer } from 'framework';
-import { Form } from 'components';
+import { PageSectionContainer, PageContentContainer, FormSectionHeader, FormActionsContainer } from 'framework';
 
 export default function PreferencesTabSection() {
   const [emailNotifications, setEmailNotifications] = useState(false);
@@ -24,7 +23,7 @@ export default function PreferencesTabSection() {
     <form onSubmit={onSubmit}>
       <PageContentContainer spacing="medium">
         <PageSectionContainer>
-          <Form.SectionHeader title="Notification Preferences" />
+          <FormSectionHeader title="Notification Preferences" />
           <div className="form-group">
             <label className="form-group__checkbox-label">
               <input
@@ -41,11 +40,11 @@ export default function PreferencesTabSection() {
           </div>
         </PageSectionContainer>
 
-        <Form.ActionsContainer>
+        <FormActionsContainer>
           <button type="submit" className="form__button form__button--primary">
             Save Preferences
           </button>
-        </Form.ActionsContainer>
+        </FormActionsContainer>
       </PageContentContainer>
     </form>
   );

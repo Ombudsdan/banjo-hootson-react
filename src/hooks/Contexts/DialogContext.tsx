@@ -1,4 +1,4 @@
-import { IDialogActionButtons } from 'components';
+import { IDialogActionButtons } from 'framework';
 import { createContext, PropsWithChildren } from 'react';
 
 const DialogContext = createContext<IDialogContext | undefined>(undefined);

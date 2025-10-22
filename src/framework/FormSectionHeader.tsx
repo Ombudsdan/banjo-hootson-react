@@ -1,4 +1,4 @@
-import { Heading } from 'components';
+import Heading from './Heading';
 import { HeadingLevel, HeadingLevelType } from 'enums';
 import { PropsWithChildren } from 'react';
 

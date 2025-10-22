@@ -5,29 +5,30 @@ This document describes the structure and conventions of the React migration cod
 ## Guiding Principles
 
 - **Separation of concerns**: visual components (dumb), controllers (pure derivation / orchestration), services (state + side‑effects), hooks (consumption layer), framework (primitives), layout (page shell), routes (navigation graph), builders (object factories/test/data helpers), utils (pure domain helpers), model (types only).
-- **Path aliases + barrels**: All major folders export a curated public surface through an `index.ts` and are imported via an alias (e.g. `import { usePageHeading } from 'hooks'`).
+- **Path aliases + barrels**: All major folders export a cu
+  rated public surface through an `index.ts` and are imported via an alias (e.g. `import { usePageHeading } from 'hooks'`).
 - **Context pattern**: UI stateful concerns (heading, page alerts, validation alert, page container) reside in context providers (currently still under `services` but could migrate to a dedicated `contexts` folder later).
 - **Minimal coupling**: Components never reach directly into services; they use hooks (which read contexts) or controllers for derived data.
 - **Explicit over implicit**: Avoid magic side effects; hooks call intentful setters, controllers return plain objects.
 
 ## Folder Roles
 
-| Folder               | Purpose                                                              | Notes                                                               |
-| -------------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| `assets/`            | Static images & media                                                | Loaded via Webpack asset modules.                                   |
-| `builders/`          | Object builders / factories                                          | Useful for test data or repetitive object shapes.                   |
-| `components/`        | Reusable presentational UI components                                | No side effects; accept props; exported via barrel.                 |
-| `controllers/`       | Pure transformation / derivation logic                               | Wrap static datasets or compose service outputs.                    |
-| `env/`               | Environment variable exposure                                        | Typed mapping from build-time injection.                            |
-| `framework/`         | Low-level shared UI primitives (layout blocks, Image, ErrorBoundary) | Building blocks for components & layout.                            |
-| `hooks/`             | Custom React hooks (context consumption + helpers)                   | Provide strongly typed public API to services/contexts.             |
-| `layout/`            | Application page shell & provider composition                        | `DefaultLayout`, `LayoutProviders` (formerly UIProviders).          |
-| `layout-components/` | Larger page section building blocks                                  | Distinct from `components/` if they coordinate multiple primitives. |
-| `model/`             | Domain types & interfaces only                                       | No runtime logic; consumed across layers.                           |
-| `routes/`            | Router configuration & route-guard components                        | Exposes `router` and `RequireAuth`.                                 |
-| `services/`          | Stateful logic (context providers, API wrappers)                     | May later split out `contexts/`.                                    |
-| `styles/`            | Global SCSS entry + partials                                         | Uses modern Sass module system.                                     |
-| `utils/`             | Pure functions (date, plushie calculations, validation)              | Must remain side‑effect free.                                       |
+| Folder               | Purpose                                                 | Notes                                                               |
+| -------------------- | ------------------------------------------------------- | ------------------------------------------------------------------- |
+| `assets/`            | Static images & media                                   | Loaded via Webpack asset modules.                                   |
+| `builders/`          | Object builders / factories                             | Useful for test data or repetitive object shapes.                   |
+| `components/`        | Reusable presentational UI components                   | No side effects; accept props; exported via barrel.                 |
+| `controllers/`       | Pure transformation / derivation logic                  | Wrap static datasets or compose service outputs.                    |
+| `env/`               | Environment variable exposure                           | Typed mapping from build-time injection.                            |
+| `framework/`         | Low-level shared UI primitives (layout blocks, Image)   | Building blocks for components & layout.                            |
+| `hooks/`             | Custom React hooks (context consumption + helpers)      | Provide strongly typed public API to services/contexts.             |
+| `layout/`            | Application page shell & provider composition           | `DefaultLayout`, `LayoutProviders` (formerly UIProviders).          |
+| `layout-components/` | Larger page section building blocks                     | Distinct from `components/` if they coordinate multiple primitives. |
+| `model/`             | Domain types & interfaces only                          | No runtime logic; consumed across layers.                           |
+| `routes/`            | Router configuration & route-guard components           | Exposes `router` and `RequireAuth`.                                 |
+| `services/`          | Stateful logic (context providers, API wrappers)        | May later split out `contexts/`.                                    |
+| `styles/`            | Global SCSS entry + partials                            | Uses modern Sass module system.                                     |
+| `utils/`             | Pure functions (date, plushie calculations, validation) | Must remain side‑effect free.                                       |
 
 ## Path Aliases
 

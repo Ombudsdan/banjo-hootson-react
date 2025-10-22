@@ -1,5 +1,5 @@
 
-import { IAlertCard } from "components";
+import { IAlertCard } from "framework";
 import { PageAlertVariant, PageAlertVariantType } from "enums";
 
 const DEFAULT_PAGE_ALERT: Partial<IAlertCard> = {

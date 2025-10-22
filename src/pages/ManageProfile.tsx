@@ -1,8 +1,15 @@
 import { FormEvent, useEffect, useState } from 'react';
-import { Form } from 'components';
+import { FormActionsContainer } from 'framework';
 import { UserController } from 'controllers';
 import { FormOutlet, FormSubmitContext, useHeading, usePageAlerts } from 'hooks';
 import { IUser } from 'model/user.model';
+import {
+  CountryFormInput,
+  EmailAddressFormInput,
+  PlushieInstagramAccountsSelector,
+  TownOrCityInput,
+  UsernameFormInput
+} from 'components';
 
 const INPUT_ID = {
   townOrCity: 'town-or-city-input',
@@ -21,41 +28,41 @@ export default function ManageProfile() {
 
   return (
     <FormOutlet onSubmit={onSubmit} onSubmitFailure={onSubmitFailure}>
-      <Form.EmailAddress
+      <EmailAddressFormInput
         isReadonly={true}
         id="email-address"
         initialValue={user?.email || ''}
         label="Email Address"
         placeholder="Email Address"
       />
-      <Form.TownOrCity
+      <TownOrCityInput
         id={INPUT_ID.townOrCity}
         initialValue={user?.city || ''}
         label="Town or City"
         placeholder="Town or City"
         hint="For example: Sheffield"
       />
-      <Form.Country
+      <CountryFormInput
         id={INPUT_ID.country}
         initialValue={user?.country || ''}
         label="Country"
         hint="Your current country of residence"
       />
-      <Form.Username
+      <UsernameFormInput
         id={INPUT_ID.yourInstagramAccount}
         initialValue={user?.humanInstagram || ''}
         label="Your Instagram Account"
         hint="Your human Instagram account"
       />
-      <Form.PlushieInstagramAccounts
+      <PlushieInstagramAccountsSelector
         id={INPUT_ID.plushieAccounts}
         initialValue={user?.plushieInstagramAccounts || []}
       />
-      <Form.ActionsContainer>
+      <FormActionsContainer>
         <button type="submit" className="form__button form__button--primary">
           Save Profile
         </button>
-      </Form.ActionsContainer>
+      </FormActionsContainer>
     </FormOutlet>
   );
 

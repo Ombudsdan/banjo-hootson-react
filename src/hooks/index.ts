@@ -13,9 +13,6 @@ export { default as useBackdrop } from './useBackdrop';
 export * from './useDialog';
 export { default as useDialog } from './useDialog';
 
-export * from './useErrorBoundary';
-export { default as useErrorBoundary } from './useErrorBoundary';
-
 export * from './useForm';
 export { default as useForm } from './useForm';
 

@@ -1,5 +1,5 @@
 import { FC, useContext } from 'react';
-import { AlertCard } from 'components';
+import { AlertCard } from 'framework';
 import { PageValidationAlertContext } from 'hooks';
 import { AlertCardVariant } from 'enums';
 

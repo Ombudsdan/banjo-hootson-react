@@ -1,6 +1,6 @@
 import { FormEvent, useEffect } from 'react';
-import { Dialog } from 'components';
 import { FormOutlet, FormSubmitContext, IFormDialogState, useForm, useFormDialog } from 'hooks';
+import { DialogActionButtons, DialogBodyText, DialogContainer, DialogTitle } from 'framework';
 
 const DEFAULT_FORM_DIALOG_TITLE_ID = 'form-dialog-title';
 const DEFAULT_FORM_DIALOG_BODY_TEXT_ID = 'form-dialog-body-text';
@@ -13,7 +13,7 @@ export default function FormDialogOutlet() {
   const { onFormDialogConfirm: onConfirm, onFormDialogConfirmFailure: onConfirmFailure } = formDialog;
 
   return (
-    <Dialog.Container
+    <DialogContainer
       onClose={closeFormDialog}
       titleId={DEFAULT_FORM_DIALOG_TITLE_ID}
       bodyTextId={DEFAULT_FORM_DIALOG_BODY_TEXT_ID}
@@ -21,7 +21,7 @@ export default function FormDialogOutlet() {
       <FormOutlet onSubmit={handleSubmit} onSubmitFailure={handleSubmitFailure} disablePageValidation={true}>
         <FormDialogContent {...formDialog} />
       </FormOutlet>
-    </Dialog.Container>
+    </DialogContainer>
   );
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>, form: FormSubmitContext) {
@@ -54,10 +54,10 @@ function FormDialogContent(formDialog: IFormDialogState) {
 
   return (
     <>
-      {title && <Dialog.Title title={title} id={DEFAULT_FORM_DIALOG_TITLE_ID} />}
-      {message && <Dialog.BodyText text={message} id={DEFAULT_FORM_DIALOG_BODY_TEXT_ID} />}
+      {title && <DialogTitle title={title} id={DEFAULT_FORM_DIALOG_TITLE_ID} />}
+      {message && <DialogBodyText text={message} id={DEFAULT_FORM_DIALOG_BODY_TEXT_ID} />}
       {children}
-      <Dialog.ActionButtons {...actionButtonsProps} isFormDialog onClose={closeFormDialog} />
+      <DialogActionButtons {...actionButtonsProps} isFormDialog onClose={closeFormDialog} />
     </>
   );
 }

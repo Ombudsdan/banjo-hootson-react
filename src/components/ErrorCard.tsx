@@ -1,4 +1,4 @@
-import { AlertCard, IAlertCard } from 'components';
+import { AlertCard, IAlertCard } from 'framework';
 import { AlertCardVariant } from 'enums';
 
 /**

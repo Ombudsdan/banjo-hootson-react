@@ -1,4 +1,4 @@
-import { AlertCard } from 'components';
+import { AlertCard } from 'framework';
 import { AlertCardVariant } from 'enums';
 import { PageContentContainer } from 'framework';
 import { usePageHeading } from 'hooks';

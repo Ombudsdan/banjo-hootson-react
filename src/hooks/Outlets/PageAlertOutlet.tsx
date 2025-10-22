@@ -1,5 +1,5 @@
 import { FC, useContext } from 'react';
-import { AlertCard, IAlertCard } from 'components';
+import { AlertCard, IAlertCard } from 'framework';
 import { generateClassName } from 'utils';
 import { IPageAlertContext, PageAlertContext } from 'hooks';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

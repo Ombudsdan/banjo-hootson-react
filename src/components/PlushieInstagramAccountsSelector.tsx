@@ -1,11 +1,12 @@
 import { FormEvent } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { SummaryList, Form } from 'components';
+import { SummaryList, FormSectionHeader, FormValidationErrors } from 'framework';
 import { FormSubmitContext, useDialog, useFormDialog, useFormField } from 'hooks';
 import { ICONS } from 'icons';
 import { IPlushieInstagramAccount } from 'model/user.model';
 import { excludeMatchingIndex } from 'utils';
 import { DialogConfirm } from 'enums';
+import { PlushieInstagramAccountFormInput } from 'components';
 
 /**
  * Composite control to manage a list of plushie Instagram accounts.
@@ -19,12 +20,12 @@ export default function PlushieInstagramAccountsSelector({ id, initialValue }: I
   return (
     <div className="form-field">
       <div id={id}></div>
-      <Form.SectionHeader title="Plushie Instagram Accounts">
+      <FormSectionHeader title="Plushie Instagram Accounts">
         <button className="icon-button" type="button" onClick={() => openAddDialog()}>
           <FontAwesomeIcon icon={ICONS.plus} />
           Add Account
         </button>
-      </Form.SectionHeader>
+      </FormSectionHeader>
       {value.length > 0 && (
         <SummaryList.Container>
           {value.map((acc, i) => (
@@ -52,7 +53,7 @@ export default function PlushieInstagramAccountsSelector({ id, initialValue }: I
           ))}
         </SummaryList.Container>
       )}
-      <Form.ValidationErrors showErrors={showErrors} validation={validation} />
+      <FormValidationErrors showErrors={showErrors} validation={validation} />
     </div>
   );
 
@@ -105,7 +106,7 @@ function PlushieInstagramDialog({ id, initialValue = '', existingAccounts }: IPl
   // Let the Username input own registration/validation; we just pass id+initialValue.
   // If duplicate checking across accounts is required, we’ll validate at the list level on save.
   return (
-    <Form.PlushieInstagramAccount
+    <PlushieInstagramAccountFormInput
       id={id}
       initialValue={initialValue}
       label="Plushie Instagram Account"

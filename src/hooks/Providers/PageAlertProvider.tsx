@@ -1,7 +1,7 @@
 import { FC, PropsWithChildren, useCallback, useEffect, useId, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { PageAlertContext } from 'hooks';
-import { IAlertCard } from 'components';
+import { IAlertCard } from 'framework';
 
 const PageAlertProvider: FC<IPageAlertProvider> = ({ children }) => {
   const location = useLocation();
