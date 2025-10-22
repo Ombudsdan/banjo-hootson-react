@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { BirthdayController } from "@/controllers/birthday.controller";
 import type { IPlushieBirthdayFormData } from "model/plushie-birthday.types";
 import FormActionsContainer from "@/components/FormActionsContainer";
 import { PageWidthContainer } from "@/framework/PageWidthContainer";
-import { PageHeadingContainer } from "@/framework/PageHeadingContainer";
-import AlertCard from "@/components/AlertCard";
+import { useHeading } from "@/hooks/useHeading";
+import { useValidationAlert } from "@/hooks/useValidationAlert";
 import {
   Validation,
   runValidators,
@@ -20,20 +20,23 @@ const EMPTY: IPlushieBirthdayFormData = {
 
 export default function SubmitPlushieBirthdayPage() {
   const [form, setForm] = useState<IPlushieBirthdayFormData>(EMPTY);
-  // Track user interaction for each field to control when errors display
   const [touched, setTouched] = useState<{
     name: boolean;
     username: boolean;
     dateOfBirth: boolean;
-  }>({
-    name: false,
-    username: false,
-    dateOfBirth: false,
-  });
+  }>({ name: false, username: false, dateOfBirth: false });
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [globalError, setGlobalError] = useState<string>("");
+  const [globalError, setGlobalError] = useState("");
   const navigate = useNavigate();
+  const { setHeading, clearHeading } = useHeading();
+  const { setValidationAlert, clearValidationAlert } = useValidationAlert();
+
+  // Configure heading on mount
+  useEffect(() => {
+    setHeading({ heading: "Submit a Birthday" });
+    return () => clearHeading();
+  }, [setHeading, clearHeading]);
 
   const update = (patch: Partial<IPlushieBirthdayFormData>) =>
     setForm((f) => ({ ...f, ...patch }));
@@ -50,7 +53,6 @@ export default function SubmitPlushieBirthdayPage() {
     Validation.validRemainingChars,
   ];
   const dateValidators = [Validation.required, Validation.noFutureDate()];
-
   const computeErrors = () => {
     return {
       name: runValidators(form.name, nameValidators),
@@ -93,14 +95,27 @@ export default function SubmitPlushieBirthdayPage() {
   const formValid = !errors.name && !errors.username && !errors.dateOfBirth;
 
   // Aggregate validation errors (only after submit attempt)
-  const aggregatedErrors: string[] =
-    submitted && !formValid
-      ? [
-          nameErrorText || "",
-          usernameErrorText || "",
-          dateErrorText || "",
-        ].filter(Boolean)
-      : [];
+  const aggregatedErrors: string[] = useMemo(
+    () =>
+      submitted && !formValid
+        ? [nameErrorText, usernameErrorText, dateErrorText].filter(Boolean)
+        : [],
+    [submitted, formValid, nameErrorText, usernameErrorText, dateErrorText]
+  );
+
+  // Show aggregated validation alert after submit attempt
+  useEffect(() => {
+    if (aggregatedErrors.length) {
+      setValidationAlert({
+        heading: "Please fix the following errors",
+        messages: aggregatedErrors,
+        variant: "error",
+        focus: true,
+      });
+    } else {
+      clearValidationAlert();
+    }
+  }, [aggregatedErrors, setValidationAlert, clearValidationAlert]);
 
   const setToday = () => {
     const d = new Date();
@@ -141,20 +156,8 @@ export default function SubmitPlushieBirthdayPage() {
 
   return (
     <>
-      <PageHeadingContainer heading="Submit a Birthday" />
       <PageWidthContainer>
         <form onSubmit={onSubmit} noValidate>
-          {aggregatedErrors.length > 0 && (
-            <div className="form-group">
-              <AlertCard
-                heading="Please fix the following errors"
-                messages={aggregatedErrors}
-                variant="error"
-                autoFocus
-                cardId="submit-birthday-errors"
-              />
-            </div>
-          )}
           <div className="form-group">
             <label
               className="form-group__label form-group__label--required"

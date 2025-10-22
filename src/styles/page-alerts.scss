@@ -1,0 +1,78 @@
+@use "./variables";
+
+.page-alerts {
+  margin: 0 auto 2rem auto; /* was variables.$spacing-large */
+  padding: 0.75rem 1.25rem 0 1.25rem; /* was small/medium mix */
+  max-width: 960px;
+  position: relative;
+  display: block;
+}
+
+/* No dismiss-all UI; only per-alert X button */
+
+.page-alerts__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem; /* was variables.$spacing-small */
+}
+
+.page-alerts__item {
+  margin: 0;
+}
+
+.page-alerts__item--entering {
+  animation: page-alert-enter 250ms ease-out forwards;
+}
+
+.page-alerts__item--exiting {
+  animation: page-alert-exit 250ms ease-in forwards;
+}
+
+@keyframes page-alert-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes page-alert-exit {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+.page-alerts__card-wrapper {
+  position: relative;
+}
+
+.page-alerts__close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  font-size: 1.1rem;
+  line-height: 1;
+  color: variables.$colour-text;
+}
+
+@media (min-width: 768px) {
+  .page-alerts {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}

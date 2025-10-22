@@ -1,10 +1,12 @@
 @use "../variables";
 @use "../mixins";
 
+$spacing: 1.5rem;
+
 .page-heading-container {
   @include mixins.flex-column-center;
   width: 100%;
-  padding: 1.5rem 0;
+  padding: $spacing 0;
 
   &--light {
     background-color: transparent;
@@ -14,6 +16,9 @@
   &--dark {
     background-color: variables.$colour-brown;
     color: variables.$colour-white;
+    // The margin-bottom class is applied to create space below the heading when is not used,
+    // so that there is space between the bottom of the container and the next section of the page.
+    margin-bottom: $spacing;
   }
 
   &__row {

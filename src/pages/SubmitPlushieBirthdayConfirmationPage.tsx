@@ -2,10 +2,10 @@ import { useEffect, useMemo, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { BirthdayController } from "@/controllers/birthday.controller";
 import type { IPlushieBirthday } from "model/plushie-birthday.types";
-import { PageHeadingContainer } from "@/framework/PageHeadingContainer";
 import { PageWidthContainer } from "@/framework/PageWidthContainer";
 import { getPropertiesFromPlushieBirthdayEventName } from "@/utils/plushie.utils";
 import { PlushieBirthdayController } from "@/controllers/plushie-birthday.controller";
+import { usePageHeading } from "@/hooks/usePageHeading";
 
 export default function SubmitPlushieBirthdayConfirmationPage() {
   const { id } = useParams();
@@ -55,74 +55,73 @@ export default function SubmitPlushieBirthdayConfirmationPage() {
     navigate("/calendar/submit");
   }, [navigate]);
 
+  usePageHeading(headingText);
+
   return (
-    <>
-      <PageHeadingContainer heading={headingText} />
-      <PageWidthContainer>
-        <div className="submit-plushie-birthday-confirmation">
-          {loading && <p>Loading…</p>}
-          {!loading && error && (
-            <div className="alert-card alert-card--error" role="alert">
-              <div className="alert-card__heading">Submission Error</div>
-              <div className="alert-card__messages">
-                <p>
-                  An error occurred while submitting your birthday. Please try
-                  again or drop me a message for assistance.
-                </p>
-              </div>
+    <PageWidthContainer>
+      <div className="submit-plushie-birthday-confirmation">
+        {loading && <p>Loading…</p>}
+        {!loading && error && (
+          <div className="alert-card alert-card--error" role="alert">
+            <div className="alert-card__heading">Submission Error</div>
+            <div className="alert-card__messages">
+              <p>
+                An error occurred while submitting your birthday. Please try
+                again or drop me a message for assistance.
+              </p>
+            </div>
+            <button
+              className="button button--secondary--outline button--secondary--compact"
+              onClick={handleRetry}
+              type="button"
+            >
+              Try Again
+            </button>
+          </div>
+        )}
+        {!loading && !error && item && (
+          <>
+            <div className="submit-plushie-birthday-confirmation__action-button-wrapper">
               <button
                 className="button button--secondary--outline button--secondary--compact"
-                onClick={handleRetry}
+                id="view-birthday-button"
                 type="button"
+                onClick={handleViewBirthday}
               >
-                Try Again
+                View Birthday
+              </button>
+              <button
+                className="button button--secondary--outline button--secondary--compact"
+                id="submit-another-birthday-button"
+                type="button"
+                onClick={handleSubmitAnother}
+              >
+                Submit Another Birthday
               </button>
             </div>
-          )}
-          {!loading && !error && item && (
-            <>
-              <div className="submit-plushie-birthday-confirmation__action-button-wrapper">
-                <button
-                  className="button button--secondary--outline button--secondary--compact"
-                  id="view-birthday-button"
-                  type="button"
-                  onClick={handleViewBirthday}
-                >
-                  View Birthday
-                </button>
-                <button
-                  className="button button--secondary--outline button--secondary--compact"
-                  id="submit-another-birthday-button"
-                  type="button"
-                  onClick={handleSubmitAnother}
-                >
-                  Submit Another Birthday
-                </button>
-              </div>
-              <div className="submit-plushie-birthday-confirmation__support-card">
-                <h2 className="submit-plushie-birthday-confirmation__support-card-title">
-                  Thank you for your submission! 🎉
-                </h2>
-                <p className="submit-plushie-birthday-confirmation__support-card-text">
-                  If you're enjoying the calendar, an optional donation helps
-                  cover running costs and keeps the birthday party going!
-                </p>
-                <a
-                  href="https://www.buymeacoffee.com/banjohootson"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="submit-plushie-birthday-confirmation__support-card-button"
-                >
-                  <img
-                    src="https://img.buymeacoffee.com/button-api/?text=Buy me a beer&emoji=🍺&slug=banjohootson&button_colour=c83200&font_colour=ffffff&font_family=Poppins&outline_colour=ffffff&coffee_colour=FFDD00"
-                    alt="Buy me a beer"
-                  />
-                </a>
-              </div>
-            </>
-          )}
-        </div>
-      </PageWidthContainer>
-    </>
+            <div className="submit-plushie-birthday-confirmation__support-card">
+              <h2 className="submit-plushie-birthday-confirmation__support-card-title">
+                Thank you for your submission! 🎉
+              </h2>
+              <p className="submit-plushie-birthday-confirmation__support-card-text">
+                If you're enjoying the calendar, an optional donation helps
+                cover running costs and keeps the birthday party going!
+              </p>
+              <a
+                href="https://www.buymeacoffee.com/banjohootson"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="submit-plushie-birthday-confirmation__support-card-button"
+              >
+                <img
+                  src="https://img.buymeacoffee.com/button-api/?text=Buy me a beer&emoji=🍺&slug=banjohootson&button_colour=c83200&font_colour=ffffff&font_family=Poppins&outline_colour=ffffff&coffee_colour=FFDD00"
+                  alt="Buy me a beer"
+                />
+              </a>
+            </div>
+          </>
+        )}
+      </div>
+    </PageWidthContainer>
   );
 }
