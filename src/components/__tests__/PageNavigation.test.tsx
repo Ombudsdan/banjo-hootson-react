@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { IPageNavigationTab, PageNavigation } from 'components';
-import { renderWithProviders } from 'test';
+import { UnitTestUtils } from 'test';
 
 const tabs: IPageNavigationTab[] = [
   { key: 'PROFILE', title: 'Profile' },
@@ -10,7 +10,7 @@ const tabs: IPageNavigationTab[] = [
 
 describe('PageNavigation', () => {
   it('highlights active tab and disables disabled tabs', () => {
-    renderWithProviders(<PageNavigation tabs={tabs} activeKey="ACCOUNT" />);
+    new UnitTestUtils((<PageNavigation tabs={tabs} activeKey="ACCOUNT" />));
 
     const profileBtn = screen.getByRole('button', { name: 'Profile' });
     const accountBtn = screen.getByRole('button', { name: 'Account' });
@@ -23,7 +23,7 @@ describe('PageNavigation', () => {
 
   it('invokes onSelect with clicked tab', () => {
     const onSelect = vi.fn();
-    renderWithProviders(<PageNavigation tabs={tabs} onSelect={onSelect} />);
+    new UnitTestUtils((<PageNavigation tabs={tabs} onSelect={onSelect} />));
 
     screen.getByRole('button', { name: 'Account' }).click();
 

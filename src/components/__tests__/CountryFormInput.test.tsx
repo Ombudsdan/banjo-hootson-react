@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { CountryFormInput } from 'components';
-import { renderWithProviders } from 'test';
+import { UnitTestUtils } from 'test';
 
 vi.mock('controllers', () => ({
   LocationController: {
@@ -17,8 +17,8 @@ const ID = 'country';
 
 describe('CountryFormInput', () => {
   it('renders label and countries, selecting value updates form field', async () => {
-    renderWithProviders(
-      <CountryFormInput id={ID} initialValue="US" label="Country" hint="Your current country of residence" />,
+    new UnitTestUtils(
+      (<CountryFormInput id={ID} initialValue="US" label="Country" hint="Your current country of residence" />),
       { withForm: true }
     );
 

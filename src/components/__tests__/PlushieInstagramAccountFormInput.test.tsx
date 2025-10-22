@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { PlushieInstagramAccountFormInput } from 'components';
 import type { IPlushieInstagramAccount } from 'model/user.model';
-import { renderWithProviders } from 'test';
+import { UnitTestUtils } from 'test';
 
 const existing: IPlushieInstagramAccount[] = [
   { username: 'banjo', isPublic: true }
@@ -12,7 +12,7 @@ const ID = 'plushie-ig';
 
 describe('PlushieInstagramAccountFormInput', () => {
   it('shows duplicate error when username already exists and changed', async () => {
-    renderWithProviders(
+    new UnitTestUtils(
       <PlushieInstagramAccountFormInput id={ID} label="Plushie Instagram Account" initialValue="" existingAccounts={existing} />,
       { withForm: true }
     );
@@ -24,7 +24,7 @@ describe('PlushieInstagramAccountFormInput', () => {
   });
 
   it('treats original value as unique (no error) when unchanged', async () => {
-    renderWithProviders(
+    new UnitTestUtils(
       <PlushieInstagramAccountFormInput id={ID} label="Plushie Instagram Account" initialValue="banjo" existingAccounts={existing} />,
       { withForm: true }
     );

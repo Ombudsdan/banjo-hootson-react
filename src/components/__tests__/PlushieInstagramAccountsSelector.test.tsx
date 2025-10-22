@@ -1,13 +1,13 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { PlushieInstagramAccountsSelector } from 'components';
-import { renderWithProviders } from 'test';
+import { UnitTestUtils } from 'test';
 
 const ID = 'plushie-accounts';
 
 describe('PlushieInstagramAccountsSelector', () => {
   it('adds a new account via dialog flow', async () => {
-    renderWithProviders(<PlushieInstagramAccountsSelector id={ID} initialValue={[]} />, {
+    new UnitTestUtils((<PlushieInstagramAccountsSelector id={ID} initialValue={[]} />), {
       withForm: true,
       withDialogs: true
     });
@@ -26,8 +26,8 @@ describe('PlushieInstagramAccountsSelector', () => {
   });
 
   it('removes an account via confirmation dialog', async () => {
-    renderWithProviders(
-      <PlushieInstagramAccountsSelector id={ID} initialValue={[{ username: 'banjo', isPublic: true }]} />,
+    new UnitTestUtils(
+      (<PlushieInstagramAccountsSelector id={ID} initialValue={[{ username: 'banjo', isPublic: true }]} />),
       {
         withForm: true,
         withDialogs: true

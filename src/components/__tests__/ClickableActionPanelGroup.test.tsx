@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import { ClickableActionPanelGroup } from 'components';
 import { ClickableActionPanelGroupOption } from 'enums';
-import { renderWithProviders } from 'test';
+import { UnitTestUtils } from 'test';
 
 vi.mock('controllers', () => ({
   ClickableActionPanelGroupController: {
@@ -20,7 +20,7 @@ vi.mock('controllers', () => ({
 
 describe('ClickableActionPanelGroup', () => {
   it('renders panels for each option in the group', () => {
-    renderWithProviders(<ClickableActionPanelGroup group={ClickableActionPanelGroupOption.SOCIAL_LINKS} />);
+    new UnitTestUtils((<ClickableActionPanelGroup group={ClickableActionPanelGroupOption.SOCIAL_LINKS} />));
     expect(screen.getAllByRole('link')).toHaveLength(2);
     expect(screen.getByRole('link', { name: 'ONE' })).toHaveAttribute('href', '/one');
     expect(screen.getByRole('link', { name: 'TWO' })).toHaveAttribute('href', '/two');

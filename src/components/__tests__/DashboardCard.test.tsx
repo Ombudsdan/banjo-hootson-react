@@ -1,15 +1,17 @@
 import { screen } from '@testing-library/react';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
-import { renderWithProviders } from 'test';
 import { DashboardCard } from 'components';
+import { UnitTestUtils } from 'test';
 
 describe('DashboardCard', () => {
   it('renders icon, children and description, clickable when not locked', async () => {
     const onClick = vi.fn();
-    renderWithProviders(
-      <DashboardCard icon={faUser} description="Manage your profile" onClick={onClick}>
-        Profile
-      </DashboardCard>
+    new UnitTestUtils(
+      (
+        <DashboardCard icon={faUser} description="Manage your profile" onClick={onClick}>
+          Profile
+        </DashboardCard>
+      )
     );
 
     const button = screen.getByRole('button');
@@ -23,10 +25,12 @@ describe('DashboardCard', () => {
 
   it('renders as locked when isLocked is true and disables click', () => {
     const onClick = vi.fn();
-    renderWithProviders(
-      <DashboardCard description="Premium feature" isLocked onClick={onClick}>
-        Premium
-      </DashboardCard>
+    new UnitTestUtils(
+      (
+        <DashboardCard description="Premium feature" isLocked onClick={onClick}>
+          Premium
+        </DashboardCard>
+      )
     );
 
     const button = screen.getByRole('button');
