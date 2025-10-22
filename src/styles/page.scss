@@ -1,0 +1,37 @@
+@use "./variables";
+@use "./mixins";
+
+:root {
+  font-size: 16px;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-width: 320px;
+  font-family: variables.$font-family-body;
+  color: variables.$colour-text;
+  background-color: variables.$colour-bg-light;
+  line-height: 1.6;
+  overflow-x: hidden;
+  @media screen and (max-width: variables.$breakpoint-m) {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+main {
+  margin-top: variables.$nav-height;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  min-height: 100vh;
+}
+body.loaded main {
+  opacity: 1;
+}
+
+.page-narrow {
+  @include mixins.page-narrow;
+}

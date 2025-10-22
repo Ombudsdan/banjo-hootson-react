@@ -1,0 +1,31 @@
+@use "sass:map";
+@use "../variables";
+
+$tier-styles: (
+  "standard": (
+    bg: variables.$colour-grey,
+  ),
+  "supporter": (
+    bg: variables.$colour-orange,
+  ),
+);
+
+.user-subscription-tier-badge {
+  font-size: variables.$font-size-base;
+  font-weight: variables.$font-weight-medium;
+  padding: 0.25rem 0.75rem;
+  color: variables.$colour-white;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: variables.$font-weight-bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  align-self: flex-start;
+
+  @each $tier, $tier-style-values in $tier-styles {
+    $background-colour: map.get($tier-style-values, bg);
+    &--#{$tier} {
+      background-color: $background-colour;
+    }
+  }
+}

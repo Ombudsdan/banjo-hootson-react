@@ -1,0 +1,49 @@
+@use "../variables";
+
+.footer {
+  margin-top: 4rem;
+  padding: 2.5rem 1.5rem;
+  background: variables.$colour-tan;
+  color: variables.$colour-text;
+  border-top: 1px solid variables.$colour-tan;
+  text-align: center;
+  &__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  &__row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    @media screen and (max-width: variables.$breakpoint-m) {
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+  }
+  &__column {
+    flex: 1;
+    min-width: 250px;
+    max-width: 300px;
+    @media screen and (max-width: variables.$breakpoint-m) {
+      margin-bottom: 1.5rem;
+      max-width: none;
+    }
+  }
+  &__list {
+    margin: unset;
+    padding: unset;
+    list-style-type: none;
+  }
+  &__heading {
+    text-transform: uppercase;
+    font-weight: variables.$font-weight-semi-bold;
+    margin-bottom: 0.75rem;
+    font-size: variables.$font-size-medium;
+    letter-spacing: 0.5px;
+  }
+  &__line-through {
+    text-decoration: line-through;
+  }
+}

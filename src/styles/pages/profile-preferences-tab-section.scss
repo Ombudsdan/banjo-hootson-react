@@ -1,0 +1,24 @@
+@use "../variables";
+@use "../mixins";
+@use "./profile" as profile;
+
+.notifications-tab-section {
+  &__content {
+    @include profile.content;
+  }
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  &__section-title {
+    @include profile.section-title;
+    border-bottom: 2px solid rgba(variables.$colour-orange, 0.2);
+    padding-bottom: 0.5rem;
+  }
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+}

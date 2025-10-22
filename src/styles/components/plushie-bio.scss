@@ -1,0 +1,70 @@
+@use "../variables";
+
+.plushie-bio {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-radius: 12px;
+  padding: 1rem;
+  transition: all 0.2s ease;
+
+  @media screen and (min-width: variables.$breakpoint-s) {
+    flex-direction: row;
+    min-width: 0;
+    max-width: 600px;
+
+    &--align-left {
+      .plushie-bio__image-container {
+        order: 1;
+      }
+      .plushie-bio__text-container {
+        order: 2;
+        text-align: left;
+      }
+    }
+
+    &--align-right {
+      .plushie-bio__image-container {
+        order: 2;
+      }
+      .plushie-bio__text-container {
+        order: 1;
+        text-align: right;
+      }
+    }
+  }
+
+  @media screen and (max-width: variables.$breakpoint-s) {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &:hover {
+    background-color: variables.$colour-very-light;
+    transform: translateY(-1px);
+  }
+
+  &__image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 0 0 150px;
+
+    @media screen and (max-width: variables.$breakpoint-m) {
+      flex: 0 0 120px;
+    }
+  }
+
+  &__text-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    gap: 1rem;
+    width: 100%;
+
+    @media screen and (max-width: variables.$breakpoint-s) {
+      text-align: center;
+    }
+  }
+}

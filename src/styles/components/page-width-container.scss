@@ -1,0 +1,24 @@
+@use "../variables";
+
+.page-width-container {
+  max-width: variables.$page-width;
+  margin: 0 auto;
+  padding: 0 1rem;
+  @media screen and (max-width: variables.$breakpoint-xl) {
+    padding: 0 3rem;
+    max-width: variables.$width-responsive;
+  }
+  @media screen and (max-width: variables.$breakpoint-l) {
+    padding: 0 4rem;
+    max-width: variables.$width-responsive;
+  }
+  @media screen and (max-width: variables.$breakpoint-m) {
+    padding: 0 2rem;
+  }
+  @media screen and (max-width: variables.$breakpoint-s) {
+    padding: 0 1rem;
+  }
+  @media screen and (max-width: variables.$breakpoint-xs) {
+    padding: 0 0.75rem;
+  }
+}

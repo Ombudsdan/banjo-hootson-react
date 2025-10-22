@@ -1,0 +1,12 @@
+@use "../variables";
+@use "../mixins";
+
+.heading {
+  text-align: center;
+  font-weight: variables.$font-weight-bold;
+  &::after {
+    margin-bottom: 1.5rem;
+    height: 0.35rem;
+    @include mixins.heading-decoration;
+  }
+}

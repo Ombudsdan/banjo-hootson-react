@@ -1,0 +1,96 @@
+@use "sass:color";
+@use "../variables";
+
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 60vh;
+
+  &__container {
+    width: 100%;
+    max-width: 400px;
+    background: variables.$colour-white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+  }
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  &__label {
+    font-weight: 600;
+    color: variables.$colour-text;
+    font-size: 0.9rem;
+  }
+
+  &__message {
+    padding: 0.75rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    text-align: center;
+    &--info {
+      background-color: #e3f2fd;
+      color: #1976d2;
+      border: 1px solid #bbdefb;
+    }
+    &--error {
+      background-color: #ffebee;
+      color: #c62828;
+      border: 1px solid #ffcdd2;
+    }
+  }
+
+  &__loading-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid transparent;
+    border-top: 2px solid currentColor;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  &__signup-prompt {
+    text-align: center;
+    padding-top: 1rem;
+    border-top: 1px solid variables.$colour-tan;
+    p {
+      margin: 0;
+      color: variables.$colour-text-muted;
+    }
+  }
+
+  &__link-button {
+    background: none;
+    border: none;
+    color: variables.$colour-orange;
+    cursor: pointer;
+    text-decoration: underline;
+    font-weight: 600;
+    &:hover:not(:disabled) {
+      color: color.adjust(variables.$colour-orange, $lightness: -10%);
+    }
+    &:disabled {
+      color: variables.$colour-text-muted;
+      cursor: not-allowed;
+      text-decoration: none;
+    }
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 480px) {
+  .login-page {
+    padding: 1rem 0.5rem;
+    &__container {
+      padding: 1.5rem;
+    }
+  }
+}

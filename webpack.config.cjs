@@ -66,6 +66,27 @@ module.exports = {
         test: /\.css$/,
         use: [require.resolve("style-loader"), require.resolve("css-loader")],
       },
+      {
+        test: /\.s[ac]ss$/i,
+        use: [
+          require.resolve("style-loader"),
+          {
+            loader: require.resolve("css-loader"),
+            options: { importLoaders: 1 },
+          },
+          {
+            loader: require.resolve("sass-loader"),
+            options: {
+              // Prefer Dart Sass
+              implementation: require("sass"),
+              sassOptions: {
+                // Ensure modern Sass modules are available
+                silenceDeprecations: ["legacy-js-api"],
+              },
+            },
+          },
+        ],
+      },
       { test: /\.svg$/, type: "asset/resource" },
       { test: /\.(png|jpe?g|gif|webp|ico)$/i, type: "asset/resource" },
     ],

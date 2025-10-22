@@ -1,0 +1,10 @@
+.overlay-host {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.overlay-host app-dialog {
+  pointer-events: auto;
+}

@@ -1,0 +1,131 @@
+@use "sass:color";
+
+$colour-white: rgb(255, 255, 255);
+$colour-black: rgb(8, 3, 0);
+$colour-orange: rgb(204, 78, 0);
+$colour-blue: rgb(0, 126, 204);
+$colour-red: rgb(204, 0, 24);
+$colour-yellow: rgb(204, 180, 0);
+$colour-brown: rgb(126, 48, 0);
+$colour-beige: rgb(255, 236, 224);
+$colour-tan: rgb(233, 225, 218);
+$colour-complementary-blue: rgb(0, 24, 204);
+$colour-playful-blue: rgb(78, 0, 204);
+$colour-complementary-green: rgb(0, 204, 180);
+$colour-vibrant-green: rgb(0, 204, 78);
+$colour-playful-green: rgb(0, 204, 78);
+$colour-pink: rgb(204, 0, 126);
+$colour-dark-orange: rgb(165, 63, 0);
+$colour-bright-orange: rgb(243, 93, 0);
+$colour-light-orange: rgb(255, 127, 47);
+$colour-very-light-orange: rgb(255, 163, 106);
+$colour-grey: rgb(110, 100, 94);
+$colour-light: rgb(255, 236, 224);
+$colour-very-light: rgb(255, 248, 243);
+
+$colour-overlay-backdrop: rgba(0, 0, 0, 0.65);
+$colour-feint-border: rgba(0, 0, 0, 0.1);
+
+$colour-orange-200: rgb(255, 113, 26);
+$colour-orange-300: rgb(255, 98, 0);
+$colour-orange-400: rgb(230, 88, 0);
+$colour-orange-500: $colour-orange;
+$colour-orange-600: rgb(179, 68, 0);
+$colour-orange-700: rgb(153, 59, 0);
+$colour-orange-800: rgb(128, 49, 0);
+
+@function color-dark($color, $percentage: 20%) {
+  @return color.mix($colour-black, $color, $percentage);
+}
+
+$colour-info: $colour-blue;
+$colour-info-light: rgba($colour-blue, 0.075);
+$colour-info-dark: color-dark($colour-blue, 15%);
+
+$colour-success: $colour-playful-green;
+$colour-success-light: rgba($colour-playful-green, 0.075);
+$colour-success-dark: color-dark($colour-playful-green, 15%);
+
+$colour-warning: $colour-yellow;
+$colour-warning-light: rgba($colour-yellow, 0.075);
+$colour-warning-dark: color-dark($colour-yellow, 15%);
+
+$colour-error: $colour-red;
+$colour-error-light: rgba($colour-red, 0.075);
+$colour-error-dark: color-dark($colour-red, 15%);
+
+$colour-bg-light: $colour-very-light;
+$colour-bg-dark: $colour-light;
+
+$colour-text: $colour-black;
+$colour-text-light: rgba($colour-black, 0.2);
+$colour-text-muted: rgba($colour-black, 0.6);
+
+$colour-button-primary: $colour-orange;
+$colour-button-primary-text: $colour-white;
+$colour-button-primary-border: $colour-dark-orange;
+$colour-button-primary-hover: $colour-bright-orange;
+$colour-button-primary-active: $colour-dark-orange;
+
+$colour-button-secondary: $colour-brown;
+$colour-button-secondary-text: $colour-white;
+$colour-button-secondary-border: $colour-dark-orange;
+$colour-button-secondary-hover: $colour-bright-orange;
+$colour-button-secondary-active: $colour-brown;
+
+$colour-button-tertiary: $colour-beige;
+$colour-button-tertiary-text: $colour-orange-800;
+$colour-button-tertiary-border: $colour-grey;
+$colour-button-tertiary-hover: $colour-light-orange;
+$colour-button-tertiary-active: $colour-very-light-orange;
+
+$colour-link: $colour-blue;
+$colour-link-underline: $colour-complementary-blue;
+$colour-link-hover: $colour-playful-blue;
+$colour-link-visited: $colour-blue;
+$colour-link-active: $colour-orange;
+
+$status-colours: (
+  "info": $colour-info,
+  "success": $colour-success,
+  "warning": $colour-warning,
+  "error": $colour-error,
+);
+
+$colour-instagram: rgb(229, 39, 101);
+$colour-threads: rgb(207, 43, 206);
+$colour-facebook: rgb(60, 93, 159);
+
+$font-family-heading: "Coiny", system-ui, "Arial Black", Arial, sans-serif;
+$font-family-body: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto,
+  Arial, sans-serif;
+
+$font-weight-thin: 100;
+$font-weight-extra-light: 200;
+$font-weight-light: 300;
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-semi-bold: 600;
+$font-weight-bold: 700;
+$font-weight-extra-bold: 800;
+$font-weight-black: 900;
+
+$font-size-h1: 2rem;
+$font-size-h2: 1.55rem;
+$font-size-h3: 1.25rem;
+$font-size-h4: 1.15rem;
+$font-size-large: 1.5rem;
+$font-size-medium: 1.125rem;
+$font-size-base: 1rem;
+$font-size-small: 0.9rem;
+$font-size-tiny: 0.825rem;
+
+$breakpoint-xl: 1140px;
+$breakpoint-l: 960px;
+$breakpoint-m: 720px;
+$breakpoint-s: 540px;
+$breakpoint-xs: 480px;
+
+$page-width: 1320px;
+$width-responsive: 100%;
+$nav-height: 72px;

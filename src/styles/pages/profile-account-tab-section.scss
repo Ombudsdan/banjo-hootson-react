@@ -1,0 +1,31 @@
+@use "sass:color";
+@use "../variables";
+@use "../mixins";
+@use "./profile" as profile;
+
+.subscription-section {
+  &__row {
+    @include mixins.flex-row-space-between;
+  }
+  &__label {
+    color: variables.$colour-text;
+    font-size: variables.$font-size-base;
+  }
+}
+
+.delete-section {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: flex-start;
+  &__text {
+    font-size: variables.$font-size-base;
+    color: variables.$colour-text;
+    margin: 0;
+  }
+  &__button {
+    font-size: variables.$font-size-base;
+    flex: 0 0 auto;
+    align-self: center;
+  }
+}

@@ -1,0 +1,12 @@
+@use "../mixins";
+
+.about-page {
+  &__plushie-bio-container {
+    @include mixins.flex-wrap;
+    gap: 1rem;
+  }
+
+  &__main-text {
+    text-align: center;
+  }
+}

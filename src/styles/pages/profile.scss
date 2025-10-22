@@ -1,0 +1,39 @@
+@use "../variables";
+@use "../mixins";
+
+@mixin section-title {
+  color: variables.$colour-text;
+  font-size: variables.$font-size-h3;
+  font-weight: variables.$font-weight-bold;
+  margin: 0 0 0.75rem 0;
+  padding-bottom: 0.5rem;
+}
+
+@mixin content {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.profile {
+  &__header {
+    @include mixins.flex-row-center;
+    gap: 1rem;
+  }
+  &__details {
+    margin-top: 1rem;
+  }
+}
+
+.alert-section {
+  margin-bottom: 2rem;
+}
+.actions-section {
+  border-top: 1px solid variables.$colour-feint-border;
+  width: 100%;
+  padding: 1rem 0;
+  justify-content: center;
+  display: flex;
+}

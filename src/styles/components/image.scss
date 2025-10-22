@@ -1,0 +1,78 @@
+@use "../variables";
+
+@mixin frame {
+  border: 5px solid variables.$colour-white;
+}
+
+@mixin frame-box-shadow($color) {
+  box-shadow: 0 0 0 4px $color, 0 0 0 8px rgba(255, 255, 255, 0.3),
+    0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.image {
+  width: 100%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+
+  &--heading {
+    width: 200px;
+    @media screen and (max-width: variables.$breakpoint-m) {
+      width: 150px;
+    }
+  }
+  &--gallery,
+  &--bio {
+    width: 150px;
+    @media screen and (max-width: variables.$breakpoint-m) {
+      width: 120px;
+    }
+  }
+
+  &[loading="lazy"] {
+    background-color: variables.$colour-very-light;
+  }
+
+  &--loading {
+    background-color: variables.$colour-very-light;
+    background-image: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+
+  &[src]:not([src=""]) {
+    opacity: 1;
+  }
+
+  &--circle {
+    border-radius: 500px;
+    aspect-ratio: 1/1;
+  }
+  &--rounded-square {
+    border-radius: 20px;
+    aspect-ratio: 1/1;
+  }
+
+  &--framed {
+    @include frame;
+    &--dark {
+      @include frame-box-shadow(variables.$colour-brown);
+    }
+    &--light {
+      @include frame-box-shadow(variables.$colour-tan);
+    }
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
