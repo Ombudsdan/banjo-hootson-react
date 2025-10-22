@@ -38,6 +38,7 @@ module.exports = {
       model: path.resolve(__dirname, "src/model"),
       routes: path.resolve(__dirname, "src/routes"),
       services: path.resolve(__dirname, "src/services"),
+      test: path.resolve(__dirname, "src/test"),
       utils: path.resolve(__dirname, "src/utils"),
       validators: path.resolve(__dirname, "src/validators"),
     },
