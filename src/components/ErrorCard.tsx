@@ -1,6 +1,10 @@
 import { AlertCard, IAlertCard } from 'components';
 import { AlertCardVariant } from 'enums';
 
+/**
+ * Convenience wrapper around {@link AlertCard} for error presentations.
+ * Renders a list of error messages under a heading with error styling.
+ */
 export default function ErrorCard({ heading, errorMessages, id }: IErrorCard) {
   return (
     <AlertCard heading={heading} variant={AlertCardVariant.ERROR} id={id}>
@@ -27,12 +31,15 @@ function ErrorCardMessage({ message, key }: IErrorCardMessage) {
   );
 }
 
+/** Props for {@link ErrorCard} */
 interface IErrorCard extends Pick<IAlertCard, 'heading' | 'id'>, IErrorCardMessageList {}
 
+/** Props for {@link ErrorCardMessageList} */
 interface IErrorCardMessageList {
   errorMessages: IErrorCardMessage['message'][];
 }
 
+/** Props for {@link ErrorCardMessage} */
 interface IErrorCardMessage {
   key: number;
   message: string;

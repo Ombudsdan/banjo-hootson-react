@@ -1,5 +1,9 @@
 import { useMemo } from 'react';
 
+/**
+ * Thin wrapper around an iframe to embed a Google Calendar with simple width/height handling.
+ * Accepts numeric or string dimensions and coerces them to valid iframe attributes.
+ */
 export default function GoogleCalendarIFrame({ source, title, width, height }: IGoogleCalendar) {
   const widthStr = useMemo(setWidthString, [width]);
   const heightStr = useMemo(setHeightString, [height]);
@@ -24,6 +28,7 @@ export default function GoogleCalendarIFrame({ source, title, width, height }: I
   }
 }
 
+/** Props for {@link GoogleCalendarIFrame} */
 interface IGoogleCalendar {
   source: string;
   title: string;

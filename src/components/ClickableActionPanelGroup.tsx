@@ -1,6 +1,10 @@
 import { ClickableActionPanel } from 'components';
 import { ClickableActionPanelGroupController, ActionPanelGroupOption } from 'controllers';
 
+/**
+ * Renders a group of clickable action panels given a group key.
+ * The group is resolved via the controller and each option is displayed as a panel.
+ */
 export default function ClickableActionPanelGroup({ group }: IClickableActionPanelGroup) {
   const options = ClickableActionPanelGroupController.getGroup(group);
 
@@ -15,6 +19,7 @@ export default function ClickableActionPanelGroup({ group }: IClickableActionPan
   );
 }
 
+/** Props for {@link ClickableActionPanelGroup} */
 interface IClickableActionPanelGroup {
   group: ActionPanelGroupOption;
 }

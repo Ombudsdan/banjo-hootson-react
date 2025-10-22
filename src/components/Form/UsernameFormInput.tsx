@@ -3,13 +3,16 @@ import { InstagramAccountValidator } from 'validators';
 import { IBaseInstagramInput, InstagramInputGroup } from 'framework';
 import { Form } from 'components';
 
+/**
+ * Instagram username input with validation. Uses a prefixed input group and shows inline errors.
+ */
 export default function UsernameFormInput({
   id,
   label,
   initialValue = '',
   hint,
   placeholder = 'Username'
-}: IUsernameInput) {
+}: IUsernameFormInput) {
   const { validation, showErrors } = useFormField({
     id,
     initialValue,
@@ -33,7 +36,8 @@ export default function UsernameFormInput({
   );
 }
 
-interface IUsernameInput extends IBaseInstagramInput {
+/** Props for {@link UsernameFormInput}. */
+interface IUsernameFormInput extends IBaseInstagramInput {
   label: string;
   hint?: string;
 }

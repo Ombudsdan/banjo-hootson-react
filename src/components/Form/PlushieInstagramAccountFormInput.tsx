@@ -4,6 +4,10 @@ import { IBaseInstagramInput, InstagramInputGroup } from 'framework';
 import { IPlushieInstagramAccount } from 'model/user.model';
 import { Form } from 'components';
 
+/**
+ * Single plushie Instagram account input with duplicate checking against an existing list.
+ * Pass `existingAccounts` to enable uniqueness validation.
+ */
 export default function PlushieInstagramAccountFormInput({
   id,
   label,
@@ -44,6 +48,7 @@ export default function PlushieInstagramAccountFormInput({
   }
 }
 
+/** Props for {@link PlushieInstagramAccountFormInput}. */
 interface IPlushieInstagramAccountFormInput extends IBaseInstagramInput {
   label: string;
   hint?: string;

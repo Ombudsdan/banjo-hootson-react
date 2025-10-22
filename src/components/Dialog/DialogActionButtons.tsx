@@ -1,6 +1,10 @@
 import { DialogConfirm, DialogConfirmType } from 'enums';
 import { MouseEventHandler } from 'react';
 
+/**
+ * Action buttons for dialogs. Supports plain dialogs (Confirm + Cancel) and form dialogs (Submit + Cancel).
+ * Validates configuration to prevent incompatible props for the chosen dialog mode.
+ */
 export default function DialogActionButtons(props: IDialogActionButtons & { isFormDialog?: boolean }) {
   const {
     isFormDialog,
@@ -19,7 +23,7 @@ export default function DialogActionButtons(props: IDialogActionButtons & { isFo
 
   return (
     <div className="dialog__action-buttons">
-      {isFormDialog && <FormDialogSubmitButton {...confirmButtonProps} />}
+      {isFormDialog && <FormDialogConfirmButton {...confirmButtonProps} />}
       {!isFormDialog && !!onConfirm && <DialogConfirmButton {...confirmButtonProps} onConfirm={onConfirm} />}
       <CloseButton cancelText={cancelText} onClose={onClose} isLoading={isLoading} />
     </div>
@@ -46,7 +50,12 @@ export default function DialogActionButtons(props: IDialogActionButtons & { isFo
   }
 }
 
-function FormDialogSubmitButton({ confirmType, isLoading, confirmText, confirmLoadingText }: IFormDialogSubmitButton) {
+function FormDialogConfirmButton({
+  confirmType,
+  isLoading,
+  confirmText,
+  confirmLoadingText
+}: IFormDialogConfirmButton) {
   return (
     <button type="submit" className={`button button--${confirmType}`} autoFocus disabled={isLoading}>
       {isLoading ? confirmLoadingText : confirmText}
@@ -86,10 +95,12 @@ function CloseButton({ cancelText, isLoading, onClose }: ICloseButton) {
   );
 }
 
+/** Props for {@link DialogActionButtons}. */
 export interface IDialogActionButtons extends IPrimaryButton, ICloseButton {
   isLoading?: boolean;
 }
 
+/** Base Props for the Primary Buttons, either {@link DialogConfirmButton} for non-form dialogs or {@link FormDialogConfirmButton} for form dialogs */
 interface IPrimaryButton {
   confirmType?: DialogConfirmType;
   confirmText?: string;
@@ -97,13 +108,16 @@ interface IPrimaryButton {
   onConfirm?: MouseEventHandler<HTMLButtonElement>;
 }
 
+/** Props for {@link CloseButton}. */
 interface ICloseButton extends Pick<IDialogActionButtons, 'isLoading'> {
   cancelText?: string;
   onClose?: () => void;
 }
 
+/** Props for {@link DialogConfirmButton}. */
 interface IDialogConfirmButton extends Omit<IPrimaryButton, 'onClick'>, Pick<IDialogActionButtons, 'isLoading'> {
   onConfirm: MouseEventHandler<HTMLButtonElement>;
 }
 
-interface IFormDialogSubmitButton extends Omit<IPrimaryButton, 'onClick'>, Pick<IDialogActionButtons, 'isLoading'> {}
+/** Props for {@link FormDialogConfirmButton}. */
+interface IFormDialogConfirmButton extends Omit<IPrimaryButton, 'onClick'>, Pick<IDialogActionButtons, 'isLoading'> {}
