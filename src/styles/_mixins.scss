@@ -41,12 +41,14 @@
   align-items: center;
   justify-content: center;
 }
+
 @mixin flex-row-center {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
 }
+
 @mixin flex-row-space-between {
   display: flex;
   flex-direction: row;
@@ -54,6 +56,7 @@
   justify-content: space-between;
   gap: 1rem;
 }
+
 @mixin flex-wrap {
   display: flex;
   flex-wrap: wrap;
@@ -62,17 +65,20 @@
   max-width: 100%;
   margin: 0 auto;
 }
+
 @mixin flex-wrap-item {
   display: flex;
   max-height: 100%;
   object-fit: cover;
 }
+
 @mixin mobile-only {
   display: none;
   @media screen and (max-width: variables.$breakpoint-s) {
     display: block;
   }
 }
+
 @mixin mobile-hidden {
   display: block;
   @media screen and (max-width: variables.$breakpoint-s) {
@@ -99,12 +105,14 @@
   & {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
+
   &:hover {
     cursor: pointer;
     background-color: rgba($colour, 0.1);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     transition: all 0.2s ease-in-out;
   }
+
   &:focus {
     outline: none;
     border: 3px solid $colour;
@@ -114,6 +122,7 @@
 @mixin clickable-panel-border($colour: null) {
   & {
     border-radius: 12px;
+
     @if $colour {
       border: 1px solid $colour;
     } @else {

@@ -1,4 +1,10 @@
-import type { IPlushieBirthday } from "model/plushie-birthday.types";
+/**
+ * Plushie utilities
+ * Formatting & extraction helpers for plushie birthday event names (pure functions only).
+ * Derives possessive name, birth year, username handle, and canonical casing.
+ */
+
+import { IPlushieBirthday } from "model/plushie-birthday";
 
 // Minimal helpers ported from Angular version (simplified: excluding age/date formatting for now)
 export function formatPlushieName(name: string): string {

@@ -1,0 +1,33 @@
+@use "../variables";
+
+.page-container {
+  padding: 0 1rem;
+
+  @media screen and (min-width: variables.$breakpoint-xs) {
+    padding: 0 0.75rem;
+    max-width: 100%;
+  }
+
+  @media screen and (min-width: variables.$breakpoint-s) {
+    padding: 0 1rem;
+  }
+
+  @media screen and (min-width: variables.$breakpoint-m) {
+    padding: 0 2rem;
+  }
+
+  @media screen and (min-width: variables.$breakpoint-m) {
+    padding: 0 2rem;
+  }
+
+  @media screen and (min-width: variables.$breakpoint-xl) {
+    padding: 0 3rem;
+  }
+
+  &--default {
+    max-width: variables.$page-width;
+    margin: 0 auto;
+  }
+
+  // &--full-width doesn't require any overrides
+}

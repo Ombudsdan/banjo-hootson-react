@@ -1,5 +1,9 @@
-type Props = { children?: React.ReactNode };
+import { PropsWithChildren } from "react";
 
-export default function FormActionsContainer({ children }: Props) {
+export default function FormActionsContainer({
+  children,
+}: IFormActionsContainer) {
   return <div className="form-actions-container">{children}</div>;
 }
+
+interface IFormActionsContainer extends PropsWithChildren {}

@@ -10,7 +10,8 @@
 @use "./components/navmenu";
 @use "./components/default-page-layout";
 @use "./components/footer";
-@use "./components/page-width-container";
+@use "./components/page-container";
+@use "./components/page-content-container";
 @use "./components/page-section-container";
 @use "./components/page-heading-container";
 @use "./components/page-navigation";
@@ -20,7 +21,6 @@
 @use "./page-alerts";
 @use "./components/gallery";
 @use "./components/dialog";
-@use "./components/flex-column-layout";
 @use "./components/form-actions-container";
 @use "./components/form-section-header";
 @use "./components/overlay-host";

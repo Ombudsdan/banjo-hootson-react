@@ -1,21 +1,15 @@
+/**
+ * HttpClientService
+ * Centralized fetch wrapper adding:
+ *  - Base URL resolution with query serialization
+ *  - Optional auth token injection via token provider
+ *  - Uniform logging + timing + error shaping (throws Error with status/body)
+ *  - Lightweight redirect handling for 401/403 to auth routes
+ * Pure static methods – no instance state except optional token provider.
+ */
 import { env } from "env";
 
-type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
-
-interface RequestOptions<TBody> {
-  path: string;
-  method?: HttpMethod;
-  body?: TBody;
-  headers?: Record<string, string>;
-  query?: Record<string, string | number | boolean | undefined>;
-  /**
-   * When true will send cookies / auth-related credentials cross-origin.
-   * Keep false (default) for public / cacheable endpoints to simplify CORS.
-   */
-  withCredentials?: boolean;
-}
-
-export class HttpClient {
+export default class HttpClientService {
   private static tokenProvider: (() => Promise<string | null>) | null = null;
 
   static setTokenProvider(provider: () => Promise<string | null>) {
@@ -113,4 +107,19 @@ export class HttpClient {
     console.debug("[HTTP] <-", method, url, statusInfo, { elapsedMs: elapsed });
     return data as TResponse;
   }
+}
+
+type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+
+interface RequestOptions<TBody> {
+  path: string;
+  method?: HttpMethod;
+  body?: TBody;
+  headers?: Record<string, string>;
+  query?: Record<string, string | number | boolean | undefined>;
+  /**
+   * When true will send cookies / auth-related credentials cross-origin.
+   * Keep false (default) for public / cacheable endpoints to simplify CORS.
+   */
+  withCredentials?: boolean;
 }

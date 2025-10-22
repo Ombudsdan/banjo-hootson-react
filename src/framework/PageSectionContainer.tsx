@@ -1,13 +1,22 @@
 import { PropsWithChildren, ReactNode } from "react";
+import { generateClassName } from "utils";
 
-type Props = PropsWithChildren<{ heading?: ReactNode; className?: string }>;
-
-export function PageSectionContainer({ heading, className, children }: Props) {
-  const cls = ["page-section-container", className].filter(Boolean).join(" ");
+export default function PageSectionContainer({
+  heading,
+  className,
+  children,
+}: IPageSectionContainer) {
   return (
-    <section className={cls}>
+    <section
+      className={generateClassName(["page-section-container", className])}
+    >
       {heading ? <h2 className="heading">{heading}</h2> : null}
       {children}
     </section>
   );
+}
+
+interface IPageSectionContainer extends PropsWithChildren {
+  heading?: ReactNode;
+  className?: string;
 }

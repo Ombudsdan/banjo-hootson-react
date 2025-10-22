@@ -1,30 +1,30 @@
-export type INavigationTab = {
-  key: string;
-  title: string;
-  isDisabled?: boolean;
-};
+import { useMemo } from "react";
+import { generateClassName } from "utils";
 
-type Props = {
-  tabs: INavigationTab[];
-  activeKey?: string;
-  onSelect?: (tab: INavigationTab) => void;
-};
-
-export default function PageNavigation({ tabs, activeKey, onSelect }: Props) {
+export default function PageNavigation({
+  tabs,
+  activeKey,
+  onSelect,
+}: IPageNavigation) {
   return (
     <nav className="page-navigation" aria-label="Page Tabs">
       <ul className="page-navigation__list">
         {tabs.map((tab) => {
-          const isActive = tab.key === activeKey;
-          const cls = [
-            "page-navigation__item",
-            isActive ? "page-navigation__item--active" : "",
-            tab.isDisabled ? "page-navigation__item--disabled" : "",
-          ]
-            .filter(Boolean)
-            .join(" ");
+          const isActive = useMemo(
+            () => tab.key === activeKey,
+            [tab.key, activeKey]
+          );
+
+          const className = useMemo(() => {
+            return generateClassName([
+              "page-navigation__item",
+              isActive && "page-navigation__item--active",
+              tab.isDisabled && "page-navigation__item--disabled",
+            ]);
+          }, [isActive, tab.isDisabled]);
+
           return (
-            <li key={tab.key} className={cls}>
+            <li key={tab.key} className={className}>
               <button
                 type="button"
                 className="page-navigation__button"
@@ -40,4 +40,16 @@ export default function PageNavigation({ tabs, activeKey, onSelect }: Props) {
       </ul>
     </nav>
   );
+}
+
+export interface INavigationTab {
+  key: string;
+  title: string;
+  isDisabled?: boolean;
+}
+
+interface IPageNavigation {
+  tabs: INavigationTab[];
+  activeKey?: string;
+  onSelect?: (tab: INavigationTab) => void;
 }

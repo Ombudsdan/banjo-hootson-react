@@ -1,20 +1,27 @@
-import { HttpClient } from "services/http-client";
-import { IUserServiceProfile, IUserUpdate } from "model/user.types";
+/**
+ * UserService
+ * Handles authenticated user lifecycle operations (init, fetch profile, update, delete).
+ * Does not cache locally; callers manage memoization if required.
+ */
+import { IUserServiceProfile, IUserUpdate } from "model/user";
+import { HttpClientService } from "services";
 
-export class UserService {
+export default class UserService {
   static initUser() {
-    return HttpClient.request<IUserServiceProfile>({
+    return HttpClientService.request<IUserServiceProfile>({
       path: "/users",
       method: "POST",
     });
   }
 
   static getCurrentUser() {
-    return HttpClient.request<IUserServiceProfile>({ path: "/users/me" });
+    return HttpClientService.request<IUserServiceProfile>({
+      path: "/users/me",
+    });
   }
 
   static updateCurrentUser(updates: IUserUpdate) {
-    return HttpClient.request<IUserServiceProfile, IUserUpdate>({
+    return HttpClientService.request<IUserServiceProfile, IUserUpdate>({
       path: "/users/me",
       method: "PUT",
       body: updates,
@@ -22,7 +29,7 @@ export class UserService {
   }
 
   static deleteCurrentUser() {
-    return HttpClient.request<{ message: string }>({
+    return HttpClientService.request<{ message: string }>({
       path: "/users/me",
       method: "DELETE",
     });

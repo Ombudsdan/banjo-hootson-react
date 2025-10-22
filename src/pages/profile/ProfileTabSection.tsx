@@ -1,17 +1,10 @@
-import { useEffect, useState } from "react";
-import { PageSectionContainer } from "@/framework/PageSectionContainer";
-import FormSectionHeader from "@/components/FormSectionHeader";
-import FormActionsContainer from "@/components/FormActionsContainer";
-import { FlexColumnLayout } from "@/framework/FlexColumnLayout";
-import { UserController } from "@/controllers/user.controller";
-import { LocationController } from "@/controllers/location.controller";
-import type { IUserProfile } from "model/user-profile.types";
-import type { ICountry } from "model/location.types";
-import {
-  Validation,
-  runValidators,
-  firstErrorMessage,
-} from "@/utils/validation";
+import { FormEvent, useEffect, useState } from "react";
+import { FormSectionHeader, FormActionsContainer } from "components";
+import { PageSectionContainer, PageContentContainer } from "framework";
+import { UserController, LocationController } from "controllers";
+import { Validation, runValidators, firstErrorMessage } from "utils";
+import { IUserProfile } from "model/user-profile";
+import { ICountry } from "model/location";
 
 export default function ProfileTabSection() {
   const [profile, setProfile] = useState<IUserProfile | null>(null);
@@ -54,7 +47,7 @@ export default function ProfileTabSection() {
 
   const formValid = !cityErrors && !instagramErrors;
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
     setTouched({ city: true, country: true, instagram: true });
@@ -69,7 +62,7 @@ export default function ProfileTabSection() {
 
   return (
     <form onSubmit={onSubmit}>
-      <FlexColumnLayout spacing="medium">
+      <PageContentContainer spacing="medium">
         {/* Alerts placeholder */}
         {/* <ProfilePageAlert errorMessages={[]} successMessage={null} /> */}
 
@@ -165,7 +158,7 @@ export default function ProfileTabSection() {
             Save Profile
           </button>
         </FormActionsContainer>
-      </FlexColumnLayout>
+      </PageContentContainer>
     </form>
   );
 }

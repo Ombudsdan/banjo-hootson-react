@@ -1,17 +1,16 @@
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  ClickableActionPanelController,
-  ActionPanelOption,
-} from "@/controllers/clickable-action-panel.controller";
+import { ClickableActionPanelController, ActionPanelOption } from "controllers";
 
-export function ClickableActionPanel({
+export default function ClickableActionPanel({
   option,
-}: {
-  option: ActionPanelOption;
-}) {
+}: IClickableActionPanel) {
   const content = ClickableActionPanelController.getPanelContent(option);
-  if (!content) return null;
+
+  if (!content) {
+    return null;
+  }
+
   const themeClass = content.theme
     ? `clickable-action-panel--${content.theme}`
     : "";
@@ -42,4 +41,8 @@ export function ClickableActionPanel({
       {body}
     </Link>
   );
+}
+
+interface IClickableActionPanel {
+  option: ActionPanelOption;
 }

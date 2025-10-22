@@ -1,12 +1,12 @@
 import { useMemo } from "react";
 import { useLocation } from "react-router-dom";
-import { PageWidthContainer } from "@/framework/PageWidthContainer";
-import { FlexColumnLayout } from "@/framework/FlexColumnLayout";
-import PageNavigation, { INavigationTab } from "@/components/PageNavigation";
+import { PageContentContainer } from "framework";
+import { PageNavigation, INavigationTab } from "components";
+import { usePageHeading } from "hooks";
+
 import ProfileTabSection from "./profile/ProfileTabSection";
 import AccountTabSection from "./profile/AccountTabSection";
 import PreferencesTabSection from "./profile/PreferencesTabSection";
-import { usePageHeading } from "@/hooks/usePageHeading";
 
 export default function ProfilePage() {
   const { search } = useLocation();
@@ -22,13 +22,11 @@ export default function ProfilePage() {
   usePageHeading("Account Settings");
 
   return (
-    <PageWidthContainer>
-      <FlexColumnLayout spacing="small">
-        <PageNavigation tabs={tabs} activeKey={activeTab} onSelect={() => {}} />
-        {activeTab === "PROFILE" && <ProfileTabSection />}
-        {activeTab === "ACCOUNT" && <AccountTabSection />}
-        {activeTab === "PREFERENCES" && <PreferencesTabSection />}
-      </FlexColumnLayout>
-    </PageWidthContainer>
+    <PageContentContainer spacing="small">
+      <PageNavigation tabs={tabs} activeKey={activeTab} onSelect={() => {}} />
+      {activeTab === "PROFILE" && <ProfileTabSection />}
+      {activeTab === "ACCOUNT" && <AccountTabSection />}
+      {activeTab === "PREFERENCES" && <PreferencesTabSection />}
+    </PageContentContainer>
   );
 }

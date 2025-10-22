@@ -1,7 +1,7 @@
 import { lazy } from "react";
 import { createBrowserRouter } from "react-router-dom";
-import DefaultLayout from "@/layout/DefaultLayout";
-import RequireAuth from "@/routes/RequireAuth";
+import { DefaultLayout } from "layout";
+import { RequireAuth } from "routes";
 
 const HomePage = lazy(() => import("../pages/HomePage"));
 const CalendarPage = lazy(() => import("../pages/CalendarPage"));
@@ -10,6 +10,7 @@ const NotFoundPage = lazy(() => import("../pages/NotFoundPage"));
 const AboutPage = lazy(() => import("../pages/AboutPage"));
 const ContactPage = lazy(() => import("../pages/ContactPage"));
 const DashboardPage = lazy(() => import("../pages/DashboardPage"));
+const ManageProfilePage = lazy(() => import("../pages/ManageProfile"));
 const LoginPage = lazy(() => import("../pages/LoginPage"));
 const SignupPage = lazy(() => import("../pages/SignupPage"));
 const UnauthorizedPage = lazy(() => import("../pages/UnauthorizedPage"));
@@ -48,6 +49,14 @@ export const router = createBrowserRouter([
         element: (
           <RequireAuth>
             <ProfilePage />
+          </RequireAuth>
+        ),
+      },
+      {
+        path: "manage-profile",
+        element: (
+          <RequireAuth>
+            <ManageProfilePage />
           </RequireAuth>
         ),
       },

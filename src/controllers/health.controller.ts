@@ -1,6 +1,6 @@
-import { HealthService } from "services/health.service";
+import { HealthService } from "services";
 
-export class HealthController {
+export default class HealthController {
   static async ping() {
     return HealthService.ping();
   }

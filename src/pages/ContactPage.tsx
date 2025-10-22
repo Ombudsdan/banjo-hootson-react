@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { PageWidthContainer } from "@/framework/PageWidthContainer";
-import { Image } from "@/framework/Image";
-import { usePageHeading } from "@/hooks/usePageHeading";
+import { Image } from "framework";
+import { usePageHeading } from "hooks";
+import { ImageLoadingState, ImageUsage } from "model/image";
 
 export default function ContactPage() {
   const sendEmail = () => {
@@ -15,8 +15,8 @@ export default function ContactPage() {
         <Image
           fileName="contact-heading-image"
           alt="Banjo wearing a grey jumper with Mickey Mouse's face on it and brown ushanka hat with a bear's face on it, standing next to a wall at Edinburgh Castle with the city in the background"
-          usage="heading"
-          loading="eager"
+          usage={ImageUsage.HEADING}
+          loading={ImageLoadingState.EAGER}
         />
       ),
       []
@@ -24,12 +24,10 @@ export default function ContactPage() {
   });
 
   return (
-    <PageWidthContainer>
-      <div className="contact-page__message-container">
-        <button className="button button--main" onClick={sendEmail}>
-          Email Me
-        </button>
-      </div>
-    </PageWidthContainer>
+    <div className="contact-page__message-container">
+      <button className="button button--main" onClick={sendEmail}>
+        Email Me
+      </button>
+    </div>
   );
 }

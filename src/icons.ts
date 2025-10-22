@@ -7,7 +7,11 @@ import {
 import {
   faBeer,
   faBirthdayCake,
+  faCalendarAlt,
   faCalendarPlus,
+  faListCheck,
+  faUser,
+  faUserGear,
 } from "@fortawesome/free-solid-svg-icons";
 
 // Register icons once
@@ -17,7 +21,11 @@ library.add(
   faThreads,
   faBeer,
   faBirthdayCake,
-  faCalendarPlus
+  faCalendarPlus,
+  faCalendarAlt,
+  faUser,
+  faUserGear,
+  faListCheck
 );
 
 export const ICONS = {
@@ -27,4 +35,8 @@ export const ICONS = {
   calendar: faBirthdayCake,
   submitBirthday: faCalendarPlus,
   beer: faBeer,
+  user: faUser,
+  calendarAlt: faCalendarAlt,
+  userGear: faUserGear,
+  listCheck: faListCheck,
 };

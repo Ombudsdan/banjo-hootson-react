@@ -1,11 +1,6 @@
 import { PropsWithChildren } from "react";
-
-type Props = PropsWithChildren<{
-  icon?: React.ReactNode;
-  description?: string;
-  isLocked?: boolean;
-  onClick?: () => void;
-}>;
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function DashboardCard({
   icon,
@@ -13,7 +8,7 @@ export default function DashboardCard({
   isLocked,
   onClick,
   children,
-}: Props) {
+}: IDashboardCard) {
   const cls = `dashboard-card${isLocked ? " dashboard-card--locked" : ""}`;
   return (
     <button
@@ -23,9 +18,11 @@ export default function DashboardCard({
       disabled={!!isLocked}
     >
       {icon && (
-        <div className="dashboard-card__icon" aria-hidden>
-          {icon}
-        </div>
+        <FontAwesomeIcon
+          className="dashboard-card__icon"
+          icon={icon}
+          title={description || "Feature Icon"}
+        />
       )}
       <div className="dashboard-card__content">
         {children}
@@ -35,4 +32,11 @@ export default function DashboardCard({
       </div>
     </button>
   );
+}
+
+interface IDashboardCard extends PropsWithChildren {
+  icon?: IconDefinition;
+  description?: string;
+  isLocked?: boolean;
+  onClick?: () => void;
 }

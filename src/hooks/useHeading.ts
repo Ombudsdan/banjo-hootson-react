@@ -1,8 +1,15 @@
+/**
+ * useHeading
+ * Low-level hook accessing raw heading context (setHeading / clearHeading + config).
+ * Prefer using higher-level helpers like usePageHeading for simple page titles.
+ */
 import { useContext } from "react";
-import { HeadingContext } from "@/services/heading.service";
+import { PageHeadingContext } from "layout";
 
-export function useHeading() {
-  const ctx = useContext(HeadingContext);
-  if (!ctx) throw new Error("useHeading must be used within HeadingProvider");
-  return ctx;
+export default function useHeading() {
+  const context = useContext(PageHeadingContext);
+  if (!context) {
+    throw new Error("useHeading must be used within HeadingProvider");
+  }
+  return context;
 }

@@ -1,16 +1,13 @@
-import { useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { PageWidthContainer } from "@/framework/PageWidthContainer";
-import { usePageHeading } from "@/hooks/usePageHeading";
-import { FlexColumnLayout } from "@/framework/FlexColumnLayout";
-import { AuthController } from "@/controllers/auth.controller";
-import { UserController } from "@/controllers/user.controller";
-import AlertCard from "@/components/AlertCard";
-import {
-  Validation,
-  runValidators,
-  firstErrorMessage,
-} from "@/utils/validation";
+import { usePageHeading } from "hooks";
+import { PageContentContainer } from "framework";
+import { UserController, AuthController } from "controllers";
+import usePageAlerts from "hooks/usePageAlerts";
+import PageAlert from "builders/page-alert.builder";
+import { Validation, runValidators, firstErrorMessage } from "utils";
+
+const LOGIN_ERROR_ALERT_ID = "login-error";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -23,12 +20,8 @@ export default function LoginPage() {
     { email: false, password: false }
   );
   const [submitted, setSubmitted] = useState(false);
-  const [showLoggedOutAlert, setShowLoggedOutAlert] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [infoMessage, setInfoMessage] = useState<string | null>(null);
-  const [showExpiredAlert, setShowExpiredAlert] = useState<boolean>(false);
-  const [isShowingMessage, setIsShowingMessage] = useState(false);
+  const { addAlert, dismissAlert } = usePageAlerts();
 
   useEffect(() => {
     const msg = params.get("message");
@@ -36,20 +29,25 @@ export default function LoginPage() {
     const hasExpired = params.get("expired") === "1";
     const next = new URLSearchParams(params);
 
-    setShowLoggedOutAlert(hasLoggedOut);
-    setShowExpiredAlert(hasExpired);
-
     if (msg) {
-      setInfoMessage(msg);
+      addAlert(PageAlert.info(msg, "info-message"));
     }
 
     if (hasLoggedOut) {
-      setInfoMessage(null);
       next.delete("loggedOut");
+      addAlert(
+        PageAlert.success("Signed out successfully", "session-logged-out")
+      );
     }
 
     if (hasExpired) {
       next.delete("expired");
+      addAlert(
+        PageAlert.warning(
+          "Your session expired. Please sign in again.",
+          "session-expired"
+        )
+      );
     }
 
     if (hasLoggedOut || hasExpired) {
@@ -59,15 +57,7 @@ export default function LoginPage() {
       }`;
       window.history.replaceState({}, "", newUrl);
     }
-  }, [params]);
-
-  useEffect(() => {
-    setIsShowingMessage(
-      Boolean(
-        errorMessage || infoMessage || showLoggedOutAlert || showExpiredAlert
-      )
-    );
-  }, [infoMessage, errorMessage, showLoggedOutAlert, showExpiredAlert]);
+  }, [params, addAlert]);
 
   // Validators mirroring Angular expectations: required + email format; password min length 6
   const emailErrors = runValidators(email, [
@@ -98,14 +88,18 @@ export default function LoginPage() {
 
   const formValid = !emailErrors && !passwordErrors;
 
-  const onSubmit = async (e: React.FormEvent) => {
+  const onSubmit = async (e: FormEvent) => {
+    dismissAlert(LOGIN_ERROR_ALERT_ID);
+
     e.preventDefault();
-    setErrorMessage(null);
+
     setSubmitted(true);
     setTouched({ email: true, password: true });
-    setErrorMessage(null);
+
     if (!formValid) return;
+
     setIsLoading(true);
+
     try {
       await AuthController.signInWithEmailPassword(email, password);
       await UserController.me();
@@ -136,7 +130,7 @@ export default function LoginPage() {
           if (m) message = `Login failed: ${m}`;
         }
       }
-      setErrorMessage(message);
+      addAlert(PageAlert.error(message, LOGIN_ERROR_ALERT_ID));
     } finally {
       setIsLoading(false);
     }
@@ -144,119 +138,82 @@ export default function LoginPage() {
 
   usePageHeading("Sign In");
   return (
-    <>
-      <PageWidthContainer>
-        <FlexColumnLayout>
-          <div className="login-page">
-            <div className="login-page__container">
-              <form onSubmit={onSubmit} className="login-page__form">
-                <div
-                  className={
-                    isShowingMessage
-                      ? "login-page__message-container"
-                      : undefined
-                  }
-                >
-                  {showLoggedOutAlert && (
-                    <AlertCard
-                      heading="Signed out successfully"
-                      variant="success"
-                      autoFocus
-                    />
-                  )}
-                  {showExpiredAlert && (
-                    <AlertCard
-                      heading="Your session expired. Please sign in again."
-                      variant="warning"
-                      autoFocus
-                    />
-                  )}
-                  {infoMessage && (
-                    <div className="login-page__message login-page__message--info">
-                      {infoMessage}
-                    </div>
-                  )}
-                  {errorMessage && (
-                    <div className="login-page__message login-page__message--error">
-                      {errorMessage}
-                    </div>
-                  )}
+    <PageContentContainer>
+      <div className="login-page">
+        <div className="login-page__container">
+          <form onSubmit={onSubmit} className="login-page__form">
+            <div className="form-group">
+              <label
+                htmlFor="email"
+                className="form-group__label form-group__label--required"
+              >
+                Email Address
+              </label>
+              <input
+                type="email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                onBlur={() => setTouched((t) => ({ ...t, email: true }))}
+                className={emailErrorText ? "error" : undefined}
+                placeholder="Enter your email"
+                autoComplete="email"
+              />
+              {emailErrorText && (
+                <div className="form-group__error-message">
+                  {emailErrorText}
                 </div>
+              )}
+            </div>
 
-                <div className="form-group">
-                  <label
-                    htmlFor="email"
-                    className="form-group__label form-group__label--required"
-                  >
-                    Email Address
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    onBlur={() => setTouched((t) => ({ ...t, email: true }))}
-                    className={emailErrorText ? "error" : undefined}
-                    placeholder="Enter your email"
-                    autoComplete="email"
-                  />
-                  {emailErrorText && (
-                    <div className="form-group__error-message">
-                      {emailErrorText}
-                    </div>
-                  )}
+            <div className="form-group">
+              <label
+                htmlFor="password"
+                className="form-group__label form-group__label--required"
+              >
+                Password
+              </label>
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onBlur={() => setTouched((t) => ({ ...t, password: true }))}
+                className={passwordErrorText ? "error" : undefined}
+                placeholder="Enter your password"
+                autoComplete="current-password"
+              />
+              {passwordErrorText && (
+                <div className="form-group__error-message">
+                  {passwordErrorText}
                 </div>
+              )}
+            </div>
 
-                <div className="form-group">
-                  <label
-                    htmlFor="password"
-                    className="form-group__label form-group__label--required"
-                  >
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    id="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    onBlur={() => setTouched((t) => ({ ...t, password: true }))}
-                    className={passwordErrorText ? "error" : undefined}
-                    placeholder="Enter your password"
-                    autoComplete="current-password"
-                  />
-                  {passwordErrorText && (
-                    <div className="form-group__error-message">
-                      {passwordErrorText}
-                    </div>
-                  )}
-                </div>
+            <button
+              type="submit"
+              className="form__button form__button--primary"
+              disabled={isLoading}
+            >
+              {isLoading ? "Signing In..." : "Sign In"}
+            </button>
 
+            <div className="login-page__signup-prompt">
+              <p>
+                Don't have an account?
                 <button
-                  type="submit"
-                  className="form__button form__button--primary"
+                  type="button"
+                  className="login-page__link-button"
+                  onClick={() => navigate("/signup")}
                   disabled={isLoading}
                 >
-                  {isLoading ? "Signing In..." : "Sign In"}
+                  Sign Up
                 </button>
-
-                <div className="login-page__signup-prompt">
-                  <p>
-                    Don't have an account?
-                    <button
-                      type="button"
-                      className="login-page__link-button"
-                      onClick={() => navigate("/signup")}
-                      disabled={isLoading}
-                    >
-                      Sign Up
-                    </button>
-                  </p>
-                </div>
-              </form>
+              </p>
             </div>
-          </div>
-        </FlexColumnLayout>
-      </PageWidthContainer>
-    </>
+          </form>
+        </div>
+      </div>
+    </PageContentContainer>
   );
 }

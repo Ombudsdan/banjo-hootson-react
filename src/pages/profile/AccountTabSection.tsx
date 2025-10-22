@@ -1,13 +1,11 @@
-import { FlexColumnLayout } from "@/framework/FlexColumnLayout";
-import { PageSectionContainer } from "@/framework/PageSectionContainer";
-import UserSubscriptionTierBadge from "@/components/UserSubscriptionTierBadge";
-import FormSectionHeader from "@/components/FormSectionHeader";
-import { DialogService } from "@/services/dialog.service";
+import { PageSectionContainer, PageContentContainer } from "framework";
+import { FormSectionHeader, UserSubscriptionTierBadge } from "components";
+import { DialogService } from "services";
 
 export default function AccountTabSection() {
   return (
     <div className="page-narrow">
-      <FlexColumnLayout spacing="medium">
+      <PageContentContainer spacing="medium">
         {/* Alerts placeholder */}
         {/* <ProfilePageAlert errorMessages={[]} successMessage={null} /> */}
 
@@ -50,7 +48,7 @@ export default function AccountTabSection() {
             </button>
           </div>
         </PageSectionContainer>
-      </FlexColumnLayout>
+      </PageContentContainer>
     </div>
   );
 }

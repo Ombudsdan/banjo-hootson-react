@@ -1,7 +1,7 @@
-import { LocationService } from "services/location.service";
-import { ICountry } from "model/location.types";
+import { ICountry } from "model/location";
+import { LocationService } from "services";
 
-export class LocationController {
+export default class LocationController {
   static async loadCountries(): Promise<ICountry[]> {
     return LocationService.getCountries();
   }

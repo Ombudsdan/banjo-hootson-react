@@ -1,7 +1,6 @@
 import { useEffect, useMemo } from "react";
-import { IHeadingConfig } from "@/services/heading.service";
-import { useHeading } from "@/hooks/useHeading";
-import { HeadingTheme } from "@/services/heading.service";
+import { useHeading } from "hooks";
+import { IPageHeadingContainer } from "model/page-heading";
 
 /**
  * usePageHeading
@@ -11,13 +10,16 @@ import { HeadingTheme } from "@/services/heading.service";
  * Example:
  *   function AboutPage() {
  *     usePageHeading('About Banjo');
- *     return <PageWidthContainer>...</PageWidthContainer>;
+ *     return <PageContainer>...</PageContainer>;
  *   }
  */
-export function usePageHeading(heading: string, options?: IPageHeadingOptions) {
+export default function usePageHeadingContainer(
+  heading: string,
+  options?: IPageHeadingContainer
+) {
   const { setHeading, clearHeading } = useHeading();
   // Memoize config so effect only runs when actual values change, not on every render creating new object references
-  const memoConfig: IHeadingConfig = useMemo(() => {
+  const memoConfig: IPageHeadingContainer = useMemo(() => {
     return { heading, ...(options || {}) };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [heading, options?.subheading, options?.image, options?.theme]);
@@ -33,9 +35,3 @@ export function usePageHeading(heading: string, options?: IPageHeadingOptions) {
  * - Pass stable references for `image` (wrap in useMemo) to avoid unnecessary re-runs.
  * - The service guards redundant updates, but memoizing prevents wasted renders.
  */
-
-interface IPageHeadingOptions {
-  subheading?: string;
-  image?: React.ReactNode;
-  theme?: HeadingTheme;
-}

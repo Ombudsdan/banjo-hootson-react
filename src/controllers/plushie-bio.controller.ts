@@ -1,19 +1,4 @@
-export type Plushie =
-  | "BIG_MONKEY"
-  | "DJUNGEL"
-  | "MANDY"
-  | "MORRIS"
-  | "DUORINGO"
-  | "GORDON";
-
-export interface IPlushie {
-  name: string;
-  bio: string;
-  birthday: string;
-  fileName: string;
-}
-
-export class PlushieBioController {
+export default class PlushieBioController {
   static getPlushieBio(plushie: Plushie) {
     return PLUSHIE_BIO_MAP.get(plushie);
   }
@@ -80,3 +65,17 @@ const PLUSHIE_BIO_MAP = new Map<Plushie, IPlushie>([
     },
   ],
 ]);
+export type Plushie =
+  | "BIG_MONKEY"
+  | "DJUNGEL"
+  | "MANDY"
+  | "MORRIS"
+  | "DUORINGO"
+  | "GORDON";
+
+export interface IPlushie {
+  name: string;
+  bio: string;
+  birthday: string;
+  fileName: string;
+}

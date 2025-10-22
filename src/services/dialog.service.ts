@@ -1,28 +1,16 @@
-type ConfirmType = "primary" | "danger";
+import { DialogConfirm, IDialog } from "model/dialog";
 
-export type DialogConfig = {
-  title: string;
-  message: string;
-  confirmText?: string;
-  cancelText?: string;
-  confirmType?: ConfirmType;
-  disableBackdropClose?: boolean;
-};
-
-export type ActiveDialog = Required<Pick<DialogConfig, "title" | "message">> &
-  Partial<
-    Pick<
-      DialogConfig,
-      "confirmText" | "cancelText" | "confirmType" | "disableBackdropClose"
-    >
-  > & {
-    resolver: (value: boolean) => void;
-  };
-
-type Listener = (active: ActiveDialog | null) => void;
-
+/**
+ * DialogService
+ * Manages a single active application modal dialog (imperative focus trap + resolve semantics).
+ * Features:
+ *  - Subscribe pattern for UI layer rendering
+ *  - Focus management & inert background while open
+ *  - Promise-based open() returning boolean (confirm/cancel)
+ * Not responsible for stacking multiple dialogs – intentionally single-instance.
+ */
 class DialogServiceImpl {
-  private active: ActiveDialog | null = null;
+  private active: IActiveDialog | null = null;
   private listeners: Set<Listener> = new Set();
   private previouslyFocusedEl: HTMLElement | null = null;
 
@@ -38,7 +26,7 @@ class DialogServiceImpl {
     return this.active;
   }
 
-  async open(config: DialogConfig): Promise<boolean> {
+  async open(config: IDialogConfig): Promise<boolean> {
     return new Promise((resolve) => {
       this.setInert(true);
       this.previouslyFocusedEl =
@@ -46,7 +34,7 @@ class DialogServiceImpl {
       this.active = {
         confirmText: "Confirm",
         cancelText: "Cancel",
-        confirmType: "primary",
+        confirmType: DialogConfirm.PRIMARY,
         disableBackdropClose: false,
         ...config,
         resolver: resolve,
@@ -123,3 +111,20 @@ class DialogServiceImpl {
 }
 
 export const DialogService = new DialogServiceImpl();
+
+export default DialogService;
+
+export interface IDialogConfig {
+  title: IDialog["title"];
+  message: IDialog["message"];
+  confirmText?: IDialog["confirmText"];
+  cancelText?: IDialog["cancelText"];
+  confirmType?: IDialog["confirmType"];
+  disableBackdropClose?: boolean;
+}
+
+export interface IActiveDialog extends IDialogConfig {
+  resolver: (value: boolean) => void;
+}
+
+type Listener = (active: IActiveDialog | null) => void;

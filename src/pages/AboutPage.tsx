@@ -1,10 +1,9 @@
-import { PlushieBioController } from "@/controllers/plushie-bio.controller";
-import { PlushieBio } from "@/components/PlushieBio";
-import { PageWidthContainer } from "@/framework/PageWidthContainer";
-import { PageSectionContainer } from "@/framework/PageSectionContainer";
-import { Image } from "@/framework/Image";
-import { usePageHeading } from "@/hooks/usePageHeading";
 import { useMemo } from "react";
+import { PlushieBioController } from "controllers";
+import { PlushieBio } from "components";
+import { Image, PageSectionContainer } from "framework";
+import { usePageHeading } from "hooks";
+import { ImageLoadingState, ImageUsage } from "model/image";
 
 export default function AboutPage() {
   const plushies = PlushieBioController.getAllPlushies();
@@ -16,8 +15,8 @@ export default function AboutPage() {
         <Image
           fileName="about-heading-image"
           alt="Banjo stood infront of a wall wearing a white shirt with crabs on it and with a felt-stitched monkey holding a banana in his shirt pocket"
-          usage="heading"
-          loading="eager"
+          usage={ImageUsage.HEADING}
+          loading={ImageLoadingState.EAGER}
         />
       ),
       []
@@ -25,14 +24,12 @@ export default function AboutPage() {
   });
 
   return (
-    <PageWidthContainer>
-      <PageSectionContainer heading="Meet My Family">
-        <div className="about-page__plushie-bio-container">
-          {plushies.map((plushie, i) => (
-            <PlushieBio plushie={plushie} position={i} key={plushie.fileName} />
-          ))}
-        </div>
-      </PageSectionContainer>
-    </PageWidthContainer>
+    <PageSectionContainer heading="Meet My Family">
+      <div className="about-page__plushie-bio-container">
+        {plushies.map((plushie, i) => (
+          <PlushieBio plushie={plushie} position={i} key={plushie.fileName} />
+        ))}
+      </div>
+    </PageSectionContainer>
   );
 }

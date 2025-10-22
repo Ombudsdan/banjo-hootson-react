@@ -1,3 +1,5 @@
+import { IInstagramAccount } from "./user-profile";
+
 export type SubscriptionTier = "standard" | "supporter";
 
 export interface IUserServiceProfile {
@@ -10,6 +12,10 @@ export interface IUserServiceProfile {
     displayName?: string;
     preferences?: Record<string, unknown>;
   };
+  city?: string;
+  country?: string;
+  humanInstagram?: string;
+  plushieInstagramAccounts?: IInstagramAccount[];
 }
 
 export type IUserUpdate = Partial<

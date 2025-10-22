@@ -1,16 +1,12 @@
-import Heading from "@/components/Heading";
-
-type Props = {
-  title: string;
-  headingLevel?: 2 | 3 | 4 | 5 | 6;
-  children?: React.ReactNode;
-};
+import { Heading } from "components";
+import { HeadingLevel, HeadingLevelType } from "model/heading";
+import { PropsWithChildren } from "react";
 
 export default function FormSectionHeader({
   title,
-  headingLevel = 2,
+  headingLevel = HeadingLevel.H2,
   children,
-}: Props) {
+}: IFormSectionHeader) {
   return (
     <div className="form-section-header">
       <Heading
@@ -21,4 +17,9 @@ export default function FormSectionHeader({
       {children}
     </div>
   );
+}
+
+interface IFormSectionHeader extends PropsWithChildren {
+  title: string;
+  headingLevel?: HeadingLevelType;
 }

@@ -1,18 +1,21 @@
-import { UserService } from "services/user.service";
-import { IUserServiceProfile, IUserUpdate } from "model/user.types";
-import { IUserProfile } from "model/user-profile.types";
+import { IUserServiceProfile, IUserUpdate } from "model/user";
+import { IUserProfile } from "model/user-profile";
+import { UserService } from "services";
 
-export class UserController {
-  static init(): Promise<IUserProfile> {
-    return UserService.initUser().then(this.toUiProfile);
+export default class UserController {
+  static async init(): Promise<IUserProfile> {
+    const user = await UserService.initUser();
+    return this.toUiProfile(user);
   }
 
-  static me(): Promise<IUserProfile> {
-    return UserService.getCurrentUser().then(this.toUiProfile);
+  static async me(): Promise<IUserProfile> {
+    const user = await UserService.getCurrentUser();
+    return this.toUiProfile(user);
   }
 
-  static update(updates: IUserUpdate): Promise<IUserProfile> {
-    return UserService.updateCurrentUser(updates).then(this.toUiProfile);
+  static async update(updates: IUserUpdate): Promise<IUserProfile> {
+    const user = await UserService.updateCurrentUser(updates);
+    return this.toUiProfile(user);
   }
 
   static delete(): Promise<{ message: string }> {
@@ -35,11 +38,10 @@ export class UserController {
       lastLogin: toIso(user.lastLogin),
       displayName: user.profile?.displayName,
       preferences: user.profile?.preferences,
-      // IProfile fields (not yet populated by backend)
-      city: "",
-      country: "",
-      humanInstagram: "",
-      plushieInstagramAccounts: [],
+      city: user.city || "",
+      country: user.country || "",
+      humanInstagram: user.humanInstagram || "",
+      plushieInstagramAccounts: user.plushieInstagramAccounts || [],
     };
   }
 }

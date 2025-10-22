@@ -1,8 +1,8 @@
-// Validation utilities ported from Angular validation.utils.ts to React/TypeScript.
-// Mirrors naming and behavior closely for parity across forms.
-
-export type ValidationErrorMap = Record<string, boolean>;
-export type ValidatorFn = (value: string) => ValidationErrorMap | null;
+/**
+ * Validation utilities
+ * Ported from Angular implementation for cross-framework parity.
+ * Exposes composable validator functions plus helpers to aggregate results and derive messages.
+ */
 
 function patternValidator(regex: RegExp, key: string): ValidatorFn {
   return (value: string) => {
@@ -112,3 +112,6 @@ export function firstErrorMessage(
   }
   return "";
 }
+
+export type ValidationErrorMap = Record<string, boolean>;
+export type ValidatorFn = (value: string) => ValidationErrorMap | null;
