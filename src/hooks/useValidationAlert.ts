@@ -1,11 +1,16 @@
+/**
+ * useValidationAlert
+ * Aggregated form-wide validation messaging (heading + list of issues) surfaced near top of page.
+ * Intended for submit-time validation summaries, not inline field errors.
+ */
+import { PageValidationAlertContext } from "layout/PageValidationAlert";
 import { useContext } from "react";
-import { ValidationAlertContext } from "@/services/validation-alert.service";
 
-export function useValidationAlert() {
-  const ctx = useContext(ValidationAlertContext);
-  if (!ctx)
+export default function useValidationAlert() {
+  const context = useContext(PageValidationAlertContext);
+  if (!context)
     throw new Error(
       "useValidationAlert must be used within ValidationAlertProvider"
     );
-  return ctx;
+  return context;
 }

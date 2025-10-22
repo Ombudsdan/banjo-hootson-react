@@ -1,12 +1,10 @@
-import React from "react";
+import { createElement } from "react";
+import { HeadingLevel, IHeading } from "model/heading";
 
-type Props = {
-  level?: 2 | 3 | 4 | 5 | 6;
-  text: string;
-  classNames?: string;
-};
-
-export default function Heading({ level = 2, text, classNames = "" }: Props) {
-  const tag = `h${level}` as keyof HTMLElementTagNameMap;
-  return React.createElement(tag, { className: classNames }, text);
+export default function Heading({
+  level = HeadingLevel.H2,
+  text,
+  classNames,
+}: IHeading) {
+  return createElement(level, { className: classNames }, text);
 }

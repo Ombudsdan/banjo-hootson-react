@@ -1,8 +1,15 @@
-import { HttpClient } from "services/http-client";
-import { ICountry } from "model/location.types";
+/**
+ * LocationService
+ * Provides geo / location reference data lookups (e.g., countries list).
+ * Intentionally read-only; transformations happen in controllers if needed.
+ */
+import { ICountry } from "model/location";
+import { HttpClientService } from "services";
 
-export class LocationService {
+export default class LocationService {
   static getCountries() {
-    return HttpClient.request<ICountry[]>({ path: "/location/countries" });
+    return HttpClientService.request<ICountry[]>({
+      path: "/location/countries",
+    });
   }
 }

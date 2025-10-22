@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import Dialog from "@/components/Dialog";
-import { DialogService, type ActiveDialog } from "@/services/dialog.service";
+import { Dialog } from "components";
+import { DialogService, IActiveDialog } from "services";
 
 export default function OverlayHost() {
-  const [dialog, setDialog] = useState<ActiveDialog | null>(
+  const [dialog, setDialog] = useState<IActiveDialog | null>(
     DialogService.getActive()
   );
 

@@ -1,10 +1,10 @@
-import { BirthdayCalendarService } from "services/birthday-calendar.service";
 import {
   IPlushieBirthday,
   IPlushieBirthdayFormData,
-} from "model/plushie-birthday.types";
+} from "model/plushie-birthday";
+import { BirthdayCalendarService } from "services";
 
-export class BirthdayController {
+export default class BirthdayController {
   static async loadUpcoming(days = 7): Promise<IPlushieBirthday[]> {
     return BirthdayCalendarService.getUpcoming(days);
   }

@@ -1,25 +1,7 @@
-export type ActionPanelOption =
-  | "instagram"
-  | "facebook"
-  | "threads"
-  | "calendar"
-  | "submitBirthday"
-  | "beer";
-
-export type ActionPanelTheme = "instagram" | "facebook" | "threads" | "default";
-
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import { ICONS } from "@/icons";
+import { ICONS } from "icons";
 
-export interface IActionPanel {
-  icon?: IconDefinition;
-  link: string;
-  text: string;
-  isExternal?: boolean;
-  theme?: ActionPanelTheme;
-}
-
-export class ClickableActionPanelController {
+export default class ClickableActionPanelController {
   static getPanelContent(option: ActionPanelOption): IActionPanel | undefined {
     const panelContent = PANEL_CONTENT_MAP.get(option);
     if (!panelContent) {
@@ -99,3 +81,21 @@ const PANEL_THEME_MAP = new Map<ActionPanelOption, ActionPanelTheme>([
   ["facebook", "facebook"],
   ["threads", "threads"],
 ]);
+
+export type ActionPanelOption =
+  | "instagram"
+  | "facebook"
+  | "threads"
+  | "calendar"
+  | "submitBirthday"
+  | "beer";
+
+export type ActionPanelTheme = "instagram" | "facebook" | "threads" | "default";
+
+export interface IActionPanel {
+  icon?: IconDefinition;
+  link: string;
+  text: string;
+  isExternal?: boolean;
+  theme?: ActionPanelTheme;
+}

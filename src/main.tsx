@@ -1,14 +1,13 @@
-import { StrictMode } from "react";
+import { Suspense, StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "./styles/index.scss";
-import { Suspense } from "react";
 import { RouterProvider } from "react-router-dom";
-import { router } from "./routes/app.routes";
-import { AuthController } from "./controllers/auth.controller";
-import { HealthController } from "./controllers/health.controller";
+import { router } from "routes";
+import { AuthController, HealthController } from "controllers";
+
+import "./styles/index.scss";
 
 // Bootstrap non-UI wiring
-AuthController.initialize();
+AuthController.init();
 HealthController.ping()
   .then((r) => console.info("[health]", r))
   .catch((e) => console.warn("[health] failed", e));

@@ -1,15 +1,9 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { PageWidthContainer } from "@/framework/PageWidthContainer";
-import { usePageHeading } from "@/hooks/usePageHeading";
-import { FlexColumnLayout } from "@/framework/FlexColumnLayout";
-import { AuthController } from "@/controllers/auth.controller";
-import { UserController } from "@/controllers/user.controller";
-import {
-  Validation,
-  runValidators,
-  firstErrorMessage,
-} from "@/utils/validation";
+import { usePageHeading } from "hooks";
+import { PageContentContainer } from "framework";
+import { UserController, AuthController } from "controllers";
+import { Validation, runValidators, firstErrorMessage } from "utils";
 
 export default function SignupPage() {
   const navigate = useNavigate();
@@ -100,7 +94,7 @@ export default function SignupPage() {
     !displayNameErrors &&
     !agreeErrors;
 
-  const onSubmit = async (e: React.FormEvent) => {
+  const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
     setTouched({
@@ -155,179 +149,165 @@ export default function SignupPage() {
   };
 
   usePageHeading("Create Account");
+
   return (
-    <>
-      <PageWidthContainer>
-        <FlexColumnLayout spacing="medium">
-          <div className="signup-page">
-            <div className="signup-page__container">
-              <form onSubmit={onSubmit} className="signup-page__form">
-                {errorMessage && (
-                  <div className="signup-page__message signup-page__message--error">
-                    {errorMessage}
-                  </div>
-                )}
+    <PageContentContainer spacing="medium">
+      <div className="signup-page">
+        <div className="signup-page__container">
+          <form onSubmit={onSubmit} className="signup-page__form">
+            {errorMessage && (
+              <div className="signup-page__message signup-page__message--error">
+                {errorMessage}
+              </div>
+            )}
 
-                <div className="form-group">
-                  <label htmlFor="email" className="signup-page__label">
-                    Email Address *
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    className={`signup-page__input ${
-                      emailErrorText ? "signup-page__input--error" : ""
-                    }`}
-                    placeholder="Enter your email"
-                    autoComplete="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    onBlur={() => setTouched((t) => ({ ...t, email: true }))}
-                  />
-                  {emailErrorText && (
-                    <div className="signup-page__field-error">
-                      {emailErrorText}
-                    </div>
-                  )}
+            <div className="form-group">
+              <label htmlFor="email" className="signup-page__label">
+                Email Address *
+              </label>
+              <input
+                type="email"
+                id="email"
+                className={`signup-page__input ${
+                  emailErrorText ? "signup-page__input--error" : ""
+                }`}
+                placeholder="Enter your email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                onBlur={() => setTouched((t) => ({ ...t, email: true }))}
+              />
+              {emailErrorText && (
+                <div className="signup-page__field-error">{emailErrorText}</div>
+              )}
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="displayName" className="signup-page__label">
+                Display Name
+              </label>
+              <input
+                type="text"
+                id="displayName"
+                className={`signup-page__input ${
+                  displayNameErrorText ? "signup-page__input--error" : ""
+                }`}
+                placeholder="Enter your display name (optional)"
+                autoComplete="name"
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                onBlur={() => setTouched((t) => ({ ...t, displayName: true }))}
+              />
+              {displayNameErrorText && (
+                <div className="signup-page__field-error">
+                  {displayNameErrorText}
                 </div>
+              )}
+            </div>
 
-                <div className="form-group">
-                  <label htmlFor="displayName" className="signup-page__label">
-                    Display Name
-                  </label>
-                  <input
-                    type="text"
-                    id="displayName"
-                    className={`signup-page__input ${
-                      displayNameErrorText ? "signup-page__input--error" : ""
-                    }`}
-                    placeholder="Enter your display name (optional)"
-                    autoComplete="name"
-                    value={displayName}
-                    onChange={(e) => setDisplayName(e.target.value)}
-                    onBlur={() =>
-                      setTouched((t) => ({ ...t, displayName: true }))
-                    }
-                  />
-                  {displayNameErrorText && (
-                    <div className="signup-page__field-error">
-                      {displayNameErrorText}
-                    </div>
-                  )}
+            <div className="form-group">
+              <label htmlFor="password" className="signup-page__label">
+                Password *
+              </label>
+              <input
+                type="password"
+                id="password"
+                className={`signup-page__input ${
+                  passwordErrorText ? "signup-page__input--error" : ""
+                }`}
+                placeholder="Enter your password (min 6 characters)"
+                autoComplete="new-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onBlur={() => setTouched((t) => ({ ...t, password: true }))}
+              />
+              {passwordErrorText && (
+                <div className="signup-page__field-error">
+                  {passwordErrorText}
                 </div>
+              )}
+            </div>
 
-                <div className="form-group">
-                  <label htmlFor="password" className="signup-page__label">
-                    Password *
-                  </label>
-                  <input
-                    type="password"
-                    id="password"
-                    className={`signup-page__input ${
-                      passwordErrorText ? "signup-page__input--error" : ""
-                    }`}
-                    placeholder="Enter your password (min 6 characters)"
-                    autoComplete="new-password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    onBlur={() => setTouched((t) => ({ ...t, password: true }))}
-                  />
-                  {passwordErrorText && (
-                    <div className="signup-page__field-error">
-                      {passwordErrorText}
-                    </div>
-                  )}
+            <div className="form-group">
+              <label htmlFor="confirmPassword" className="signup-page__label">
+                Confirm Password *
+              </label>
+              <input
+                type="password"
+                id="confirmPassword"
+                className={`signup-page__input ${
+                  confirmPasswordErrorText ? "signup-page__input--error" : ""
+                }`}
+                placeholder="Confirm your password"
+                autoComplete="new-password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                onBlur={() =>
+                  setTouched((t) => ({ ...t, confirmPassword: true }))
+                }
+              />
+              {confirmPasswordErrorText && (
+                <div className="signup-page__field-error">
+                  {confirmPasswordErrorText}
                 </div>
+              )}
+            </div>
 
-                <div className="form-group">
-                  <label
-                    htmlFor="confirmPassword"
-                    className="signup-page__label"
+            <div className="form-group--checkbox">
+              <label className="signup-page__checkbox-label">
+                <input
+                  type="checkbox"
+                  className="signup-page__checkbox"
+                  checked={agreeToTerms}
+                  onChange={(e) => setAgreeToTerms(e.target.checked)}
+                  onBlur={() =>
+                    setTouched((t) => ({ ...t, agreeToTerms: true }))
+                  }
+                />
+                <span className="signup-page__checkbox-text">
+                  I agree to the
+                  <a
+                    href="/terms"
+                    target="_blank"
+                    className="signup-page__link"
                   >
-                    Confirm Password *
-                  </label>
-                  <input
-                    type="password"
-                    id="confirmPassword"
-                    className={`signup-page__input ${
-                      confirmPasswordErrorText
-                        ? "signup-page__input--error"
-                        : ""
-                    }`}
-                    placeholder="Confirm your password"
-                    autoComplete="new-password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    onBlur={() =>
-                      setTouched((t) => ({ ...t, confirmPassword: true }))
-                    }
-                  />
-                  {confirmPasswordErrorText && (
-                    <div className="signup-page__field-error">
-                      {confirmPasswordErrorText}
-                    </div>
-                  )}
-                </div>
+                    Terms and Conditions
+                  </a>
+                  *
+                </span>
+              </label>
+              {agreeErrorText && (
+                <div className="signup-page__field-error">{agreeErrorText}</div>
+              )}
+            </div>
 
-                <div className="form-group--checkbox">
-                  <label className="signup-page__checkbox-label">
-                    <input
-                      type="checkbox"
-                      className="signup-page__checkbox"
-                      checked={agreeToTerms}
-                      onChange={(e) => setAgreeToTerms(e.target.checked)}
-                      onBlur={() =>
-                        setTouched((t) => ({ ...t, agreeToTerms: true }))
-                      }
-                    />
-                    <span className="signup-page__checkbox-text">
-                      I agree to the
-                      <a
-                        href="/terms"
-                        target="_blank"
-                        className="signup-page__link"
-                      >
-                        Terms and Conditions
-                      </a>
-                      *
-                    </span>
-                  </label>
-                  {agreeErrorText && (
-                    <div className="signup-page__field-error">
-                      {agreeErrorText}
-                    </div>
-                  )}
-                </div>
+            <button
+              type="submit"
+              className="signup-page__submit-button"
+              disabled={isLoading}
+            >
+              {isLoading && (
+                <span className="signup-page__loading-spinner"></span>
+              )}
+              {isLoading ? "Creating Account..." : "Create Account"}
+            </button>
 
+            <div className="signup-page__login-prompt">
+              <p>
+                Already have an account?
                 <button
-                  type="submit"
-                  className="signup-page__submit-button"
+                  type="button"
+                  className="signup-page__link-button"
+                  onClick={() => navigate("/login")}
                   disabled={isLoading}
                 >
-                  {isLoading && (
-                    <span className="signup-page__loading-spinner"></span>
-                  )}
-                  {isLoading ? "Creating Account..." : "Create Account"}
+                  Sign In
                 </button>
-
-                <div className="signup-page__login-prompt">
-                  <p>
-                    Already have an account?
-                    <button
-                      type="button"
-                      className="signup-page__link-button"
-                      onClick={() => navigate("/login")}
-                      disabled={isLoading}
-                    >
-                      Sign In
-                    </button>
-                  </p>
-                </div>
-              </form>
+              </p>
             </div>
-          </div>
-        </FlexColumnLayout>
-      </PageWidthContainer>
-    </>
+          </form>
+        </div>
+      </div>
+    </PageContentContainer>
   );
 }

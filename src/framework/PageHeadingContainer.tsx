@@ -1,17 +1,16 @@
-import { PropsWithChildren, ReactNode } from "react";
-import { PageWidthContainer } from "./PageWidthContainer";
-import { HeadingTheme } from "@/services/heading.service";
+import { IPageHeadingContainer } from "model/page-heading";
+import PageContainer from "./PageContainer";
 
-export function PageHeadingContainer({
+export default function PageHeadingContainer({
   theme,
   image,
   heading,
   subheading,
   children,
-}: Props) {
+}: IPageHeadingContainer) {
   return (
     <div className={`page-heading-container page-heading-container--${theme}`}>
-      <PageWidthContainer>
+      <PageContainer>
         {image && <div className="page-heading-container__image">{image}</div>}
 
         <div className="page-heading-container__row">
@@ -25,14 +24,7 @@ export function PageHeadingContainer({
             {children}
           </div>
         </div>
-      </PageWidthContainer>
+      </PageContainer>
     </div>
   );
 }
-
-type Props = PropsWithChildren<{
-  heading?: ReactNode;
-  subheading?: ReactNode;
-  image?: ReactNode;
-  theme?: HeadingTheme;
-}>;

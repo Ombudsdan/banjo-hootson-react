@@ -1,16 +1,14 @@
-import { useEffect, useState, type PropsWithChildren } from "react";
+import { AuthController } from "controllers";
+import { useEffect, useState, PropsWithChildren } from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import { onAuthTokenChange } from "@/auth/firebase";
 
-export default function RequireAuth({
-  children,
-}: PropsWithChildren<{ children?: React.ReactNode }>) {
+export default function RequireAuth({ children }: PropsWithChildren) {
   const location = useLocation();
   const [ready, setReady] = useState(false);
   const [authed, setAuthed] = useState(false);
 
   useEffect(() => {
-    const unsub = onAuthTokenChange((token) => {
+    const unsub = AuthController.onAuthTokenChange((token) => {
       setAuthed(!!token);
       setReady(true);
     });

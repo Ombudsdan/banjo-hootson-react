@@ -1,16 +1,18 @@
-import { ClickableActionPanel } from "./ClickableActionPanel";
+import { ClickableActionPanel } from "components";
 import {
   ClickableActionPanelGroupController,
   ActionPanelGroupOption,
-} from "@/controllers/clickable-action-panel-group.controller";
+} from "controllers";
 
-export function ClickableActionPanelGroup({
+export default function ClickableActionPanelGroup({
   group,
-}: {
-  group: ActionPanelGroupOption;
-}) {
+}: IClickableActionPanelGroup) {
   const options = ClickableActionPanelGroupController.getGroup(group) || [];
-  if (!options.length) return null;
+
+  if (!options.length) {
+    return null;
+  }
+
   return (
     <div className="clickable-action-panel-group">
       {options.map((opt) => (
@@ -18,4 +20,8 @@ export function ClickableActionPanelGroup({
       ))}
     </div>
   );
+}
+
+interface IClickableActionPanelGroup {
+  group: ActionPanelGroupOption;
 }

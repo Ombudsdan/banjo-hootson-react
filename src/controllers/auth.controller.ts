@@ -1,28 +1,20 @@
-import { HttpClient } from "services/http-client";
+import { HttpClientService } from "services";
 import {
-  getCurrentIdToken,
-  initFirebase,
-  onAuthTokenChange,
-} from "@/auth/firebase";
-import {
-  getAuth,
-  signOut,
-  signInWithCredential,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  updateProfile,
-  AuthCredential,
-  type User,
-} from "firebase/auth";
-import type { IAuthUser } from "model/auth.types";
+  FirebaseController,
+  FirebaseUser,
+  FirebaseUserCredential,
+} from "controllers";
+import { IAuthUser } from "model/auth";
 
-export class AuthController {
-  static initialize() {
-    initFirebase();
+export default class AuthController {
+  static init() {
+    FirebaseController.init();
     // Provide initial token fetcher
-    HttpClient.setTokenProvider(async () => await getCurrentIdToken());
+    HttpClientService.setTokenProvider(
+      async () => await FirebaseController.getCurrentIdToken()
+    );
     // Keep in sync when token changes
-    onAuthTokenChange((token: string | null) => {
+    FirebaseController.onAuthTokenChange((token: string | null) => {
       // Optional: could refresh client state or trigger re-fetches
       // The HttpClient provider is always evaluated before each request
       if (!token) {
@@ -32,52 +24,47 @@ export class AuthController {
   }
 
   static async getToken(): Promise<string | null> {
-    return getCurrentIdToken();
+    return FirebaseController.getCurrentIdToken();
   }
 
   static getCurrentUser(): IAuthUser | null {
-    const user = getAuth().currentUser;
+    const user = FirebaseController.getCurrentUser();
     return user ? this.mapUser(user) : null;
-  }
-
-  static async signInWith(
-    credential: AuthCredential
-  ): Promise<{ user: IAuthUser; token: string }> {
-    const auth = getAuth();
-    const result = await signInWithCredential(auth, credential);
-    const token = await result.user.getIdToken();
-    return { user: this.mapUser(result.user), token };
   }
 
   static async signInWithEmailPassword(
     email: string,
     password: string
-  ): Promise<{ user: IAuthUser; token: string }> {
-    const auth = getAuth();
-    const result = await signInWithEmailAndPassword(auth, email, password);
-    const token = await result.user.getIdToken();
-    return { user: this.mapUser(result.user), token };
+  ): Promise<ISignInResult> {
+    const result = await FirebaseController.signInWithEmailAndPassword(
+      email,
+      password
+    );
+    return this.mapUserCredential(result);
   }
 
   static async signUpWithEmailPassword(
     email: string,
     password: string,
     displayName?: string
-  ): Promise<{ user: IAuthUser; token: string }> {
-    const auth = getAuth();
-    const result = await createUserWithEmailAndPassword(auth, email, password);
-    if (displayName) {
-      await updateProfile(result.user, { displayName });
-    }
-    const token = await result.user.getIdToken();
-    return { user: this.mapUser(result.user), token };
+  ): Promise<ISignInResult> {
+    const result = await FirebaseController.createUserWithEmailAndPassword(
+      email,
+      password,
+      displayName
+    );
+    return this.mapUserCredential(result);
   }
 
   static async signOut(): Promise<void> {
-    await signOut(getAuth());
+    await FirebaseController.signOut();
   }
 
-  private static mapUser(user: User): IAuthUser {
+  static onAuthTokenChange(callback: (token: string | null) => void) {
+    return FirebaseController.onAuthTokenChange(callback);
+  }
+
+  private static mapUser(user: FirebaseUser): IAuthUser {
     return {
       uid: user.uid,
       email: user.email,
@@ -85,4 +72,16 @@ export class AuthController {
       photoURL: user.photoURL,
     };
   }
+
+  private static async mapUserCredential(
+    credential: FirebaseUserCredential
+  ): Promise<ISignInResult> {
+    const token = await credential.user.getIdToken();
+    return { user: this.mapUser(credential.user), token };
+  }
+}
+
+interface ISignInResult {
+  user: IAuthUser;
+  token: string;
 }

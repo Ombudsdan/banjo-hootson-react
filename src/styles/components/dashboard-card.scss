@@ -6,6 +6,7 @@
   justify-content: flex-start;
   gap: 0.5rem;
   color: variables.$colour-text;
+  background-color: rgba(variables.$colour-orange, 0.05);
   padding: 1.5rem 0.75rem;
   min-width: 250px;
 
@@ -13,10 +14,12 @@
     font-size: 2.5rem;
     color: variables.$colour-orange;
   }
+
   &__description {
     font-size: variables.$font-size-small;
     text-align: center;
   }
+
   &--locked {
     background-color: rgba(variables.$colour-grey, 0.1);
     pointer-events: none;

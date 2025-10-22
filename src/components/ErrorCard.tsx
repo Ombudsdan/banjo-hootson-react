@@ -1,18 +1,17 @@
-import AlertCard from "@/components/AlertCard";
-
-type Props = {
-  heading: string;
-  errorMessages: string[];
-  cardId?: string;
-};
+import { AlertCard } from "components";
+import { AlertCardVariant, IAlertCard } from "model/page-validation-alert";
 
 export default function ErrorCard({
   heading,
   errorMessages,
-  cardId = "error-card",
-}: Props) {
+  cardId,
+}: IErrorCard) {
   return (
-    <AlertCard heading={heading} variant="error" cardId={cardId}>
+    <AlertCard
+      heading={heading}
+      variant={AlertCardVariant.ERROR}
+      cardId={cardId || "error-card"}
+    >
       <ul className="error-card__messages">
         {errorMessages.map((msg, i) => (
           <li className="error-card__message" key={i}>
@@ -22,4 +21,8 @@ export default function ErrorCard({
       </ul>
     </AlertCard>
   );
+}
+
+interface IErrorCard extends Pick<IAlertCard, "heading" | "cardId"> {
+  errorMessages: string[];
 }

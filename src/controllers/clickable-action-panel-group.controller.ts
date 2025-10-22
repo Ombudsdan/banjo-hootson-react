@@ -1,8 +1,6 @@
 import { ActionPanelOption } from "./clickable-action-panel.controller";
 
-export type ActionPanelGroupOption = "social-links" | "community-links";
-
-export class ClickableActionPanelGroupController {
+export default class ClickableActionPanelGroupController {
   static getGroup(option: ActionPanelGroupOption) {
     const panelGroup = ACTION_PANEL_GROUP_MAP.get(option);
     if (!panelGroup) {
@@ -20,3 +18,5 @@ const ACTION_PANEL_GROUP_MAP = new Map<
   ["social-links", ["instagram", "facebook", "threads"]],
   ["community-links", ["calendar", "submitBirthday", "beer"]],
 ]);
+
+export type ActionPanelGroupOption = "social-links" | "community-links";

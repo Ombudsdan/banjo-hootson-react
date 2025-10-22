@@ -19,6 +19,45 @@ export default defineConfig([
     },
     rules: {
       // Keep rules minimal until Angular ruleset is mirrored (placeholder for mirroring step)
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            // Disallow importing from the model barrel to avoid circular dependencies
+            {
+              group: ["model"],
+              message:
+                "Import from specific submodules (e.g. 'model/page-alert') instead of the 'model' barrel to avoid circular dependencies.",
+            },
+            // Disallow reaching into aliased folders via relative paths from outside
+            "../*/auth/*",
+            "../*/components/*",
+            "../*/controllers/*",
+            "../*/env/*",
+            "../*/framework/*",
+            "../*/hooks/*",
+            "../*/layout/*",
+            "../*/model/*",
+            "../*/routes/*",
+            "../*/services/*",
+            "../*/utils/*",
+            // Disallow importing from src root when alias exists
+            "src/auth/*",
+            "src/components/*",
+            "src/controllers/*",
+            "src/env/*",
+            "src/framework/*",
+            "src/hooks/*",
+            "src/layout/*",
+            "src/model/*",
+            "src/routes/*",
+            "src/services/*",
+            "src/utils/*",
+          ],
+          message:
+            "Use the configured path alias (e.g. 'components', 'services', 'auth') instead of relative or 'src/*' import paths.",
+        },
+      ],
     },
   },
   {

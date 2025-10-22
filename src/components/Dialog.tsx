@@ -1,15 +1,4 @@
-type DialogProps = {
-  title?: string;
-  message?: string;
-  confirmType?: "primary" | "danger";
-  confirmText?: string;
-  confirmLoadingText?: string;
-  cancelText?: string;
-  isLoading?: boolean;
-  onConfirm: () => void;
-  onClose: () => void;
-  children?: React.ReactNode;
-};
+import { IDialog } from "model/dialog";
 
 export default function Dialog({
   title,
@@ -22,7 +11,7 @@ export default function Dialog({
   onConfirm,
   onClose,
   children,
-}: DialogProps) {
+}: IDialog) {
   return (
     <div className="backdrop" onClick={onClose}>
       <div

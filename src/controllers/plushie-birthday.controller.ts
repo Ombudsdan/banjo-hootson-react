@@ -1,7 +1,7 @@
-import type { IPlushieBirthday } from "model/plushie-birthday.types";
-import type { IPlushieBirthdayDisplayProperties } from "@/utils/plushie.utils";
+import { IPlushieBirthday } from "model/plushie-birthday";
+import { IPlushieBirthdayDisplayProperties } from "utils";
 
-export class PlushieBirthdayController {
+export default class PlushieBirthdayController {
   static extractPossessiveName(props?: IPlushieBirthdayDisplayProperties) {
     return props?.possessivePlushieName || "";
   }

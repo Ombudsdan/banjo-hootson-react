@@ -1,16 +1,11 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { BirthdayController } from "@/controllers/birthday.controller";
-import type { IPlushieBirthdayFormData } from "model/plushie-birthday.types";
-import FormActionsContainer from "@/components/FormActionsContainer";
-import { PageWidthContainer } from "@/framework/PageWidthContainer";
-import { useHeading } from "@/hooks/useHeading";
-import { useValidationAlert } from "@/hooks/useValidationAlert";
-import {
-  Validation,
-  runValidators,
-  firstErrorMessage,
-} from "@/utils/validation";
+import { BirthdayController } from "controllers";
+import { AlertCardVariant } from "model/page-validation-alert";
+import { IPlushieBirthdayFormData } from "model/plushie-birthday";
+import { FormActionsContainer } from "components";
+import { useValidationAlert, useHeading } from "hooks";
+import { Validation, runValidators, firstErrorMessage } from "utils";
 
 const EMPTY: IPlushieBirthdayFormData = {
   name: "",
@@ -109,8 +104,8 @@ export default function SubmitPlushieBirthdayPage() {
       setValidationAlert({
         heading: "Please fix the following errors",
         messages: aggregatedErrors,
-        variant: "error",
-        focus: true,
+        variant: AlertCardVariant.ERROR,
+        autoFocus: true,
       });
     } else {
       clearValidationAlert();
@@ -125,7 +120,7 @@ export default function SubmitPlushieBirthdayPage() {
     update({ dateOfBirth: `${yyyy}-${mm}-${dd}` });
   };
 
-  const onSubmit = async (e: React.FormEvent) => {
+  const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
     setGlobalError("");
@@ -155,106 +150,100 @@ export default function SubmitPlushieBirthdayPage() {
   };
 
   return (
-    <>
-      <PageWidthContainer>
-        <form onSubmit={onSubmit} noValidate>
-          <div className="form-group">
-            <label
-              className="form-group__label form-group__label--required"
-              htmlFor="name"
-            >
-              Plushie Name
-            </label>
-            <div className="form-group__hint">For example: Banjo Hootson</div>
-            <input
-              id="name"
-              type="text"
-              value={form.name}
-              onChange={(e) => update({ name: e.target.value })}
-              onBlur={() => setTouched((t) => ({ ...t, name: true }))}
-              placeholder="Plushie Name"
-              className={nameErrorText ? "error" : ""}
-            />
-            {nameErrorText && (
-              <div className="form-group__error-message">{nameErrorText}</div>
-            )}
-          </div>
+    <form onSubmit={onSubmit} noValidate>
+      <div className="form-group">
+        <label
+          className="form-group__label form-group__label--required"
+          htmlFor="name"
+        >
+          Plushie Name
+        </label>
+        <div className="form-group__hint">For example: Banjo Hootson</div>
+        <input
+          id="name"
+          type="text"
+          value={form.name}
+          onChange={(e) => update({ name: e.target.value })}
+          onBlur={() => setTouched((t) => ({ ...t, name: true }))}
+          placeholder="Plushie Name"
+          className={nameErrorText ? "error" : ""}
+        />
+        {nameErrorText && (
+          <div className="form-group__error-message">{nameErrorText}</div>
+        )}
+      </div>
 
-          <div className="form-group">
-            <label
-              className="form-group__label form-group__label--required"
-              htmlFor="username"
-            >
-              Username of Account
-            </label>
-            <div className="form-group__hint">For example: banjohootson</div>
-            <input
-              id="username"
-              type="text"
-              value={form.username}
-              onChange={(e) =>
-                update({ username: e.target.value.replace(/^@+/, "") })
-              }
-              onBlur={() => setTouched((t) => ({ ...t, username: true }))}
-              placeholder="Username"
-              className={usernameErrorText ? "error" : ""}
-            />
-            {usernameErrorText && (
-              <div className="form-group__error-message">
-                {usernameErrorText}
-              </div>
-            )}
-          </div>
+      <div className="form-group">
+        <label
+          className="form-group__label form-group__label--required"
+          htmlFor="username"
+        >
+          Username of Account
+        </label>
+        <div className="form-group__hint">For example: banjohootson</div>
+        <input
+          id="username"
+          type="text"
+          value={form.username}
+          onChange={(e) =>
+            update({ username: e.target.value.replace(/^@+/, "") })
+          }
+          onBlur={() => setTouched((t) => ({ ...t, username: true }))}
+          placeholder="Username"
+          className={usernameErrorText ? "error" : ""}
+        />
+        {usernameErrorText && (
+          <div className="form-group__error-message">{usernameErrorText}</div>
+        )}
+      </div>
 
-          <div className="form-group">
-            <label
-              className="form-group__label form-group__label--required"
-              htmlFor="dob"
-            >
-              Plushie Birth Date
-            </label>
-            <div className="form-group__hint">
-              When was your plushie born or adopted?
-            </div>
-            <div className="form-row">
-              <input
-                id="dob"
-                type="date"
-                value={form.dateOfBirth}
-                onChange={(e) => update({ dateOfBirth: e.target.value })}
-                onBlur={() => setTouched((t) => ({ ...t, dateOfBirth: true }))}
-                className={dateErrorText ? "error" : ""}
-              />
-              <button
-                type="button"
-                className="form__button form__button--secondary form__button--inline form__button--today"
-                onClick={setToday}
-              >
-                Today
-              </button>
-            </div>
-            {dateErrorText && (
-              <div className="form-group__error-message">{dateErrorText}</div>
-            )}
-          </div>
+      <div className="form-group">
+        <label
+          className="form-group__label form-group__label--required"
+          htmlFor="dob"
+        >
+          Plushie Birth Date
+        </label>
+        <div className="form-group__hint">
+          When was your plushie born or adopted?
+        </div>
+        <div className="form-row">
+          <input
+            id="dob"
+            type="date"
+            value={form.dateOfBirth}
+            onChange={(e) => update({ dateOfBirth: e.target.value })}
+            onBlur={() => setTouched((t) => ({ ...t, dateOfBirth: true }))}
+            className={dateErrorText ? "error" : ""}
+          />
+          <button
+            type="button"
+            className="form__button form__button--secondary form__button--inline form__button--today"
+            onClick={setToday}
+          >
+            Today
+          </button>
+        </div>
+        {dateErrorText && (
+          <div className="form-group__error-message">{dateErrorText}</div>
+        )}
+      </div>
 
-          {globalError && (
-            <div className="form-group__error-message" role="alert">
-              {globalError}
-            </div>
-          )}
+      {globalError && (
+        <div className="form-group__error-message" role="alert">
+          {globalError}
+        </div>
+      )}
 
-          <FormActionsContainer>
-            <button
-              className="form__button form__button--primary"
-              type="submit"
-              disabled={submitting}
-            >
-              {submitting ? "Submitting Birthday..." : "Submit Birthday"}
-            </button>
-          </FormActionsContainer>
-        </form>
-      </PageWidthContainer>
-    </>
+      <FormActionsContainer>
+        <button
+          className="form__button form__button--primary"
+          type="submit"
+          disabled={submitting}
+        >
+          {submitting ? "Submitting Birthday..." : "Submit Birthday"}
+        </button>
+      </FormActionsContainer>
+    </form>
   );
 }

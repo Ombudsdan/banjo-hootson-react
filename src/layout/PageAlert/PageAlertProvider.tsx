@@ -1,23 +1,22 @@
-import React, {
-  createContext,
+import { PageAlertContext } from "layout";
+import { IPageAlert } from "model/page-alert";
+import {
+  FC,
+  ReactNode,
   useCallback,
   useEffect,
   useId,
   useRef,
   useState,
 } from "react";
-import AlertCard from "@/components/AlertCard";
+import { useLocation } from "react-router-dom";
 
-export const PageAlertsContext = createContext<
-  IPageAlertsContextValue | undefined
->(undefined);
-
-export const PageAlertsProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+const PageAlertProvider: FC<{ children: ReactNode }> = ({ children }) => {
+  const location = useLocation();
   const [alerts, setAlerts] = useState<IPageAlert[]>([]);
   const [exitingIds, setExitingIds] = useState<Set<string>>(new Set());
   const [enteringIds, setEnteringIds] = useState<Set<string>>(new Set());
+
   const reactUnique = useId(); // assists uniqueness fallback
   const timersRef = useRef<Record<string, number>>({});
   const expiryRef = useRef<Record<string, number>>({});
@@ -55,21 +54,27 @@ export const PageAlertsProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 
   const addAlert = useCallback(
-    (alert: Omit<IPageAlert, "id"> & { id?: string }) => {
-      const id =
-        alert.id ||
-        `${Date.now()}-${Math.random().toString(36).slice(2)}-${reactUnique}`;
-      setAlerts((prev) => [...prev, { ...alert, id }]);
-      setEnteringIds((prev) => new Set(prev).add(id));
+    (alert: IPageAlert) => {
+      let isExistingAlert = false;
+
+      setAlerts((prev) => {
+        isExistingAlert = prev.some((a) => a.id === alert.id);
+        return isExistingAlert ? prev : [...prev, alert];
+      });
+
+      if (isExistingAlert) return alert.id;
+
+      setEnteringIds((prev) => new Set(prev).add(alert.id));
+
       if (alert.timeoutMs && alert.timeoutMs > 0) {
-        expiryRef.current[id] = Date.now() + alert.timeoutMs;
+        expiryRef.current[alert.id] = Date.now() + alert.timeoutMs;
         const handle = window.setTimeout(
-          () => beginDismiss(id),
+          () => beginDismiss(alert.id),
           alert.timeoutMs
         );
-        timersRef.current[id] = handle;
+        timersRef.current[alert.id] = handle;
       }
-      return id;
+      return alert.id;
     },
     [reactUnique, beginDismiss]
   );
@@ -83,9 +88,16 @@ export const PageAlertsProvider: React.FC<{ children: React.ReactNode }> = ({
     [beginDismiss]
   );
 
+  // Instantly remove all alerts (no animation)
   const dismissAll = useCallback(() => {
-    alerts.forEach((a) => beginDismiss(a.id));
-  }, [alerts, beginDismiss]);
+    setAlerts([]);
+    setExitingIds(new Set());
+    setEnteringIds(new Set());
+    Object.values(timersRef.current).forEach((h) => window.clearTimeout(h));
+    timersRef.current = {};
+    expiryRef.current = {};
+    remainingRef.current = {};
+  }, []);
 
   const replaceAlerts = useCallback(
     (incoming: Omit<IPageAlert, "id">[]) => {
@@ -184,8 +196,16 @@ export const PageAlertsProvider: React.FC<{ children: React.ReactNode }> = ({
     []
   );
 
+  // Dismiss all alerts on route change
+  useEffect(() => {
+    if (alerts.length) {
+      dismissAll();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.key]);
+
   return (
-    <PageAlertsContext.Provider
+    <PageAlertContext.Provider
       value={{
         alerts,
         addAlert,
@@ -200,140 +220,8 @@ export const PageAlertsProvider: React.FC<{ children: React.ReactNode }> = ({
       }}
     >
       {children}
-    </PageAlertsContext.Provider>
+    </PageAlertContext.Provider>
   );
 };
 
-export const PageAlertsOutlet: React.FC = () => {
-  const ctx = React.useContext(PageAlertsContext);
-  if (!ctx)
-    throw new Error("PageAlertsOutlet must be used within PageAlertsProvider");
-  const {
-    alerts,
-    dismissAlert,
-    enteringIds,
-    exitingIds,
-    pauseAlertTimer,
-    resumeAlertTimer,
-  } = ctx as IPageAlertsContextValue & {
-    enteringIds: Set<string>;
-    exitingIds: Set<string>;
-  };
-  // Access entering/exiting sets via closure above
-  if (!alerts.length) return null;
-  return (
-    <div className="page-alerts" role="region" aria-label="Page notifications">
-      <div className="page-alerts__inner">
-        <ul className="page-alerts__list">
-          {alerts.map((a) => (
-            <li
-              key={a.id}
-              className={[
-                "page-alerts__item",
-                enteringIds.has(a.id) && "page-alerts__item--entering",
-                exitingIds.has(a.id) && "page-alerts__item--exiting",
-              ]
-                .filter(Boolean)
-                .join(" ")}
-              onMouseEnter={() => pauseAlertTimer?.(a.id)}
-              onMouseLeave={() => resumeAlertTimer?.(a.id)}
-            >
-              <div className="page-alerts__card-wrapper">
-                <AlertCard
-                  heading={a.heading}
-                  messages={a.messages}
-                  variant={a.variant}
-                  autoFocus={a.autoFocus}
-                  cardId={`page-alert-${a.id}`}
-                >
-                  {a.content}
-                  <button
-                    type="button"
-                    className="page-alerts__close"
-                    aria-label={`Dismiss ${a.heading} notification`}
-                    onClick={() => dismissAlert(a.id)}
-                  >
-                    ×
-                  </button>
-                </AlertCard>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  );
-};
-
-// Builder helpers for common patterns
-export const PageAlertBuilders = {
-  success(
-    options: Omit<Partial<IPageAlert>, "variant" | "id"> & { heading: string }
-  ): Omit<IPageAlert, "id"> {
-    return { variant: "success", autoFocus: true, ...options, id: "" } as Omit<
-      IPageAlert,
-      "id"
-    >;
-  },
-  error(
-    options: Omit<Partial<IPageAlert>, "variant" | "id"> & { heading: string }
-  ): Omit<IPageAlert, "id"> {
-    return { variant: "error", autoFocus: true, ...options, id: "" } as Omit<
-      IPageAlert,
-      "id"
-    >;
-  },
-  info(
-    options: Omit<Partial<IPageAlert>, "variant" | "id"> & { heading: string }
-  ): Omit<IPageAlert, "id"> {
-    return { variant: "info", ...options, id: "" } as Omit<IPageAlert, "id">;
-  },
-  warning(
-    options: Omit<Partial<IPageAlert>, "variant" | "id"> & { heading: string }
-  ): Omit<IPageAlert, "id"> {
-    return { variant: "warning", ...options, id: "" } as Omit<IPageAlert, "id">;
-  },
-  // Common semantic templates
-  saved(entity: string = "Changes"): Omit<IPageAlert, "id"> {
-    return {
-      heading: `${entity} saved`,
-      variant: "success",
-      autoFocus: true,
-      timeoutMs: 4000,
-    };
-  },
-  deleted(entity: string = "Item"): Omit<IPageAlert, "id"> {
-    return {
-      heading: `${entity} deleted`,
-      variant: "info",
-      autoFocus: true,
-      timeoutMs: 4000,
-    };
-  },
-};
-
-export type PageAlertVariant = "success" | "info" | "warning" | "error";
-
-export interface IPageAlert {
-  id: string;
-  heading: string;
-  messages?: string[];
-  variant?: PageAlertVariant;
-  autoFocus?: boolean;
-  content?: React.ReactNode;
-  timeoutMs?: number; // auto-dismiss after provided milliseconds
-}
-
-interface IPageAlertsContextValue {
-  alerts: IPageAlert[];
-  addAlert: (alert: Omit<IPageAlert, "id"> & { id?: string }) => string;
-  dismissAlert: (id: string) => void;
-  dismissAll: () => void;
-  replaceAlerts: (alerts: Omit<IPageAlert, "id">[]) => void;
-  updateAlert: (id: string, patch: Partial<Omit<IPageAlert, "id">>) => boolean;
-  pauseAlertTimer?: (id: string) => void;
-  resumeAlertTimer?: (id: string) => void;
-  // entering/exiting sets are injected for outlet animation (not part of public hook API contract if consuming only add/dismiss methods)
-  enteringIds?: Set<string>;
-  exitingIds?: Set<string>;
-}
+export default PageAlertProvider;

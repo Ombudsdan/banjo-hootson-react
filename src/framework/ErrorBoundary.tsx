@@ -1,13 +1,13 @@
-import { Component, ReactNode } from "react";
+import { Component, PropsWithChildren, ReactNode } from "react";
 
-type Props = { children: ReactNode; fallback?: ReactNode };
-type State = { hasError: boolean; error?: unknown };
-
-export class ErrorBoundary extends Component<Props, State> {
-  state: State = { hasError: false };
+export default class ErrorBoundary extends Component<
+  IErrorBoundary,
+  IErrorBoundaryState
+> {
+  state: IErrorBoundaryState = { hasError: false };
 
   static getDerivedStateFromError(error: unknown) {
-    return { hasError: true, error } as State;
+    return { hasError: true, error } as IErrorBoundaryState;
   }
 
   componentDidCatch(error: unknown, info: unknown) {
@@ -20,4 +20,13 @@ export class ErrorBoundary extends Component<Props, State> {
     }
     return this.props.children;
   }
+}
+
+interface IErrorBoundary extends PropsWithChildren {
+  fallback?: ReactNode;
+}
+
+interface IErrorBoundaryState {
+  hasError: boolean;
+  error?: unknown;
 }

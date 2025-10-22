@@ -16,6 +16,7 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 2rem;
   }
+
   &__form {
     display: flex;
     flex-direction: column;
@@ -23,31 +24,11 @@
     max-width: 100%; // override generic form narrowing
     box-sizing: border-box;
   }
+
   &__label {
     font-weight: 600;
     color: variables.$colour-text;
     font-size: 0.9rem;
-  }
-
-  &____message-container {
-    margin-bottom: 1.5rem;
-  }
-
-  &__message {
-    padding: 0.75rem;
-    border-radius: 12px;
-    font-size: 0.9rem;
-    text-align: center;
-    &--info {
-      background-color: #e3f2fd;
-      color: #1976d2;
-      border: 1px solid #bbdefb;
-    }
-    &--error {
-      background-color: #ffebee;
-      color: #c62828;
-      border: 1px solid #ffcdd2;
-    }
   }
 
   &__loading-spinner {
@@ -64,6 +45,7 @@
     text-align: center;
     padding-top: 1rem;
     border-top: 1px solid variables.$colour-tan;
+
     p {
       margin: 0;
       color: variables.$colour-text-muted;
@@ -77,9 +59,11 @@
     cursor: pointer;
     text-decoration: underline;
     font-weight: 600;
+
     &:hover:not(:disabled) {
       color: color.adjust(variables.$colour-orange, $lightness: -10%);
     }
+
     &:disabled {
       color: variables.$colour-text-muted;
       cursor: not-allowed;

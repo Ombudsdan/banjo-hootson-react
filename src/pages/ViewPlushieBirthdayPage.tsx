@@ -1,10 +1,10 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
-import { BirthdayController } from "@/controllers/birthday.controller";
-import type { IPlushieBirthday } from "model/plushie-birthday.types";
-import { PageWidthContainer } from "@/framework/PageWidthContainer";
-import AlertCard from "@/components/AlertCard";
-import { usePageHeading } from "@/hooks/usePageHeading";
+import { BirthdayController } from "controllers";
+import { AlertCardVariant } from "model/page-validation-alert";
+import { IPlushieBirthday } from "model/plushie-birthday";
+import { AlertCard } from "components";
+import { usePageHeading } from "hooks";
 
 export default function ViewPlushieBirthdayPage() {
   const { id } = useParams();
@@ -73,94 +73,92 @@ export default function ViewPlushieBirthdayPage() {
   usePageHeading(heading);
 
   return (
-    <PageWidthContainer>
-      <div className="view-plushie-birthday">
-        {loading && <p>Loading…</p>}
-        {item && !loading && !error && (
-          <>
-            <div className="view-plushie-birthday__event">
-              <div className="view-plushie-birthday__event-row">
-                <span className="view-plushie-birthday__event-detail-label">
-                  Name
-                </span>
-                <span className="view-plushie-birthday__event-detail-value">
-                  {item.name}
-                </span>
-              </div>
-              <div className="view-plushie-birthday__event-row">
-                <span className="view-plushie-birthday__event-detail-label">
-                  Account
-                </span>
-                <div className="view-plushie-birthday__event-detail-value">
-                  <span
-                    aria-hidden="true"
-                    className="view-plushie-birthday__icon view-plushie-birthday__icon--instagram"
-                  />
-                  {username ? (
-                    <a
-                      href={`https://instagram.com/${username}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="view-plushie-birthday__link"
-                    >
-                      {username}
-                    </a>
-                  ) : (
-                    <span className="view-plushie-birthday__link">Unknown</span>
-                  )}
-                </div>
-              </div>
-              <div className="view-plushie-birthday__event-row">
-                <span className="view-plushie-birthday__event-detail-label">
-                  Birthday
-                </span>
+    <div className="view-plushie-birthday">
+      {loading && <p>Loading…</p>}
+      {item && !loading && !error && (
+        <>
+          <div className="view-plushie-birthday__event">
+            <div className="view-plushie-birthday__event-row">
+              <span className="view-plushie-birthday__event-detail-label">
+                Name
+              </span>
+              <span className="view-plushie-birthday__event-detail-value">
+                {item.name}
+              </span>
+            </div>
+            <div className="view-plushie-birthday__event-row">
+              <span className="view-plushie-birthday__event-detail-label">
+                Account
+              </span>
+              <div className="view-plushie-birthday__event-detail-value">
                 <span
-                  className="view-plushie-birthday__event-detail-value"
-                  id="birthDate"
-                >
-                  {birthDateText}
-                </span>
-                <span
-                  className="view-plushie-birthday__event-detail-value"
-                  id="age"
-                >
-                  {ageText}
-                </span>
-                <span
-                  className="view-plushie-birthday__event-detail-value"
-                  id="countdown"
-                >
-                  {countdownText}
-                </span>
+                  aria-hidden="true"
+                  className="view-plushie-birthday__icon view-plushie-birthday__icon--instagram"
+                />
+                {username ? (
+                  <a
+                    href={`https://instagram.com/${username}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="view-plushie-birthday__link"
+                  >
+                    {username}
+                  </a>
+                ) : (
+                  <span className="view-plushie-birthday__link">Unknown</span>
+                )}
               </div>
             </div>
-            <div className="view-plushie-birthday__action-button-wrapper">
-              <button
-                className="button button--secondary--outline button--secondary--compact"
-                id="submit-a-new-birthday-button"
-                onClick={() => navigate("/calendar/submit")}
+            <div className="view-plushie-birthday__event-row">
+              <span className="view-plushie-birthday__event-detail-label">
+                Birthday
+              </span>
+              <span
+                className="view-plushie-birthday__event-detail-value"
+                id="birthDate"
               >
-                Submit a New Birthday
-              </button>
+                {birthDateText}
+              </span>
+              <span
+                className="view-plushie-birthday__event-detail-value"
+                id="age"
+              >
+                {ageText}
+              </span>
+              <span
+                className="view-plushie-birthday__event-detail-value"
+                id="countdown"
+              >
+                {countdownText}
+              </span>
             </div>
-          </>
-        )}
-
-        {!item && !loading && (
-          <AlertCard
-            variant="error"
-            heading="Oops! This plushie seems to be hiding!"
-            messages={["Unable to load birthday details. Please try again."]}
-          >
+          </div>
+          <div className="view-plushie-birthday__action-button-wrapper">
             <button
-              className="button button--main"
-              onClick={() => navigate("/calendar")}
+              className="button button--secondary--outline button--secondary--compact"
+              id="submit-a-new-birthday-button"
+              onClick={() => navigate("/calendar/submit")}
             >
-              Explore Other Birthdays
+              Submit a New Birthday
             </button>
-          </AlertCard>
-        )}
-      </div>
-    </PageWidthContainer>
+          </div>
+        </>
+      )}
+
+      {!item && !loading && (
+        <AlertCard
+          variant={AlertCardVariant.ERROR}
+          heading="Oops! This plushie seems to be hiding!"
+          messages={["Unable to load birthday details. Please try again."]}
+        >
+          <button
+            className="button button--main"
+            onClick={() => navigate("/calendar")}
+          >
+            Explore Other Birthdays
+          </button>
+        </AlertCard>
+      )}
+    </div>
   );
 }

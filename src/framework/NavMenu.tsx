@@ -1,8 +1,8 @@
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { onAuthTokenChange } from "@/auth/firebase";
+import { AuthController } from "controllers";
 
-export function NavMenu() {
+export default function NavMenu() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -19,7 +19,9 @@ export function NavMenu() {
   }, []);
 
   useEffect(() => {
-    const unsub = onAuthTokenChange((token) => setIsAuthenticated(!!token));
+    const unsub = AuthController.onAuthTokenChange((token) =>
+      setIsAuthenticated(!!token)
+    );
     return () => unsub();
   }, []);
 

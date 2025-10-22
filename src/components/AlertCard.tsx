@@ -1,38 +1,29 @@
-import { useEffect, useRef } from "react";
-type Variant = "success" | "info" | "warning" | "error";
-
-type Props = {
-  heading: string;
-  messages?: string[];
-  cardId?: string;
-  variant?: Variant;
-  children?: React.ReactNode;
-  autoFocus?: boolean;
-};
+import { useEffect, useMemo, useRef } from "react";
+import { AlertCardVariant, IAlertCard } from "model/page-validation-alert";
+import { generateClassName } from "utils";
 
 export default function AlertCard({
   heading,
   messages,
   cardId = "alert-card",
-  variant = "info",
+  variant = AlertCardVariant.INFO,
   children,
   autoFocus = false,
-}: Props) {
+}: IAlertCard) {
   const ref = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     if (autoFocus && ref.current) {
       ref.current.focus();
     }
   }, [autoFocus]);
-  const className = [
-    "alert-card",
-    variant === "success" && "alert-card--success",
-    variant === "error" && "alert-card--error",
-    variant === "info" && "alert-card--info",
-    variant === "warning" && "alert-card--warning",
-  ]
-    .filter(Boolean)
-    .join(" ");
+
+  const className = useMemo(() => {
+    return generateClassName([
+      "alert-card",
+      variant && `alert-card--${variant}`,
+    ]);
+  }, [variant]);
 
   return (
     <div className={className} tabIndex={-1} id={cardId} ref={ref}>

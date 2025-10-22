@@ -26,11 +26,19 @@ module.exports = {
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".jsx"],
     alias: {
-      "@": path.resolve(__dirname, "src"),
+      builders: path.resolve(__dirname, "src/builders"),
+      components: path.resolve(__dirname, "src/components"),
+      "layout-components": path.resolve(__dirname, "src/layout-components"),
+      controllers: path.resolve(__dirname, "src/controllers"),
+      env: path.resolve(__dirname, "src/env/index.ts"),
+      framework: path.resolve(__dirname, "src/framework"),
+      hooks: path.resolve(__dirname, "src/hooks"),
+      icons: path.resolve(__dirname, "src/icons.ts"),
+      layout: path.resolve(__dirname, "src/layout"),
+      model: path.resolve(__dirname, "src/model"),
+      routes: path.resolve(__dirname, "src/routes"),
       services: path.resolve(__dirname, "src/services"),
       utils: path.resolve(__dirname, "src/utils"),
-      model: path.resolve(__dirname, "src/model"),
-      env: path.resolve(__dirname, "src/env/index.ts"),
     },
   },
   module: {

@@ -26,7 +26,7 @@ import { useLocation } from "react-router-dom";
  *  - Native scrollRestoration is forced to 'manual' once so the browser does not counteract our resets.
  *  - We intentionally avoid scanning arbitrary containers for performance; explicit design keeps the app with a single primary scroller.
  */
-export function ScrollToTop() {
+export default function ScrollToTop() {
   const location = useLocation();
 
   // One-time: disable native restoration so we fully control resets.

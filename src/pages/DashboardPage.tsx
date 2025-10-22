@@ -1,14 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserController } from "@/controllers/user.controller";
-import { AuthController } from "@/controllers/auth.controller";
-import type { IUserProfile } from "model/user-profile.types";
-import { PageWidthContainer } from "@/framework/PageWidthContainer";
-import { usePageHeading } from "@/hooks/usePageHeading";
-import { PageSectionContainer } from "@/framework/PageSectionContainer";
-import { FlexColumnLayout } from "@/framework/FlexColumnLayout";
-import DashboardCard from "@/components/DashboardCard";
-import UserSubscriptionTierBadge from "@/components/UserSubscriptionTierBadge";
+import { AuthController, UserController } from "controllers";
+import { usePageHeading } from "hooks";
+import { PageContentContainer, PageSectionContainer } from "framework";
+import { DashboardCard, UserSubscriptionTierBadge } from "components";
+import { IUserProfile } from "model/user-profile";
+import { ICONS } from "icons";
 
 export default function DashboardPage() {
   const navigate = useNavigate();
@@ -34,22 +31,18 @@ export default function DashboardPage() {
 
   const availableCards = [
     {
-      key: "BIRTHDAY_CALENDAR",
-      title: "Birthday Calendar",
-      description: "View and manage plushie birthdays",
-      action: () => navigate("/calendar"),
-    },
-    {
       key: "PROFILE_SETTINGS",
       title: "My Profile",
       description: "Manage your profile settings",
       action: () => navigate({ pathname: "/profile", search: "?tab=PROFILE" }),
+      icon: ICONS.user,
     },
     {
       key: "ACCOUNT_SETTINGS",
       title: "Account Settings",
       description: "Manage your account preferences",
       action: () => navigate({ pathname: "/profile", search: "?tab=ACCOUNT" }),
+      icon: ICONS.userGear,
     },
     {
       key: "PREFERENCES",
@@ -57,62 +50,59 @@ export default function DashboardPage() {
       description: "Manage your user preferences",
       action: () =>
         navigate({ pathname: "/profile", search: "?tab=PREFERENCES" }),
+      icon: ICONS.listCheck,
     },
   ];
 
   usePageHeading("My Account");
+
   return (
-    <>
-      <PageWidthContainer>
-        <FlexColumnLayout spacing="medium">
-          {userProfile ? (
-            <>
-              <PageSectionContainer className="welcome-section">
-                <p className="welcome-section__email-address">
-                  {userProfile.email}
-                </p>
-                <UserSubscriptionTierBadge
-                  tier={userProfile.subscriptionTier}
-                />
-              </PageSectionContainer>
+    <PageContentContainer spacing="medium">
+      {userProfile ? (
+        <>
+          <PageSectionContainer className="welcome-section">
+            <p className="welcome-section__email-address">
+              {userProfile.email}
+            </p>
+            <UserSubscriptionTierBadge tier={userProfile.subscriptionTier} />
+          </PageSectionContainer>
 
-              <PageSectionContainer heading="Available Features">
-                <div className="dashboard-page__features">
-                  {availableCards.map((c) => (
-                    <DashboardCard
-                      key={c.key}
-                      description={c.description}
-                      onClick={c.action}
-                    >
-                      <h3>{c.title}</h3>
-                    </DashboardCard>
-                  ))}
-                </div>
-              </PageSectionContainer>
-
-              <PageSectionContainer>
-                <div className="dashboard-page__actions">
-                  <button
-                    className="dashboard-page__sign-out-button"
-                    disabled={isSigningOut}
-                    onClick={onSignOut}
-                  >
-                    {isSigningOut && (
-                      <span className="dashboard-page__loading-spinner" />
-                    )}
-                    {isSigningOut ? "Signing Out..." : "Sign Out"}
-                  </button>
-                </div>
-              </PageSectionContainer>
-            </>
-          ) : (
-            <div className="dashboard-page__loading">
-              <div className="dashboard-page__loading-spinner"></div>
-              <p>Loading your dashboard...</p>
+          <PageSectionContainer heading="Available Features">
+            <div className="dashboard-page__features">
+              {availableCards.map((c) => (
+                <DashboardCard
+                  key={c.key}
+                  description={c.description}
+                  onClick={c.action}
+                  icon={c.icon}
+                >
+                  <h3>{c.title}</h3>
+                </DashboardCard>
+              ))}
             </div>
-          )}
-        </FlexColumnLayout>
-      </PageWidthContainer>
-    </>
+          </PageSectionContainer>
+
+          <PageSectionContainer>
+            <div className="dashboard-page__actions">
+              <button
+                className="dashboard-page__sign-out-button"
+                disabled={isSigningOut}
+                onClick={onSignOut}
+              >
+                {isSigningOut && (
+                  <span className="dashboard-page__loading-spinner" />
+                )}
+                {isSigningOut ? "Signing Out..." : "Sign Out"}
+              </button>
+            </div>
+          </PageSectionContainer>
+        </>
+      ) : (
+        <div className="dashboard-page__loading">
+          <div className="dashboard-page__loading-spinner"></div>
+          <p>Loading your dashboard...</p>
+        </div>
+      )}
+    </PageContentContainer>
   );
 }

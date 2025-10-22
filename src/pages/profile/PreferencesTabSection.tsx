@@ -1,8 +1,6 @@
-import { useState } from "react";
-import { FlexColumnLayout } from "@/framework/FlexColumnLayout";
-import { PageSectionContainer } from "@/framework/PageSectionContainer";
-import FormSectionHeader from "@/components/FormSectionHeader";
-import FormActionsContainer from "@/components/FormActionsContainer";
+import { FormEvent, useState } from "react";
+import { PageSectionContainer, PageContentContainer } from "framework";
+import { FormActionsContainer, FormSectionHeader } from "components";
 
 export default function PreferencesTabSection() {
   const [emailNotifications, setEmailNotifications] = useState(false);
@@ -18,7 +16,7 @@ export default function PreferencesTabSection() {
     ? ""
     : "";
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
     setTouched({ emailNotifications: true });
@@ -27,7 +25,7 @@ export default function PreferencesTabSection() {
 
   return (
     <form onSubmit={onSubmit}>
-      <FlexColumnLayout spacing="medium">
+      <PageContentContainer spacing="medium">
         {/* Alerts placeholder */}
         {/* <ProfilePageAlert errorMessages={[]} successMessage={null} /> */}
 
@@ -66,7 +64,7 @@ export default function PreferencesTabSection() {
             Save Preferences
           </button>
         </FormActionsContainer>
-      </FlexColumnLayout>
+      </PageContentContainer>
     </form>
   );
 }

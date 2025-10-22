@@ -1,9 +1,4 @@
-export interface GalleryItem {
-  fileName: string;
-  alt: string;
-}
-
-export class GalleryController {
+export default class GalleryController {
   static get homeItems(): GalleryItem[] {
     return HOME_GALLERY_ITEMS;
   }
@@ -27,3 +22,7 @@ const HOME_GALLERY_ITEMS: GalleryItem[] = [
     alt: "Gallery image 4 for the connect section showing Banjo wearing his yellow raincoat standing in front of Clifford's Tower in York.",
   },
 ];
+export interface GalleryItem {
+  fileName: string;
+  alt: string;
+}

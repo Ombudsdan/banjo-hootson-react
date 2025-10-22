@@ -5,7 +5,7 @@ React 19 + Webpack 5 + TypeScript app that lives alongside the Angular 20 app fo
 ## Quick start (PowerShell)
 
 ```powershell
-cd C:\Users\Dangr\Git\banjo-hootson\banjo-hootson-react
+cd banjo-hootson-react
 npm install
 npm run start
 ```
@@ -27,14 +27,20 @@ PORT=5174
 
 ### Centralized models
 
-- Import all types from the model barrel:
+**Do not import from the model barrel.**
+
+Import directly from the relevant submodule:
 
 ```ts
-import { IPlushieBirthday, ApiError, IUserProfile } from "model";
+import { IPlushieBirthday } from "model/plushie-birthday";
+import { IUserProfile } from "model/user-profile";
 ```
 
-- Files:
-  - `src/model/api.types.ts`, `date.types.ts`, `location.types.ts`, `plushie-birthday.types.ts`, `user-profile.types.ts`, `user.types.ts`, `model/index.ts`
+This avoids circular dependencies and is enforced by ESLint. If a barrel index.ts is reintroduced, it must not be used for imports.
+
+Files:
+
+- `src/model/api.ts`, `date.ts`, `location.ts`, `plushie-birthday.ts`, `user-profile.ts`, `user.ts`
 
 ### Type checking
 
@@ -52,12 +58,12 @@ Pages should not render heading or aggregated validation alert markup directly. 
 #### Simple heading-only page
 
 ```tsx
-import { PageWidthContainer } from "@/framework/PageWidthContainer";
-import { usePageHeading } from "@/hooks/usePageHeading";
+import { PageContainer } from "framework";
+import { usePageHeading } from "hooks";
 
 export default function AboutPage() {
   usePageHeading("About Banjo");
-  return <PageWidthContainer>...</PageWidthContainer>;
+  return <PageContainer>...</PageContainer>;
 }
 ```
 
@@ -65,7 +71,7 @@ export default function AboutPage() {
 
 ```tsx
 import { useEffect } from "react";
-import { useHeading } from "@/hooks/useHeading";
+import { useHeading } from "hooks";
 
 export default function GalleryPage() {
   const { setHeading, clearHeading } = useHeading();
@@ -83,7 +89,7 @@ export default function GalleryPage() {
 #### Aggregated (delayed) validation alert after submit attempt
 
 ```tsx
-import { useValidationAlert } from "@/hooks/useValidationAlert";
+import { useValidationAlert } from "hooks";
 import { useEffect, useMemo, useState } from "react";
 
 export function ExampleForm() {
@@ -175,20 +181,32 @@ Animation lifecycle:
 Builder helpers (`PageAlertBuilders`):
 
 ```ts
-PageAlertBuilders.success({ heading: "Saved", messages: [], timeoutMs: 4000 });
-PageAlertBuilders.error({ heading: "Failed", messages: [] });
-PageAlertBuilders.info({ heading: "Heads up" });
-PageAlertBuilders.warning({ heading: "Be careful" });
-PageAlertBuilders.saved("Profile"); // => "Profile saved"
-PageAlertBuilders.deleted("Photo"); // => "Photo deleted"
+PageAlert.success({
+  heading: "Saved",
+  id: "success-alert",
+  messages: [],
+  timeoutMs: 4000,
+});
+PageAlert.error({ heading: "Failed", id: "error-alert", messages: [] });
+PageAlert.info({ heading: "Heads up", id: "info-alert" });
+PageAlert.warning({ heading: "Be careful", id: "warning-alert" });
+PageAlert.saved("Profile"); // => "Profile saved"
+PageAlert.deleted("Photo"); // => "Photo deleted"
+PageAlert.buildPageAlert("success", "My Custom Alert", "custom-alert")
+  .setAutoFocus(false)
+  .setContent(<span>Example Content</span>)
+  .setTimeoutMs(2000)
+  .includeMessage("Message 1")
+  .includeMessage("Message 2")
+  .create();
 ```
 
 Example – success notification with auto‑dismiss:
 
 ```tsx
 import { useEffect } from "react";
-import { usePageAlerts } from "@/hooks/usePageAlerts";
-import { PageAlertBuilders } from "@/services/page-alerts.service";
+import { usePageAlerts } from "hooks";
+import { PageAlert } from "builders";
 
 export function ProfileSavedNotice() {
   const { addAlert, updateAlert } = usePageAlerts();
@@ -249,3 +267,88 @@ Guidance:
 - For form-wide validation issues, always use the validation alert service instead.
 
 Inline/local alerts Still use `AlertCard` directly when global stacking is unnecessary.
+
+### Path Aliases & Barrel Imports
+
+All major source folders now expose a barrel `index.ts` and are mapped via TypeScript + Webpack path aliases. Prefer these concise imports over deep relative paths:
+
+Available aliases (tsconfig `paths` + webpack `resolve.alias`):
+
+```
+auth        -> src/auth
+components  -> src/components
+controllers -> src/controllers
+env         -> src/env
+framework   -> src/framework
+hooks       -> src/hooks
+icons       -> src/icons.ts
+layout      -> src/layout
+model       -> src/model
+routes      -> src/routes
+services    -> src/services
+utils       -> src/utils
+```
+
+Examples:
+
+```ts
+// Auth helpers (Firebase auth wrapper)
+import { onAuthTokenChange, initFirebase } from "auth";
+
+// Layout Components (Page Heading, Page Alerts, etc.)
+import { HeadingProvider, PageAlertsProvider } from "layout-components";
+
+// Hooks (custom React hooks barrel)
+import { usePageHeading, usePageAlerts } from "hooks";
+
+// UI primitives / layout
+import { PageContainer, OverlayHost } from "framework";
+
+// Layout root (aggregated providers, etc.)
+import { DefaultLayout } from "layout";
+
+// Shared components
+import { AlertCard, DashboardCard } from "components";
+
+// Controllers (non-visual logic facades)
+import { BirthdayCalendarController } from "controllers";
+
+// Route objects / helpers (router export)
+import { router } from "routes";
+
+// Utilities & pure helpers
+import { formatDisplayDate, sortPlushies } from "utils";
+
+// Domain models / types
+import { IPlushieBirthday, IUserProfile } from "model";
+```
+
+Guidelines:
+
+- Do not import individual `*.service.ts` files directly; use the `services` barrel unless you have a tree‑shaking need (rare – all services are small).
+- Keep page-level code free of deep `../../..` import chains; if you find one, convert it to an alias.
+- Adding a new top-level folder? Add a barrel `index.ts`, then extend both `tsconfig.app.json` `paths` and `webpack.config.cjs` `resolve.alias` to keep parity (keep ordering alpha for readability).
+- Prefer importing from the barrel root (e.g. `import { AlertCard } from 'components'`) rather than deep internal files (`components/AlertCard`) unless you have a measurable tree‑shaking need.
+- Avoid `../../` traversals into an aliased folder — switch to the alias form instead.
+- If an item shouldn't be part of the public surface (e.g. an internal helper), do not re-export it from the barrel; keep the export surface intentional.
+
+Linting: ESLint rules enforce that you do not deep-import from `src/*` into an aliased folder (e.g. `import { AlertCard } from '../../components/AlertCard'`). Use the alias instead. Exceptions: relative imports within the same folder are still allowed.
+
+Migration status: All service and hook imports have been updated to use the new `services` barrel; additional component/controller imports may be modernized incrementally.
+
+### Further Reading
+
+- [ARCHITECTURE.md](./ARCHITECTURE.md)
+- Folder guides:
+  - [auth](./src/auth/README.md)
+  - [builders](./src/builders/README.md)
+  - [components](./src/components/README.md)
+  - [controllers](./src/controllers/README.md)
+  - [framework](./src/framework/README.md)
+  - [hooks](./src/hooks/README.md)
+  - [layout](./src/layout/README.md)
+  - [layout-components](./src/layout-components/README.md)
+  - [model](./src/model/README.md)
+  - [routes](./src/routes/README.md)
+  - [services](./src/services/README.md)
+  - [utils](./src/utils/README.md)

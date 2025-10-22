@@ -1,19 +1,18 @@
 // This file ensures TypeScript compatibility of our shared models.
 // It is not executed at runtime; it must type-check successfully.
 
-import type {
-  ApiError,
-  IApiErrorResponse,
-  DateString,
-  Year,
-  ICalendarEventDateRange,
-  ICountry,
+import { ApiError, IApiErrorResponse } from "./api";
+import { DateString, ICalendarEventDateRange, Year } from "./date";
+import { ICountry } from "./location";
+import {
   IPlushieBirthday,
   IPlushieBirthdayDisplayProperties,
-  IUserProfile,
+} from "./plushie-birthday";
+import {
   ICreateUserRequest,
   IUpdateUserRequest,
-} from "model";
+  IUserProfile,
+} from "./user-profile";
 
 // Sample assignments to validate structural compatibility
 const SAMPLE_ERROR: ApiError = { message: "oops" };

@@ -1,9 +1,15 @@
+/**
+ * usePageAlerts
+ * Accessor for stacked page alerts context (add/update/dismiss logic).
+ * Use for transient notification UX; validation errors use validation alert context instead.
+ */
 import { useContext } from "react";
-import { PageAlertsContext } from "@/services/page-alerts.service";
+import { PageAlertContext } from "layout";
 
-export function usePageAlerts() {
-  const ctx = useContext(PageAlertsContext);
-  if (!ctx)
+export default function usePageAlerts() {
+  const context = useContext(PageAlertContext);
+  if (!context) {
     throw new Error("usePageAlerts must be used within PageAlertsProvider");
-  return ctx;
+  }
+  return context;
 }
