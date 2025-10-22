@@ -3,6 +3,7 @@ export interface IPlushieBirthday {
   name: string;
   birthday: string;
   description?: string;
+  username?: string;
   imageUrl?: string;
   createdAt: string;
   updatedAt?: string;
