@@ -1,12 +1,6 @@
-import {
-  ISummaryList,
-  ISummaryListActions,
-  ISummaryListKey,
-  ISummaryListRow,
-  ISummaryListValue
-} from 'model/summary-list';
+import { PropsWithChildren } from 'react';
 
-const Container = ({ children }: ISummaryList) => {
+const Container = ({ children }: ISummaryListContainer) => {
   return <dl className="summary-list">{children}</dl>;
 };
 
@@ -31,3 +25,13 @@ const Actions = ({ children }: ISummaryListActions) => {
 };
 
 export default { Container, Row, Key, Value, Actions };
+
+export interface ISummaryListContainer extends PropsWithChildren {}
+
+export interface ISummaryListRow extends PropsWithChildren {}
+
+export interface ISummaryListKey extends PropsWithChildren {}
+
+export interface ISummaryListValue extends PropsWithChildren {}
+
+export interface ISummaryListActions extends PropsWithChildren {}

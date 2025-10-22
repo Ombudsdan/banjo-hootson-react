@@ -1,10 +1,10 @@
-import { PageSectionContainer } from "framework";
-import { GoogleCalendar } from "components";
-import { usePageContainer, usePageHeading } from "hooks";
-import { PageContainerVariant } from "model/page-container";
+import { PageSectionContainer } from 'framework';
+import { GoogleCalendar } from 'components';
+import { usePageContainer, usePageHeading } from 'hooks';
+import { PageContainerVariant } from 'enums';
 
 export default function CalendarPage() {
-  usePageHeading("Plushie Birthday Calendar");
+  usePageHeading('Plushie Birthday Calendar');
   usePageContainer({ variant: PageContainerVariant.FULL_WIDTH });
 
   return (

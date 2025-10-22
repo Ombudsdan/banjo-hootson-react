@@ -1,47 +1,42 @@
-import { IUserServiceProfile, IUserUpdate } from "model/user";
-import { IUserProfile } from "model/user-profile";
-import { UserService } from "services";
+import { IUser, IUserUpdate } from 'model/user.model';
+import { UserService } from 'services';
+import { toISOString } from 'utils';
 
 export default class UserController {
-  static async init(): Promise<IUserProfile> {
+  static async init(): Promise<IUser> {
     const user = await UserService.initUser();
-    return this.toUiProfile(user);
+    return this.toUserProfile(user);
   }
 
-  static async me(): Promise<IUserProfile> {
+  static async me(): Promise<IUser> {
     const user = await UserService.getCurrentUser();
-    return this.toUiProfile(user);
+    return this.toUserProfile(user);
   }
 
-  static async update(updates: IUserUpdate): Promise<IUserProfile> {
+  static async update(updates: IUserUpdate): Promise<IUser> {
     const user = await UserService.updateCurrentUser(updates);
-    return this.toUiProfile(user);
+    return this.toUserProfile(user);
   }
 
   static delete(): Promise<{ message: string }> {
     return UserService.deleteCurrentUser();
   }
 
-  private static toUiProfile(user: IUserServiceProfile): IUserProfile {
-    const toIso = (v: unknown): string => {
-      if (typeof v === "string") return v;
-      if (v instanceof Date) return v.toISOString();
-      if (typeof v === "number") return new Date(v).toISOString();
-      return "";
-    };
-
+  private static toUserProfile(user: IUser): IUser {
     return {
       uid: user.uid,
       email: user.email,
       subscriptionTier: user.subscriptionTier,
-      createdAt: toIso(user.createdAt),
-      lastLogin: toIso(user.lastLogin),
-      displayName: user.profile?.displayName,
-      preferences: user.profile?.preferences,
-      city: user.city || "",
-      country: user.country || "",
-      humanInstagram: user.humanInstagram || "",
-      plushieInstagramAccounts: user.plushieInstagramAccounts || [],
+      createdAt: toISOString(user.createdAt),
+      lastLogin: toISOString(user.lastLogin),
+      profile: {
+        displayName: user.profile?.displayName,
+        preferences: user.profile?.preferences
+      },
+      city: user.city || '',
+      country: user.country || '',
+      humanInstagram: user.humanInstagram || '',
+      plushieInstagramAccounts: user.plushieInstagramAccounts || []
     };
   }
 }

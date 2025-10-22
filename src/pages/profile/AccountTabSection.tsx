@@ -1,15 +1,13 @@
 import { PageSectionContainer, PageContentContainer } from 'framework';
 import { FormSectionHeader, UserSubscriptionTierBadge } from 'components';
 import { useDialog } from 'hooks';
+import { DialogConfirm } from 'enums';
 
 export default function AccountTabSection() {
   const { openDialog } = useDialog();
   return (
     <div className="page-narrow">
       <PageContentContainer spacing="medium">
-        {/* Alerts placeholder */}
-        {/* <ProfilePageAlert errorMessages={[]} successMessage={null} /> */}
-
         <PageSectionContainer>
           <FormSectionHeader title="My Subscription" />
           <div className="subscription-section">
@@ -31,10 +29,10 @@ export default function AccountTabSection() {
                 openDialog({
                   title: 'Delete Account',
                   message: 'Are you sure you want to permanently delete your account and all associated data?',
-                  confirmType: 'danger',
+                  confirmType: DialogConfirm.DANGER,
                   confirmText: 'Delete',
                   cancelText: 'Cancel',
-                  onConfirm: () => {
+                  onDialogConfirm: () => {
                     // Integrate delete call when backend action is available
                   }
                 });

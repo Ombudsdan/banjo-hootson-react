@@ -1,18 +1,12 @@
-import { HttpClientService } from "services";
-import {
-  FirebaseController,
-  FirebaseUser,
-  FirebaseUserCredential,
-} from "controllers";
-import { IAuthUser } from "model/auth";
+import { HttpClientService } from 'services';
+import { FirebaseController, FirebaseUser, FirebaseUserCredential } from 'controllers';
+import { IAuthUser } from 'model/auth.model';
 
 export default class AuthController {
   static init() {
     FirebaseController.init();
     // Provide initial token fetcher
-    HttpClientService.setTokenProvider(
-      async () => await FirebaseController.getCurrentIdToken()
-    );
+    HttpClientService.setTokenProvider(async () => await FirebaseController.getCurrentIdToken());
     // Keep in sync when token changes
     FirebaseController.onAuthTokenChange((token: string | null) => {
       // Optional: could refresh client state or trigger re-fetches
@@ -32,27 +26,13 @@ export default class AuthController {
     return user ? this.mapUser(user) : null;
   }
 
-  static async signInWithEmailPassword(
-    email: string,
-    password: string
-  ): Promise<ISignInResult> {
-    const result = await FirebaseController.signInWithEmailAndPassword(
-      email,
-      password
-    );
+  static async signInWithEmailPassword(email: string, password: string): Promise<ISignInResult> {
+    const result = await FirebaseController.signInWithEmailAndPassword(email, password);
     return this.mapUserCredential(result);
   }
 
-  static async signUpWithEmailPassword(
-    email: string,
-    password: string,
-    displayName?: string
-  ): Promise<ISignInResult> {
-    const result = await FirebaseController.createUserWithEmailAndPassword(
-      email,
-      password,
-      displayName
-    );
+  static async signUpWithEmailPassword(email: string, password: string, displayName?: string): Promise<ISignInResult> {
+    const result = await FirebaseController.createUserWithEmailAndPassword(email, password, displayName);
     return this.mapUserCredential(result);
   }
 
@@ -69,13 +49,11 @@ export default class AuthController {
       uid: user.uid,
       email: user.email,
       displayName: user.displayName,
-      photoURL: user.photoURL,
+      photoURL: user.photoURL
     };
   }
 
-  private static async mapUserCredential(
-    credential: FirebaseUserCredential
-  ): Promise<ISignInResult> {
+  private static async mapUserCredential(credential: FirebaseUserCredential): Promise<ISignInResult> {
     const token = await credential.user.getIdToken();
     return { user: this.mapUser(credential.user), token };
   }

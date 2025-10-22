@@ -10,7 +10,7 @@ Key elements:
 ## Import
 
 ```ts
-import { DefaultLayout } from "layout";
+import { DefaultLayout } from 'layout';
 ```
 
 ## Responsibilities

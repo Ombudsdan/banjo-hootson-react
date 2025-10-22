@@ -3,8 +3,7 @@ import { ClickableActionPanelGroup, Gallery } from 'components';
 import { Image, PageContentContainer, PageSectionContainer } from 'framework';
 import { GalleryController } from 'controllers';
 import { usePageHeading } from 'hooks';
-import { PageHeadingTheme } from 'model/page-heading';
-import { ImageFrame, ImageUsage } from 'model/image';
+import { ImageFrame, ImageUsage, PageHeadingTheme } from 'enums';
 
 export default function HomePage() {
   usePageHeading('Banjo Hootson', {

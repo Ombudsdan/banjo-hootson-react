@@ -3,7 +3,7 @@ import { PlushieBioController } from 'controllers';
 import { PlushieBio } from 'components';
 import { Image, PageSectionContainer } from 'framework';
 import { usePageHeading } from 'hooks';
-import { ImageUsage } from 'model/image';
+import { ImageUsage } from 'enums';
 
 export default function AboutPage() {
   const plushies = PlushieBioController.getAllPlushies();

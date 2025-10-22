@@ -1,4 +1,4 @@
-import { IImage, ImageFrame, ImageShape, ImageUsage } from 'model/image';
+import { ImageFrame, ImageFrameType, ImageShape, ImageShapeType, ImageUsageType } from 'enums';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { generateClassName } from 'utils';
 // Allow use of webpack require.context in TypeScript ESM build
@@ -156,9 +156,9 @@ function generateClass(usage: IImage['usage'], shape: IImage['shape'], frame: II
 function generateShapeClass(shape: IImage['shape'], usage: IImage['usage']): string | undefined {
   if (shape) {
     return `image--${shape}`;
-  } else if (usage === ImageUsage.HEADING) {
+  } else if (usage === 'heading') {
     return `image--${ImageShape.CIRCLE}`;
-  } else if (usage === ImageUsage.BIO || usage === ImageUsage.GALLERY) {
+  } else if (usage === 'bio' || usage === 'gallery') {
     return `image--${ImageShape.ROUNDED_SQUARE}`;
   } else return undefined;
 }
@@ -167,16 +167,25 @@ function generateShapeClass(shape: IImage['shape'], usage: IImage['usage']): str
 function generateFrameClass(frame: IImage['frame'], usage: IImage['usage']) {
   const classes = [];
 
-  const hasFrame = !!frame || usage === ImageUsage.HEADING;
+  const hasFrame = !!frame || usage === 'heading';
   if (hasFrame) {
     classes.push(`image--framed`);
   }
 
   if (frame) {
     classes.push(`image--framed--${frame}`);
-  } else if (usage === ImageUsage.HEADING) {
+  } else if (usage === 'heading') {
     classes.push(`image--framed--${ImageFrame.DARK}`);
   }
 
   return generateClassName(classes);
+}
+
+interface IImage {
+  fileName: string;
+  alt: string;
+  usage?: ImageUsageType;
+  shape?: ImageShapeType;
+  frame?: ImageFrameType;
+  loading?: HTMLImageElement['loading'];
 }

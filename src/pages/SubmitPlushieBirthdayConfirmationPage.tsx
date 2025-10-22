@@ -1,25 +1,25 @@
-import { useEffect, useMemo, useState, useCallback } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { BirthdayController } from "controllers";
-import { getPropertiesFromPlushieBirthdayEventName } from "utils";
-import { PlushieBirthdayController } from "controllers";
-import { usePageHeading } from "hooks";
-import { IPlushieBirthday } from "model/plushie-birthday";
+import { useEffect, useMemo, useState, useCallback } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { BirthdayController } from 'controllers';
+import { getPropertiesFromPlushieBirthdayEventName } from 'utils';
+import { PlushieBirthdayController } from 'controllers';
+import { usePageHeading } from 'hooks';
+import { IPlushieBirthday } from 'model/plushie-birthday.model';
 
 export default function SubmitPlushieBirthdayConfirmationPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [item, setItem] = useState<IPlushieBirthday | null>(null);
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!id) return;
     setLoading(true);
-    setError("");
+    setError('');
     BirthdayController.loadByEventId(id)
-      .then((r) => setItem(r))
-      .catch((e) => setError((e as Error)?.message || String(e)))
+      .then(r => setItem(r))
+      .catch(e => setError((e as Error)?.message || String(e)))
       .finally(() => setLoading(false));
   }, [id]);
 
@@ -29,7 +29,7 @@ export default function SubmitPlushieBirthdayConfirmationPage() {
   }, [item]);
 
   const headingText = useMemo(() => {
-    if (!displayProperties) return "Birthday Submitted";
+    if (!displayProperties) return 'Birthday Submitted';
     return `${PlushieBirthdayController.extractPossessiveName(
       displayProperties
     )} birthday has been added to the calendar!`;
@@ -41,17 +41,12 @@ export default function SubmitPlushieBirthdayConfirmationPage() {
   }, [item, navigate]);
 
   const handleSubmitAnother = useCallback(() => {
-    const username = displayProperties
-      ? PlushieBirthdayController.extractUsername(displayProperties)
-      : "";
-    navigate(
-      "/calendar/submit",
-      username ? { state: { event: username } } : undefined
-    );
+    const username = displayProperties ? PlushieBirthdayController.extractUsername(displayProperties) : '';
+    navigate('/calendar/submit', username ? { state: { event: username } } : undefined);
   }, [displayProperties, navigate]);
 
   const handleRetry = useCallback(() => {
-    navigate("/calendar/submit");
+    navigate('/calendar/submit');
   }, [navigate]);
 
   usePageHeading(headingText);
@@ -64,8 +59,7 @@ export default function SubmitPlushieBirthdayConfirmationPage() {
           <div className="alert-card__heading">Submission Error</div>
           <div className="alert-card__messages">
             <p>
-              An error occurred while submitting your birthday. Please try again
-              or drop me a message for assistance.
+              An error occurred while submitting your birthday. Please try again or drop me a message for assistance.
             </p>
           </div>
           <button
@@ -102,8 +96,8 @@ export default function SubmitPlushieBirthdayConfirmationPage() {
               Thank you for your submission! 🎉
             </h2>
             <p className="submit-plushie-birthday-confirmation__support-card-text">
-              If you're enjoying the calendar, an optional donation helps cover
-              running costs and keeps the birthday party going!
+              If you're enjoying the calendar, an optional donation helps cover running costs and keeps the birthday
+              party going!
             </p>
             <a
               href="https://www.buymeacoffee.com/banjohootson"

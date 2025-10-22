@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Image } from 'framework';
 import { usePageHeading } from 'hooks';
-import { ImageUsage } from 'model/image';
+import { ImageUsage } from 'enums';
 
 export default function ContactPage() {
   const sendEmail = () => {

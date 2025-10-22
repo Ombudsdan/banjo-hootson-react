@@ -1,32 +1,29 @@
-import { useEffect, useMemo, useRef } from "react";
-import { AlertCardVariant, IAlertCard } from "model/page-validation-alert";
-import { generateClassName } from "utils";
+import { PropsWithChildren, useEffect, useMemo, useRef } from 'react';
+import { generateClassName } from 'utils';
+import { AlertCardVariant, AlertCardVariantType } from 'enums';
 
 export default function AlertCard({
+  id,
   heading,
   messages,
-  cardId = "alert-card",
   variant = AlertCardVariant.INFO,
   children,
-  autoFocus = false,
+  disableAutoFocus = false
 }: IAlertCard) {
   const ref = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (autoFocus && ref.current) {
+    if (!disableAutoFocus && ref.current) {
       ref.current.focus();
     }
-  }, [autoFocus]);
+  }, [disableAutoFocus, messages, children]);
 
   const className = useMemo(() => {
-    return generateClassName([
-      "alert-card",
-      variant && `alert-card--${variant}`,
-    ]);
+    return generateClassName(['alert-card', variant && `alert-card--${variant}`]);
   }, [variant]);
 
   return (
-    <div className={className} tabIndex={-1} id={cardId} ref={ref}>
+    <div className={className} tabIndex={-1} id={id} ref={ref} aria-live="assertive" role="alert">
       <h2 className="alert-card__heading">{heading}</h2>
       {messages && messages.length > 0 && (
         <ul className="alert-card__messages">
@@ -40,4 +37,13 @@ export default function AlertCard({
       {children}
     </div>
   );
+}
+
+export interface IAlertCard extends PropsWithChildren {
+  id: string;
+  heading: string;
+  messages?: string[];
+  variant?: AlertCardVariantType;
+  disableAutoFocus?: boolean;
+  timeoutMs?: number; // auto-dismiss after provided milliseconds
 }

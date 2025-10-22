@@ -1,19 +1,13 @@
-import { IPlushie } from "controllers";
-import { Image } from "framework";
-import { ImageUsage } from "model/image";
+import { IPlushie } from 'controllers';
+import { ImageUsage } from 'enums';
+import { Image } from 'framework';
 
 export default function PlushieBio({ plushie, position }: IPlushieBio) {
   const isEven = position % 2 === 0;
   return (
-    <div
-      className={`plushie-bio plushie-bio--align-${isEven ? "right" : "left"}`}
-    >
+    <div className={`plushie-bio plushie-bio--align-${isEven ? 'right' : 'left'}`}>
       <div className="plushie-bio__image-container">
-        <Image
-          alt={plushie.name}
-          fileName={plushie.fileName}
-          usage={ImageUsage.BIO}
-        />
+        <Image alt={plushie.name} fileName={plushie.fileName} usage={ImageUsage.BIO} />
       </div>
       <div className="plushie-bio__text-container">
         <h3>{plushie.name}</h3>

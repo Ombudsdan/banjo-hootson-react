@@ -1,6 +1,6 @@
-import { useEffect, useMemo } from "react";
-import { useHeading } from "hooks";
-import { IPageHeadingContainer } from "model/page-heading";
+import { useMemo } from 'react';
+import { useHeading } from 'hooks';
+import { IPageHeading } from 'framework';
 
 /**
  * usePageHeading
@@ -13,21 +13,14 @@ import { IPageHeadingContainer } from "model/page-heading";
  *     return <PageContainer>...</PageContainer>;
  *   }
  */
-export default function usePageHeadingContainer(
-  heading: string,
-  options?: IPageHeadingContainer
-) {
-  const { setHeading, clearHeading } = useHeading();
+export default function usePageHeadingContainer(heading: string, options?: IPageHeading) {
   // Memoize config so effect only runs when actual values change, not on every render creating new object references
-  const memoConfig: IPageHeadingContainer = useMemo(() => {
+  const memoConfig: IPageHeading = useMemo(() => {
     return { heading, ...(options || {}) };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [heading, options?.subheading, options?.image, options?.theme]);
 
-  useEffect(() => {
-    setHeading(memoConfig);
-    return () => clearHeading();
-  }, [memoConfig, setHeading, clearHeading]);
+  useHeading(memoConfig);
 }
 
 /**

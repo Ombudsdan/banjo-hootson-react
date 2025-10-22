@@ -12,11 +12,13 @@ form {
 .form-section:not(:last-child) {
   margin-bottom: 3rem;
 }
+
 .form-content {
   @include mixins.flex-column-center;
 }
 
-form .form-group:not(:last-child) {
+form .form-group:not(:last-child),
+.form-field:not(:last-child) {
   margin-bottom: 1.5rem;
 }
 
@@ -140,7 +142,41 @@ option {
   }
 }
 
-.form-group {
+$prefix-map: (
+  instagram: '@'
+);
+
+.input-group {
+  display: flex;
+  align-items: center;
+  position: relative;
+  flex-grow: 1;
+
+  @each $key, $value in $prefix-map {
+    &--#{$key} {
+      &__prefix {
+        &::after {
+          content: '#{$value}';
+        }
+
+        line-height: $input-height;
+        position: absolute;
+        left: 1.5rem;
+        font-weight: variables.$font-weight-medium;
+        z-index: 1; // TODO - not sure what this is here for
+        pointer-events: none;
+        color: variables.$colour-text-muted;
+      }
+
+      & > input[type='text'] {
+        padding-left: 2.5rem;
+      }
+    }
+  }
+}
+
+.form-group,
+.form-field {
   width: 100%;
 
   > * {
@@ -204,7 +240,8 @@ option {
   align-items: center;
   gap: 0.5rem;
 
-  .form-group {
+  .form-group,
+  .form-field {
     flex: 1;
   }
 

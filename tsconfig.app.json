@@ -15,9 +15,10 @@
       "builders/*": ["./src/builders/*"],
       "components": ["./src/components/index.ts"],
       "components/*": ["./src/components/*"],
-      "layout-components": ["src/layout-components/index.ts"],
       "controllers": ["./src/controllers/index.ts"],
       "controllers/*": ["./src/controllers/*"],
+      "enums": ["./src/enums/index.ts"],
+      "enums/*": ["./src/enums/*"],
       "env": ["./src/env/index.ts"],
       "env/*": ["./src/env/*"],
       "framework": ["./src/framework/index.ts"],
@@ -33,7 +34,9 @@
       "services": ["./src/services/index.ts"],
       "services/*": ["./src/services/*"],
       "utils": ["./src/utils/index.ts"],
-      "utils/*": ["./src/utils/*"]
+      "utils/*": ["./src/utils/*"],
+      "validators": ["./src/validators/index.ts"],
+      "validators/*": ["./src/validators/*"]
     },
 
     /* Linting */

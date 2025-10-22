@@ -1,5 +1,5 @@
-import { ICountry } from "model/location";
-import { LocationService } from "services";
+import { ICountry } from 'model/country.model';
+import { LocationService } from 'services';
 
 export default class LocationController {
   static async loadCountries(): Promise<ICountry[]> {

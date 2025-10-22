@@ -34,9 +34,9 @@ This document describes the structure and conventions of the React migration cod
 All are reflected in `tsconfig.app.json` and `webpack.config.cjs`. Example:
 
 ```ts
-import { formatDisplayDate } from "utils";
-import { usePageHeading } from "hooks";
-import { BirthdayCalendarController } from "controllers";
+import { formatDisplayDate } from 'utils';
+import { usePageHeading } from 'hooks';
+import { BirthdayCalendarController } from 'controllers';
 ```
 
 See root README for the full alias list.
@@ -52,7 +52,7 @@ Each UI state area typically contains:
 Usage keeps pages declarative:
 
 ```tsx
-usePageHeading({ heading: "Dashboard", icon: "house" });
+usePageHeading({ heading: 'Dashboard', icon: 'house' });
 ```
 
 ## Controllers vs Services
@@ -95,7 +95,7 @@ Provider composition is handled in `LayoutProviders`.
 ## Linting Conventions
 
 - Enforcement of alias imports over deep `../../` relative paths (custom `no-restricted-imports` patterns).
-- Rule blocking direct `PageHeadingContainer` usage in `pages/`.
+- Rule blocking direct `PageHeading` usage in `pages/`.
 - Future candidate: disallow service file imports inside components (encourage hook indirection).
 
 ## JSDoc Strategy

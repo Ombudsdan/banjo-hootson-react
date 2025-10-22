@@ -1,8 +1,15 @@
 import { Outlet } from 'react-router-dom';
 import { NavMenu, ScrollToTop, Footer } from 'framework';
-import { DialogOutlet, LayoutProviders, PageAlertOutlet, PageContainerOutlet, PageHeadingOutlet } from 'layout';
-import { BackdropOutlet } from 'layout/Backdrop';
-import { PageValidationAlertOutlet } from './PageValidationAlert';
+import {
+  DialogOutlet,
+  PageAlertOutlet,
+  PageContainerOutlet,
+  PageHeadingOutlet,
+  BackdropOutlet,
+  PageValidationAlertOutlet,
+  FormDialogOutlet
+} from 'hooks';
+import LayoutProviders from './LayoutProviders';
 
 export default function DefaultLayout() {
   return (
@@ -11,6 +18,7 @@ export default function DefaultLayout() {
       <ScrollToTop />
       <BackdropOutlet />
       <DialogOutlet />
+      <FormDialogOutlet />
       <PageHeadingOutlet />
       <PageValidationAlertOutlet />
       <PageAlertOutlet />

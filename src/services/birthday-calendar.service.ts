@@ -6,42 +6,36 @@
  *  - Delegate network + auth header handling to HttpClientService.
  * No caching or transformation here; consumers (controllers) handle shaping for UI.
  */
-import {
-  IPlushieBirthday,
-  IPlushieBirthdayFormData,
-} from "model/plushie-birthday";
-import { HttpClientService } from "services";
+import { IPlushieBirthday, IPlushieBirthdayFormData } from 'model/plushie-birthday.model';
+import { HttpClientService } from 'services';
 
-const BASE = "/plushie-birthdays";
+const BASE = '/plushie-birthdays';
 
 export default class BirthdayCalendarService {
   static getUpcoming(days = 7) {
     return HttpClientService.request<IPlushieBirthday[]>({
       path: `${BASE}/upcoming`,
-      query: { days },
+      query: { days }
     });
   }
 
   static getByUsername(username: string) {
     return HttpClientService.request<IPlushieBirthday[]>({
-      path: `${BASE}/user/${encodeURIComponent(username)}`,
+      path: `${BASE}/user/${encodeURIComponent(username)}`
     });
   }
 
   static getByEventId(eventId: string) {
     return HttpClientService.request<IPlushieBirthday>({
-      path: `${BASE}/${encodeURIComponent(eventId)}`,
+      path: `${BASE}/${encodeURIComponent(eventId)}`
     });
   }
 
   static create(form: IPlushieBirthdayFormData) {
-    return HttpClientService.request<
-      IPlushieBirthday,
-      IPlushieBirthdayFormData
-    >({
+    return HttpClientService.request<IPlushieBirthday, IPlushieBirthdayFormData>({
       path: `${BASE}/calendar`,
-      method: "POST",
-      body: form,
+      method: 'POST',
+      body: form
     });
   }
 }

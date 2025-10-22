@@ -1,6 +1,40 @@
+@use "../variables";
 @use "../mixins";
 
 .page-validation-alert {
   @include mixins.page-narrow;
   margin-bottom: 1.5rem;
+
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  &__list-item {
+    @include mixins.alert-card-list-item(variables.$colour-error);
+  }
+
+  &__validation-message {
+    @include mixins.button-displayed-as-link;
+
+    color: variables.$colour-error;
+
+    &:focus {
+      text-decoration-color: variables.$colour-error-dark;
+    }
+
+    &:hover {
+      color: variables.$colour-error-dark;
+      text-decoration-color: currentColor;
+    }
+
+    &:visited {
+      color: variables.$colour-error-dark;
+    }
+
+    &:active {
+      color: variables.$colour-error-dark;
+    }
+  }
 }

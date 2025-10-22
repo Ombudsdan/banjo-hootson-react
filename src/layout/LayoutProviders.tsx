@@ -10,12 +10,12 @@ import { FC } from 'react';
 import {
   BackdropProvider,
   DialogProvider,
+  FormDialogProvider,
   PageAlertProvider,
   PageContainerProvider,
   PageHeadingProvider,
   PageValidationAlertProvider
-} from 'layout';
-import { ILayoutProviders } from 'model/layout';
+} from 'hooks';
 
 const LayoutProviders: FC<ILayoutProviders> = ({ children }) => {
   return (
@@ -23,9 +23,11 @@ const LayoutProviders: FC<ILayoutProviders> = ({ children }) => {
       <PageValidationAlertProvider>
         <PageAlertProvider>
           <BackdropProvider>
-            <DialogProvider>
-              <PageContainerProvider>{children}</PageContainerProvider>
-            </DialogProvider>
+            <FormDialogProvider>
+              <DialogProvider>
+                <PageContainerProvider>{children}</PageContainerProvider>
+              </DialogProvider>
+            </FormDialogProvider>
           </BackdropProvider>
         </PageAlertProvider>
       </PageValidationAlertProvider>
@@ -34,3 +36,5 @@ const LayoutProviders: FC<ILayoutProviders> = ({ children }) => {
 };
 
 export default LayoutProviders;
+
+export interface ILayoutProviders extends React.PropsWithChildren {}

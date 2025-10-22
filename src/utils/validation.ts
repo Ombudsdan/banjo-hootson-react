@@ -1,100 +1,49 @@
+import { ValidationErrorRecord, ValidatorService, ValidatorFn } from 'services';
+import { isFutureDate, toLowercase } from 'utils';
+
+export function isValidRegex(value: string, regex: RegExp): boolean {
+  return regex.test(value);
+}
+
+export function isValueInArray<T>(value: T, existingValues?: T[]): boolean {
+  const list = existingValues ?? [];
+  const normalisedValue = typeof value === 'string' ? toLowercase((value as unknown) as string) : value;
+  const normalisedArray = list.map(v => (typeof v === 'string' ? toLowercase((v as unknown) as string) : v));
+  return normalisedArray.includes(normalisedValue);
+}
+
+export function hasMultipleAtSymbols(value: string): boolean {
+  return (value.match(/@/g) || []).length !== 1;
+}
+
+export function getEmailParts(value: string): [string, string] | [null, null] {
+  const parts = value.split('@');
+  if (parts.length === 2) {
+    return [parts[0], parts[1]];
+  }
+  return [null, null];
+}
+
 /**
  * Validation utilities
  * Ported from Angular implementation for cross-framework parity.
  * Exposes composable validator functions plus helpers to aggregate results and derive messages.
  */
 
-function patternValidator(regex: RegExp, key: string): ValidatorFn {
-  return (value: string) => {
-    if (!value) return null;
-    return regex.test(value) ? null : { [key]: true };
-  };
-}
-
-function maxLengthValidator(max: number): ValidatorFn {
-  return (value: string) => {
-    if (!value) return null;
-    return value.length <= max ? null : { maxlength: true };
-  };
-}
-
-function minLengthValidator(min: number): ValidatorFn {
-  return (value: string) => {
-    if (!value) return null;
-    return value.length >= min ? null : { minlength: true };
-  };
-}
-
-function requiredValidator(): ValidatorFn {
-  return (value: string) => {
-    return value ? null : { required: true };
-  };
-}
-
-function noFutureDateValidator(): ValidatorFn {
-  return (value: string) => {
-    if (!value) return null;
-    const selectedDate = new Date(value);
-    selectedDate.setUTCHours(0, 0, 0, 0);
-    const today = new Date();
-    today.setUTCHours(0, 0, 0, 0);
-    return selectedDate > today ? { futureDate: true } : null;
-  };
-}
-
-function validFirstCharValidator(): ValidatorFn {
-  return (value: string) => {
-    if (!value) return null;
-    return /^[@a-zA-Z0-9_\-.].*$/.test(value)
-      ? null
-      : { invalidFirstChar: true };
-  };
-}
-
-function validRemainingCharsValidator(): ValidatorFn {
-  return (value: string) => {
-    if (!value || value.length <= 1) return null;
-    return /^[a-zA-Z0-9_\-.]*$/.test(value.substring(1))
-      ? null
-      : { invalidRemainingChars: true };
-  };
-}
-
-function emailValidator(): ValidatorFn {
-  // Simplified email regex similar to Angular's default Validators.email implementation intent
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return (value: string) => {
-    if (!value) return null;
-    return emailRegex.test(value) ? null : { email: true };
-  };
-}
-
 export const Validation = {
   required: requiredValidator(),
   minLength: (min: number) => minLengthValidator(min),
   maxLength: (max: number) => maxLengthValidator(max),
-  namePattern: patternValidator(/^[a-zA-Z0-9\s\-']+$/, "pattern"),
-  usernamePattern: patternValidator(
-    /^[@a-zA-Z0-9_\-.][a-zA-Z0-9_\-.]*$/,
-    "pattern"
-  ),
+  namePattern: patternValidator(/^[a-zA-Z0-9\s\-']+$/, 'pattern'),
+  usernamePattern: patternValidator(/^[@a-zA-Z0-9_\-.][a-zA-Z0-9_\-.]*$/, 'pattern'),
   validFirstChar: validFirstCharValidator(),
   validRemainingChars: validRemainingCharsValidator(),
   noFutureDate: () => noFutureDateValidator(),
-  email: emailValidator(),
+  email: emailValidator()
 };
 
-export interface FieldValidationResult {
-  dirty: boolean;
-  touched: boolean;
-  errors: ValidationErrorMap | null;
-}
-
-export function runValidators(
-  value: string,
-  validators: ValidatorFn[]
-): ValidationErrorMap | null {
-  const aggregate: ValidationErrorMap = {};
+export function runValidators(value: string, validators: ValidatorFn[]): ValidationErrorRecord | null {
+  const aggregate: ValidationErrorRecord = {};
   for (const v of validators) {
     const result = v(value);
     if (result) Object.assign(aggregate, result);
@@ -102,16 +51,48 @@ export function runValidators(
   return Object.keys(aggregate).length ? aggregate : null;
 }
 
-export function firstErrorMessage(
-  errors: ValidationErrorMap | null,
-  messages: Record<string, string>
-): string {
-  if (!errors) return "";
+export function firstErrorMessage(errors: ValidationErrorRecord | null, messages: Record<string, string>): string {
+  if (!errors) return '';
   for (const key of Object.keys(messages)) {
     if (errors[key]) return messages[key];
   }
-  return "";
+  return '';
 }
 
-export type ValidationErrorMap = Record<string, boolean>;
-export type ValidatorFn = (value: string) => ValidationErrorMap | null;
+// Deprecated functions below
+// I have since implemented BaseValidator and specific validator classes
+
+function patternValidator(regex: RegExp, key: string): ValidatorFn {
+  return (value: string) => (!value || isValidRegex(value, regex) ? null : { [key]: true });
+}
+
+function maxLengthValidator(max: number): ValidatorFn {
+  return (value: string) => (!value || ValidatorService.isValidMaxLength(value, max) ? null : { maxlength: true });
+}
+
+function minLengthValidator(min: number): ValidatorFn {
+  return (value: string) => (!value || ValidatorService.isValidMinLength(value, min) ? null : { minlength: true });
+}
+
+function requiredValidator(): ValidatorFn {
+  return (value: string) => (!value || ValidatorService.isRequired(value) ? null : { required: true });
+}
+
+function noFutureDateValidator(): ValidatorFn {
+  return (value: string) => (!value || isFutureDate(value) ? null : { futureDate: true });
+}
+
+function validFirstCharValidator(): ValidatorFn {
+  return (value: string) => (!value || isValidRegex(value, /^[@a-zA-Z0-9]/) ? null : { invalidFirstChar: true });
+}
+
+function validRemainingCharsValidator(): ValidatorFn {
+  return (value: string) =>
+    !value || value.length <= 1 || isValidRegex(value.substring(1), /^[a-zA-Z0-9_\-.]+$/)
+      ? null
+      : { invalidRemainingChars: true };
+}
+
+function emailValidator(): ValidatorFn {
+  return (value: string) => (!value || isValidRegex(value, /^[^\s@]+@[^\s@]+\.[^\s@]+$/) ? null : { email: true });
+}

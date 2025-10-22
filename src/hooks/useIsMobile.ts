@@ -1,5 +1,5 @@
-import { Breakpoint } from 'model/breakpoint';
 import { useEffect, useState } from 'react';
+import { Breakpoint } from 'enums';
 
 export default function useIsMobile(breakpoint = Breakpoint.M) {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= breakpoint);
