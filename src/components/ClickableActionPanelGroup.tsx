@@ -1,5 +1,6 @@
 import { ClickableActionPanel } from 'components';
-import { ClickableActionPanelGroupController, ActionPanelGroupOption } from 'controllers';
+import { ClickableActionPanelGroupController } from 'controllers';
+import { ClickableActionPanelGroupOptionType } from 'enums';
 
 /**
  * Renders a group of clickable action panels given a group key.
@@ -21,5 +22,5 @@ export default function ClickableActionPanelGroup({ group }: IClickableActionPan
 
 /** Props for {@link ClickableActionPanelGroup} */
 interface IClickableActionPanelGroup {
-  group: ActionPanelGroupOption;
+  group: ClickableActionPanelGroupOptionType;
 }

@@ -2,7 +2,7 @@ import { useCallback, useState, useRef, useMemo, useEffect, PropsWithChildren } 
 import { BackdropContext, IBackdropContext } from 'hooks';
 import { setInert } from 'utils';
 
-export const BackdropProvider = ({ children }: IBackdropProvider) => {
+export const BackdropProvider = ({ children }: BackdropProviderProps) => {
   const [open, setOpen] = useState(false);
 
   const listenersRef = useRef<Set<() => void>>(new Set());
@@ -34,4 +34,4 @@ export const BackdropProvider = ({ children }: IBackdropProvider) => {
 
 export default BackdropProvider;
 
-export interface IBackdropProvider extends PropsWithChildren {}
+type BackdropProviderProps = PropsWithChildren;

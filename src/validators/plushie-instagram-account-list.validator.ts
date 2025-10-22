@@ -1,4 +1,4 @@
-import { ValidatorService } from 'services';
+import { ValidationRuleService } from 'services';
 import { isArrayEmpty } from 'utils';
 import { BaseValidator } from 'validators';
 
@@ -29,4 +29,4 @@ export default class PlushieInstagramAccountListValidator extends BaseValidator 
   }
 }
 
-type PlushieInstagramAccountListValidatorKey = 'hasNoAccounts' | keyof typeof ValidatorService;
+type PlushieInstagramAccountListValidatorKey = 'hasNoAccounts' | keyof typeof ValidationRuleService;

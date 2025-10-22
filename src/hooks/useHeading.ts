@@ -17,7 +17,6 @@ export default function useHeading(config: IPageHeading) {
 
   const { heading, subheading, image, theme } = config;
 
-  // Memoize config so effect only runs when actual config values change
   useEffect(() => {
     setHeading(config);
     return () => clearHeading();

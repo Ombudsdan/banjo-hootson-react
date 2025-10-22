@@ -5,7 +5,7 @@ import { renderWithProviders } from 'test';
 import { BaseValidator } from 'validators';
 
 class NoopValidator extends BaseValidator {
-  static validate(_value: string) {
+  static validate() {
     return NoopValidator.executeValidation('', {});
   }
 }

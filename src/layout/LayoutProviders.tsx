@@ -17,7 +17,7 @@ import {
   PageValidationAlertProvider
 } from 'hooks';
 
-const LayoutProviders: FC<ILayoutProviders> = ({ children }) => {
+const LayoutProviders: FC<LayoutProvidersProps> = ({ children }) => {
   return (
     <PageHeadingProvider>
       <PageValidationAlertProvider>
@@ -37,4 +37,4 @@ const LayoutProviders: FC<ILayoutProviders> = ({ children }) => {
 
 export default LayoutProviders;
 
-export interface ILayoutProviders extends React.PropsWithChildren {}
+type LayoutProvidersProps = React.PropsWithChildren;

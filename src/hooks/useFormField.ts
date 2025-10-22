@@ -1,8 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import { useForm, useInputValidation } from '.';
 import { BaseValidator, IValidation, NoopValidator } from 'validators';
-import { ValidationErrorRecord } from 'services';
-import { isEmpty } from 'utils';
+import { isEmpty, ValidationErrorRecord } from 'utils';
 
 /**
  * React hook that registers a form field with the global `useForm` context,
@@ -43,7 +42,7 @@ export function useFormField<TValue = string>({
   args,
   additionalValidators = []
 }: IUseFormField<TValue>) {
-  const { fields, setField, touched, setTouched, isSubmitted, setFieldValidation, setFields } = useForm() as any;
+  const { fields, setField, touched, setTouched, isSubmitted, setFieldValidation, setFields } = useForm();
 
   // Seed or update initial value when provided from outside (e.g., after async load)
   // - If the field is not yet set, set it to initialValue
@@ -66,12 +65,11 @@ export function useFormField<TValue = string>({
   // Provide a no-op validator when none is supplied so hooks order stays stable
   const effectivePrimaryValidator = useMemo(() => validator || NoopValidator, [validator]);
 
-  // Stabilize validator args to avoid identity-only churn
   const argsKey = useMemo(() => JSON.stringify(args ?? null), [args]);
   const stableArgs = useMemo(() => args, [argsKey]);
 
   // Run validation on the current value
-  const primaryValidation: IValidation = useInputValidation(value as any, effectivePrimaryValidator, stableArgs);
+  const primaryValidation: IValidation = useInputValidation(value, effectivePrimaryValidator, stableArgs);
 
   // Merge primary + additional validators in a readable way
   const additionalCount = additionalValidators.length;
@@ -98,9 +96,9 @@ export function useFormField<TValue = string>({
 
   return {
     value,
-    setValue: (v: TValue) => setField(id, v as any),
+    setValue: (newValue: TValue) => setField(id, newValue),
     touched,
-    setTouched: (t: boolean) => setTouched(id, t),
+    setTouched: (newValue: boolean) => setTouched(id, newValue),
     validation,
     showErrors
   } as const;
@@ -115,7 +113,7 @@ export default useFormField;
  * @param {IValidation} primaryValidation - Validation result from the primary validator.
  * @param {Array<typeof BaseValidator>} additionalValidators - Extra validators to run after the primary one.
  * @param {unknown} value - The value to validate.
- * @param {Record<string, any>} [args] - Optional arguments to pass to each validator.
+ * @param {UseFormFieldArgsRecord} [args] - Optional arguments to pass to each validator.
  * @returns {IValidation} Combined validation result including merged errors and messages.
  *
  * @internal
@@ -124,7 +122,7 @@ function mergeValidation(
   primaryValidation: IValidation,
   additionalValidators: Array<typeof BaseValidator>,
   value: unknown,
-  args?: Record<string, any>
+  args?: UseFormFieldArgsRecord
 ): IValidation {
   const errorMessages = [...(primaryValidation.errorMessages || [])];
   const errorObjects: ValidationErrorRecord[] = primaryValidation.errors ? [primaryValidation.errors] : [];
@@ -161,5 +159,7 @@ interface IUseFormField<TValue> {
   initialValue: TValue;
   validator?: typeof BaseValidator;
   additionalValidators?: Array<typeof BaseValidator>;
-  args?: Record<string, any>;
+  args?: UseFormFieldArgsRecord;
 }
+
+export type UseFormFieldArgsRecord = Record<string, unknown>;

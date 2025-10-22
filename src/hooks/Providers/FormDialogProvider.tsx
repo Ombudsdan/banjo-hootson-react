@@ -5,7 +5,7 @@ import { checkHasValueChanged, checkHasObjectChanged } from 'utils';
 
 const DEFAULT_DIRTY_TRACKER_MESSAGE = 'You have unsaved changes that will be lost. Are you sure you want to leave?';
 
-const FormDialogProvider = ({ children }: IFormDialogProvider) => {
+const FormDialogProvider = ({ children }: FormDialogProviderProps) => {
   const [formDialog, setFormDialog] = useState<IFormDialogState | null>(null);
   const { openBackdrop, closeBackdrop } = useBackdrop();
 
@@ -15,7 +15,6 @@ const FormDialogProvider = ({ children }: IFormDialogProvider) => {
 
   const closeFormDialog = useCallback(handleFormDialogClose, [formDialog]);
 
-  // Sync backdrop state with dialog state
   useEffect(syncBackdropState, [formDialog]);
 
   return (
@@ -44,7 +43,7 @@ const FormDialogProvider = ({ children }: IFormDialogProvider) => {
     });
   }
 
-  function hasFormDialogChanged(prev: any, next: any) {
+  function hasFormDialogChanged(prev: IFormDialogState, next: Partial<IFormDialogState>) {
     return (
       checkHasValueChanged('isInvalid', prev, next) ||
       checkHasValueChanged('isDirty', prev, next) ||
@@ -80,6 +79,7 @@ const FormDialogProvider = ({ children }: IFormDialogProvider) => {
     return !!(formDialog && typeof formDialog.isInvalid === 'function' && formDialog.isInvalid());
   }
 
+  /** Sync backdrop state with dialog state */
   function syncBackdropState() {
     return formDialog && formDialog.open ? openBackdrop() : closeBackdrop();
   }
@@ -91,4 +91,4 @@ const FormDialogProvider = ({ children }: IFormDialogProvider) => {
 
 export default FormDialogProvider;
 
-export interface IFormDialogProvider extends PropsWithChildren {}
+type FormDialogProviderProps = PropsWithChildren;

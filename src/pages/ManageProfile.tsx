@@ -2,7 +2,7 @@ import { FormEvent, useEffect, useState } from 'react';
 import { FormActionsContainer } from 'framework';
 import { UserController } from 'controllers';
 import { FormOutlet, FormSubmitContext, useHeading, usePageAlerts } from 'hooks';
-import { IUser } from 'model/user.model';
+import { IPlushieInstagramAccount, IUser } from 'model/user.model';
 import {
   CountryFormInput,
   EmailAddressFormInput,
@@ -16,7 +16,7 @@ const INPUT_ID = {
   country: 'country-input',
   yourInstagramAccount: 'your-instagram-account-input',
   plushieAccounts: 'plushie-accounts-input'
-};
+} as const;
 
 export default function ManageProfile() {
   useHeading({ heading: 'Manage Profile' });
@@ -27,7 +27,7 @@ export default function ManageProfile() {
   useEffect(fetchUser, []);
 
   return (
-    <FormOutlet onSubmit={onSubmit} onSubmitFailure={onSubmitFailure}>
+    <FormOutlet<IManageProfileFormFields> onSubmit={onSubmit} onSubmitFailure={onSubmitFailure}>
       <EmailAddressFormInput
         isReadonly={true}
         id="email-address"
@@ -81,15 +81,15 @@ export default function ManageProfile() {
     });
   }
 
-  async function onSubmit(_e: FormEvent<HTMLFormElement>, form: FormSubmitContext) {
+  async function onSubmit(_e: FormEvent<HTMLFormElement>, form: FormSubmitContext<IManageProfileFormFields>) {
     const fields = form.getFormFields();
 
     await UserController.update({
       ...user,
-      city: fields[INPUT_ID.townOrCity] || user?.city || '',
-      country: fields[INPUT_ID.country] || user?.country || '',
-      humanInstagram: fields[INPUT_ID.yourInstagramAccount] || user?.humanInstagram || '',
-      plushieInstagramAccounts: fields[INPUT_ID.plushieAccounts] || user?.plushieInstagramAccounts || []
+      city: fields[INPUT_ID.townOrCity] ?? user?.city ?? '',
+      country: fields[INPUT_ID.country] ?? user?.country ?? '',
+      humanInstagram: fields[INPUT_ID.yourInstagramAccount] ?? user?.humanInstagram ?? '',
+      plushieInstagramAccounts: fields[INPUT_ID.plushieAccounts] ?? user?.plushieInstagramAccounts ?? []
     });
 
     addAlert({
@@ -107,4 +107,11 @@ export default function ManageProfile() {
       messages: [...(err?.message || [])]
     });
   }
+}
+
+interface IManageProfileFormFields {
+  [INPUT_ID.townOrCity]: string;
+  [INPUT_ID.country]: string;
+  [INPUT_ID.yourInstagramAccount]: string;
+  [INPUT_ID.plushieAccounts]: IPlushieInstagramAccount[];
 }

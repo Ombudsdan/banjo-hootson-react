@@ -29,8 +29,8 @@ describe('PlushieInstagramAccountFormInput', () => {
       { withForm: true }
     );
 
-    const input = screen.getByPlaceholderText('Plushie Instagram Account') as HTMLInputElement;
-    await userEvent.tab();
+  // focus/blur to trigger validation without using the variable
+  await userEvent.tab();
     expect(screen.queryByText(/already been added/i)).not.toBeInTheDocument();
   });
 });

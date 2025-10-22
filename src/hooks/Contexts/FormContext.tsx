@@ -1,12 +1,17 @@
 import { createContext } from 'react';
 import { IValidation } from 'validators';
 
-const FormContext = createContext<IFormContext | undefined>(undefined);
+// Generic form context. TFields represents the shape of form fields by id.
+// NOTE: We intentionally use `any` here to allow providers to supply IFormContext<TFields>
+// without running into variance issues across consumer sites. Consumers should use the
+// generic useForm<TFields>() hook, which narrows this back to the precise TFields.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const FormContext = createContext<IFormContext<any> | undefined>(undefined);
 
 export default FormContext;
 
-export interface IFormContext {
-  fields: FormField;
+export interface IFormContext<TFields extends object = FormFieldRecord> {
+  fields: Partial<TFields>;
   // Initial values captured on first set for each field, used for dirty detection
   // Not guaranteed to include keys that were never set
   // Consumers typically call isFormDirty() rather than reading this directly
@@ -15,14 +20,14 @@ export interface IFormContext {
   isSubmitted: boolean;
   touched: Record<string, boolean>;
   isSaving: boolean;
-  fieldValidation: FieldValidation;
+  fieldValidation: FieldValidationRecord;
 
   isFormDirty: () => boolean;
 
-  getFormFields: () => FormField;
+  getFormFields(): Partial<TFields>;
 
-  setField: (fieldName: string, value: any) => void;
-  setFields: (fields: FormField) => void;
+  setField: (fieldName: keyof TFields & string, value: TFields[keyof TFields]) => void;
+  setFields: (fields: Partial<TFields>) => void;
   setIsSubmitted: (isSubmitted: boolean) => void;
   setTouched: (inputName: string, touched: boolean) => void;
   setIsSaving: (isSaving: boolean) => void;
@@ -34,5 +39,6 @@ export interface IFormContext {
   resetIsSaving: () => void;
 }
 
-export type FormField = Record<string, any>;
-export type FieldValidation = Record<string, IValidation>;
+export type FormFieldRecord = Record<string, unknown>;
+
+export type FieldValidationRecord = Record<string, IValidation>;

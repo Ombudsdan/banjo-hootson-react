@@ -1,7 +1,7 @@
-import { useBackdrop } from "hooks";
+import { useBackdrop } from 'hooks';
 
 export default function BackdropOutlet({ onClick }: { onClick?: () => void }) {
-  const { open, _listeners } = useBackdrop() as any;
+  const { open, _listeners } = useBackdrop();
 
   if (!open) return null;
 
@@ -10,18 +10,8 @@ export default function BackdropOutlet({ onClick }: { onClick?: () => void }) {
       _listeners.forEach((callback: () => void) => callback());
     }
 
-    if (onClick) {
-      onClick();
-    }
+    if (onClick) onClick();
   };
 
-  return (
-    <div
-      className="backdrop"
-      role="presentation"
-      aria-hidden="true"
-      tabIndex={-1}
-      onClick={handleClick}
-    />
-  );
+  return <div className="backdrop" role="presentation" aria-hidden="true" tabIndex={-1} onClick={handleClick} />;
 }

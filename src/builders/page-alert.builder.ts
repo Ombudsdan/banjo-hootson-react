@@ -13,7 +13,7 @@ export default class PageAlert {
     variant: PageAlertVariantType,
     heading: string,
     id: string,
-    overrides?: IPageAlertBuilderOverrides
+    overrides?: PageAlertBuilderOverrides
   ): PageAlertBuilder {
     return new PageAlertBuilder(variant, heading, id, overrides || {});
   }
@@ -21,7 +21,7 @@ export default class PageAlert {
   static success(
     heading: string,
     id: string,
-    overrides?: IPageAlertBuilderOverrides
+    overrides?: PageAlertBuilderOverrides
   ) {
     return new PageAlertBuilder(
       PageAlertVariant.SUCCESS,
@@ -34,7 +34,7 @@ export default class PageAlert {
   static info(
     heading: string,
     id: string = "",
-    overrides?: IPageAlertBuilderOverrides
+    overrides?: PageAlertBuilderOverrides
   ) {
     return new PageAlertBuilder(
       PageAlertVariant.INFO,
@@ -47,7 +47,7 @@ export default class PageAlert {
   static warning(
     heading: string,
     id: string,
-    overrides?: IPageAlertBuilderOverrides
+    overrides?: PageAlertBuilderOverrides
   ) {
     return new PageAlertBuilder(
       PageAlertVariant.WARNING,
@@ -60,7 +60,7 @@ export default class PageAlert {
   static error(
     heading: string,
     id: string,
-    overrides?: IPageAlertBuilderOverrides
+    overrides?: PageAlertBuilderOverrides
   ) {
     return new PageAlertBuilder(
       PageAlertVariant.ERROR,
@@ -104,7 +104,7 @@ class PageAlertBuilder {
     variant: PageAlertVariantType,
     heading: string,
     id: string,
-    overrides: IPageAlertBuilderOverrides
+    overrides: PageAlertBuilderOverrides
   ) {
     this.pageAlert = {
       ...DEFAULT_PAGE_ALERT,
@@ -137,5 +137,6 @@ class PageAlertBuilder {
   }
 }
 
-interface IPageAlertBuilderOverrides
-  extends Partial<Omit<IAlertCard, "id" | "variant" | "heading">> {}
+type PageAlertBuilderOverrides = Partial<
+  Omit<IAlertCard, "id" | "variant" | "heading">
+>;

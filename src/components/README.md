@@ -61,11 +61,11 @@ Small panels that route internally or link externally based on controller option
 
 ```tsx
 import { ClickableActionPanel, ClickableActionPanelGroup } from "components";
-import { ActionPanelOption, ActionPanelGroupOption } from "controllers";
+import { ClickableActionPanelOption, ClickableActionPanelGroupOption } from "controllers";
 
-<ClickableActionPanel option={ActionPanelOption.ManageProfile} />
+<ClickableActionPanel option={ClickableActionPanelOption.ManageProfile} />
 
-<ClickableActionPanelGroup group={ActionPanelGroupOption.DashboardMain} />
+<ClickableActionPanelGroup group={ClickableActionPanelGroupOption.DashboardMain} />
 ```
 
 ### DashboardCard

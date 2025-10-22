@@ -5,10 +5,10 @@ const PageValidationAlertContext = createContext<IValidationAlertContext | undef
 export default PageValidationAlertContext;
 
 export interface IValidationAlertContext {
-  validationErrors: PageValidationAlertErrors | null;
-  setValidationAlert: (config: PageValidationAlertErrors | null) => void;
+  validationErrors: PageValidationAlertErrorsRecord | null;
+  setValidationAlert: (config: PageValidationAlertErrorsRecord | null) => void;
   clearValidationAlert: () => void;
 }
 
 /** Record<error-id, error-message> */
-export type PageValidationAlertErrors = Record<string, string[]>; //
+export type PageValidationAlertErrorsRecord = Record<string, string[]>; //

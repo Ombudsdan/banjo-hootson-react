@@ -7,7 +7,7 @@ const DEFAULT_CONFIG: IPageContainer = {
   variant: PageContainerVariant.DEFAULT
 };
 
-const PageContainerProvider: FC<IPageContainerProvider> = ({ children }) => {
+const PageContainerProvider: FC<PageContainerProviderProps> = ({ children }) => {
   const [config, setConfig] = useState<IPageContainer>(DEFAULT_CONFIG);
 
   const setContainer = useCallback((cfg: Partial<IPageContainer>) => {
@@ -30,4 +30,4 @@ const PageContainerProvider: FC<IPageContainerProvider> = ({ children }) => {
 
 export default PageContainerProvider;
 
-export interface IPageContainerProvider extends PropsWithChildren {}
+type PageContainerProviderProps = PropsWithChildren;

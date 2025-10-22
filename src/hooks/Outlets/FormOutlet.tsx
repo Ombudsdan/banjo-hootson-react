@@ -1,18 +1,19 @@
 import { FormEvent, PropsWithChildren } from 'react';
 import {
   FormProvider,
-  PageValidationAlertErrors,
+  PageValidationAlertErrorsRecord,
   useForm,
   usePageAlerts,
   useValidationAlert,
-  IFormContext
+  IFormContext,
+  FormFieldsRecord
 } from 'hooks';
 
 /** Wrapper `Form` component that provides context so hooks can be used safely inside */
-export default function FormOutlet(props: IForm) {
+export default function FormOutlet<TFields extends object = FormFieldsRecord>(props: IForm<TFields>) {
   return (
-    <FormProvider>
-      <FormContent {...props} />
+    <FormProvider<TFields>>
+      <FormContent<TFields> {...props} />
     </FormProvider>
   );
 }
@@ -21,7 +22,13 @@ export default function FormOutlet(props: IForm) {
  * Since the useForm hook is used, the form state must wrap the form content.
  * To achieve this, we separate out the content `FormContent` from the form wrapper `Form`.
  */
-function FormContent({ children, onSubmit, onSubmitFailure, onSubmitFinally, disablePageValidation }: IForm) {
+function FormContent<TFields extends object = FormFieldsRecord>({
+  children,
+  onSubmit,
+  onSubmitFailure,
+  onSubmitFinally,
+  disablePageValidation
+}: IForm<TFields>) {
   const { dismissAllAlerts } = usePageAlerts();
   const {
     setIsSubmitted,
@@ -32,7 +39,7 @@ function FormContent({ children, onSubmit, onSubmitFailure, onSubmitFinally, dis
     touched,
     isSubmitted,
     fieldValidation
-  } = useForm();
+  } = useForm<TFields>();
   const { setValidationAlert, clearValidationAlert } = useValidationAlert();
 
   return <form onSubmit={submit}>{children}</form>;
@@ -67,15 +74,15 @@ function FormContent({ children, onSubmit, onSubmitFailure, onSubmitFinally, dis
     if (e) triggerSubmitEvent(e);
 
     const validators = Object.entries(fieldValidation);
-    const isValid = validators.every(([_, v]) => !v?.errors);
+    const isValid = validators.every(([, validation]) => !validation?.errors);
 
     if (!disablePageValidation && !isValid) {
       const validationErrors = validators
-        .filter(([_, validation]) => validation.errorMessages?.length)
+        .filter(([, validation]) => validation.errorMessages?.length)
         .reduce((acc, [inputId, validation]) => {
           acc[inputId] = validation.errorMessages;
           return acc;
-        }, {} as PageValidationAlertErrors);
+        }, {} as PageValidationAlertErrorsRecord);
 
       setValidationAlert(validationErrors);
     }
@@ -91,14 +98,14 @@ function FormContent({ children, onSubmit, onSubmitFailure, onSubmitFinally, dis
   }
 }
 
-interface IForm extends PropsWithChildren {
-  onSubmit: (e: FormEvent<HTMLFormElement>, form: FormSubmitContext) => void | Promise<void>;
+interface IForm<TFields extends object = FormFieldsRecord> extends PropsWithChildren {
+  onSubmit: (e: FormEvent<HTMLFormElement>, form: FormSubmitContext<TFields>) => void | Promise<void>;
   onSubmitFailure: (err: Error) => void;
   onSubmitFinally?: () => void;
   disablePageValidation?: boolean;
 }
 
-export type FormSubmitContext = Pick<
-  IFormContext,
+export type FormSubmitContext<TFields extends object = FormFieldsRecord> = Pick<
+  IFormContext<TFields>,
   'fields' | 'getFormFields' | 'touched' | 'isSubmitted' | 'isSaving' | 'fieldValidation'
 >;

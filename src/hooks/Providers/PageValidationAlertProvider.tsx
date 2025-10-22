@@ -1,10 +1,13 @@
 import { FC, PropsWithChildren, useCallback, useState } from 'react';
-import { PageValidationAlertContext, PageValidationAlertErrors } from 'hooks';
+import { PageValidationAlertContext, PageValidationAlertErrorsRecord } from 'hooks';
 
-const PageValidationAlertProvider: FC<IPageValidationAlertProvider> = ({ children }) => {
-  const [validationErrors, setValidationErrors] = useState<PageValidationAlertErrors | null>(null);
+const PageValidationAlertProvider: FC<PageValidationAlertProviderProps> = ({ children }) => {
+  const [validationErrors, setValidationErrors] = useState<PageValidationAlertErrorsRecord | null>(null);
 
-  const setValidationAlert = useCallback((config: PageValidationAlertErrors | null) => setValidationErrors(config), []);
+  const setValidationAlert = useCallback(
+    (config: PageValidationAlertErrorsRecord | null) => setValidationErrors(config),
+    []
+  );
 
   const clearValidationAlert = useCallback(() => setValidationErrors(null), []);
 
@@ -17,4 +20,4 @@ const PageValidationAlertProvider: FC<IPageValidationAlertProvider> = ({ childre
 
 export default PageValidationAlertProvider;
 
-export interface IPageValidationAlertProvider extends PropsWithChildren {}
+type PageValidationAlertProviderProps = PropsWithChildren;

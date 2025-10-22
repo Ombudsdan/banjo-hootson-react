@@ -30,7 +30,11 @@ export default function FormDialogOutlet() {
   }
 
   function handleSubmitFailure(err: Error) {
-    onConfirmFailure?.(err) || console.error('FormDialog submission failed:', err);
+    if (onConfirmFailure) {
+      onConfirmFailure(err);
+    } else {
+      console.error('FormDialog submission failed:', err);
+    }
   }
 }
 

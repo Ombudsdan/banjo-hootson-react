@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { PageAlertContext } from 'hooks';
 import { IAlertCard } from 'framework';
 
-const PageAlertProvider: FC<IPageAlertProvider> = ({ children }) => {
+const PageAlertProvider: FC<PageAlertProviderProps> = ({ children }) => {
   const location = useLocation();
   const [alerts, setAlerts] = useState<IAlertCard[]>([]);
   const [exitingIds, setExitingIds] = useState<Set<string>>(new Set());
@@ -65,6 +65,7 @@ const PageAlertProvider: FC<IPageAlertProvider> = ({ children }) => {
       }
       return alert.id;
     },
+
     [reactUnique, beginDismiss]
   );
 
@@ -191,7 +192,6 @@ const PageAlertProvider: FC<IPageAlertProvider> = ({ children }) => {
     if (alerts.length) {
       dismissAllAlerts();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.key]);
 
   return (
@@ -216,4 +216,4 @@ const PageAlertProvider: FC<IPageAlertProvider> = ({ children }) => {
 
 export default PageAlertProvider;
 
-export interface IPageAlertProvider extends PropsWithChildren {}
+type PageAlertProviderProps = PropsWithChildren;

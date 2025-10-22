@@ -5,11 +5,11 @@ import { BaseValidator, IValidation } from 'validators';
  * Generic field validation hook for any value, validator, and error message resolver.
  */
 export default function useInputValidation(
-  value: any,
+  value: unknown,
   validator: typeof BaseValidator,
-  args?: Record<string, any>
+  args?: InputValidationArgsRecord
 ): IValidation {
-  const isRequired = !!(args && (args as any).required);
+  const isRequired = args?.required || false;
   const isEmpty = useMemo(() => {
     if (value === '' || value === null || value === undefined) return true;
     if (Array.isArray(value)) return value.length === 0;
@@ -28,3 +28,5 @@ export default function useInputValidation(
 
   return { errors, errorMessages };
 }
+
+export type InputValidationArgsRecord = Record<string, unknown> & { required?: boolean };

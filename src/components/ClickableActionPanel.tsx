@@ -1,8 +1,9 @@
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ClickableActionPanelController, ActionPanelOption, IActionPanel } from 'controllers';
+import { ClickableActionPanelController, IClickableActionPanelConfig } from 'controllers';
 import { generateClassName } from 'utils';
+import { ClickableActionPanelOptionType } from 'enums';
 
 /**
  * Clickable panel that navigates to an internal route or external URL based on the provided option.
@@ -11,15 +12,15 @@ import { generateClassName } from 'utils';
 export default function ClickableActionPanel({ option }: IClickableActionPanel) {
   const content = ClickableActionPanelController.getPanelContent(option);
 
+  const className = useMemo(() => {
+    const theme = content?.theme;
+    return generateClassName(['clickable-action-panel', theme && `clickable-action-panel--${theme}`]);
+  }, [content?.theme]);
+
   if (!content) return null;
 
-  const { icon, text, link, isExternal, theme } = content;
+  const { icon, text, link, isExternal } = content;
   const bodyProps = { icon, text };
-
-  const className = useMemo(() => {
-    return generateClassName(['clickable-action-panel', theme && `clickable-action-panel--${theme}`]);
-  }, [content.theme]);
-
   return isExternal ? (
     <ClickableActionPanelExternalLink link={link} className={className} bodyProps={bodyProps} />
   ) : (
@@ -54,14 +55,14 @@ function ClickableActionPanelBody({ icon, text }: IClickableActionPanelBody) {
 
 /** Props for {@link ClickableActionPanel} */
 interface IClickableActionPanel {
-  option: ActionPanelOption;
+  option: ClickableActionPanelOptionType;
 }
 
 /** Props for {@link ClickableActionPanelLink} */
-interface IClickableActionPanelLink extends Pick<IActionPanel, 'link'> {
+interface IClickableActionPanelLink extends Pick<IClickableActionPanelConfig, 'link'> {
   className: string;
   bodyProps: IClickableActionPanelBody;
 }
 
 /** Props for {@link ClickableActionPanelBody} */
-interface IClickableActionPanelBody extends Pick<IActionPanel, 'icon' | 'text'> {}
+type IClickableActionPanelBody = Pick<IClickableActionPanelConfig, 'icon' | 'text'>;

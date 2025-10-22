@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { ReactElement, JSXElementConstructor, ReactNode } from 'react';
 import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { DialogOutlet, FormDialogOutlet, FormProvider } from 'hooks';
@@ -23,7 +23,7 @@ export function renderWithProviders(ui: ReactElement, opts: IProviderOptions = {
     );
   };
 
-  return render(ui, { wrapper: Wrapper as any });
+  return render(ui, { wrapper: Wrapper as JSXElementConstructor<{ children?: ReactNode }> });
 }
 
 interface IProviderOptions {

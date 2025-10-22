@@ -1,8 +1,9 @@
 import { screen } from '@testing-library/react';
 import { PlushieBio } from 'components';
+import type { IPlushie } from 'controllers';
 import { renderWithProviders } from 'test';
 
-const plushie = { fileName: 'plushie-1', name: 'Banjo', bio: 'A hoot.', birthday: '1 Jan' } as any;
+const plushie: IPlushie = { fileName: 'plushie-1', name: 'Banjo', bio: 'A hoot.', birthday: '1 Jan' };
 
 describe('PlushieBio', () => {
   it('renders plushie details and alternates alignment by position', () => {

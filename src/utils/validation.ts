@@ -1,4 +1,4 @@
-import { ValidationErrorRecord, ValidatorService, ValidatorFn } from 'services';
+import { ValidationRuleService } from 'services';
 import { isFutureDate, toLowercase } from 'utils';
 
 export function isValidRegex(value: string, regex: RegExp): boolean {
@@ -16,20 +16,16 @@ export function hasMultipleAtSymbols(value: string): boolean {
   return (value.match(/@/g) || []).length !== 1;
 }
 
-export function getEmailParts(value: string): [string, string] | [null, null] {
-  const parts = value.split('@');
-  if (parts.length === 2) {
-    return [parts[0], parts[1]];
-  }
-  return [null, null];
-}
+// Deprecated functions below
+//
+// I have since implemented BaseValidator and specific validator classes
+// These are only used in forms that haven't yet been replaced with the new hooks-based forms
 
 /**
  * Validation utilities
  * Ported from Angular implementation for cross-framework parity.
  * Exposes composable validator functions plus helpers to aggregate results and derive messages.
  */
-
 export const Validation = {
   required: requiredValidator(),
   minLength: (min: number) => minLengthValidator(min),
@@ -59,23 +55,20 @@ export function firstErrorMessage(errors: ValidationErrorRecord | null, messages
   return '';
 }
 
-// Deprecated functions below
-// I have since implemented BaseValidator and specific validator classes
-
 function patternValidator(regex: RegExp, key: string): ValidatorFn {
   return (value: string) => (!value || isValidRegex(value, regex) ? null : { [key]: true });
 }
 
 function maxLengthValidator(max: number): ValidatorFn {
-  return (value: string) => (!value || ValidatorService.isValidMaxLength(value, max) ? null : { maxlength: true });
+  return (value: string) => (!value || ValidationRuleService.isValidMaxLength(value, max) ? null : { maxlength: true });
 }
 
 function minLengthValidator(min: number): ValidatorFn {
-  return (value: string) => (!value || ValidatorService.isValidMinLength(value, min) ? null : { minlength: true });
+  return (value: string) => (!value || ValidationRuleService.isValidMinLength(value, min) ? null : { minlength: true });
 }
 
 function requiredValidator(): ValidatorFn {
-  return (value: string) => (!value || ValidatorService.isRequired(value) ? null : { required: true });
+  return (value: string) => (!value || ValidationRuleService.isRequired(value) ? null : { required: true });
 }
 
 function noFutureDateValidator(): ValidatorFn {
@@ -96,3 +89,7 @@ function validRemainingCharsValidator(): ValidatorFn {
 function emailValidator(): ValidatorFn {
   return (value: string) => (!value || isValidRegex(value, /^[^\s@]+@[^\s@]+\.[^\s@]+$/) ? null : { email: true });
 }
+
+export type ValidationErrorRecord = Record<string, boolean>;
+
+type ValidatorFn = (value: string) => ValidationErrorRecord | null;
