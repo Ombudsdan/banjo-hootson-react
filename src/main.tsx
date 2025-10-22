@@ -1,7 +1,9 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import App from "./App";
+import { Suspense } from "react";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./routes/app.routes";
 import { AuthController } from "./controllers/auth.controller";
 import { HealthController } from "./controllers/health.controller";
 
@@ -13,6 +15,8 @@ HealthController.ping()
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
+    <Suspense fallback={<div>Loading...</div>}>
+      <RouterProvider router={router} />
+    </Suspense>
   </StrictMode>
 );
