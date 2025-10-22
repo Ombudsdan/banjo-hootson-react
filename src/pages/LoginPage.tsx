@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { PageWidthContainer } from "@/framework/PageWidthContainer";
-import { PageHeadingContainer } from "@/framework/PageHeadingContainer";
+import { usePageHeading } from "@/hooks/usePageHeading";
 import { FlexColumnLayout } from "@/framework/FlexColumnLayout";
 import { AuthController } from "@/controllers/auth.controller";
 import { UserController } from "@/controllers/user.controller";
@@ -142,9 +142,9 @@ export default function LoginPage() {
     }
   };
 
+  usePageHeading("Sign In");
   return (
     <>
-      <PageHeadingContainer heading="Sign In" />
       <PageWidthContainer>
         <FlexColumnLayout>
           <div className="login-page">

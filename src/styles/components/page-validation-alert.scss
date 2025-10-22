@@ -1,0 +1,6 @@
+@use "../mixins";
+
+.page-validation-alert {
+  @include mixins.page-narrow;
+  margin-bottom: 1.5rem;
+}

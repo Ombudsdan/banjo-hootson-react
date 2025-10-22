@@ -4,7 +4,7 @@ import { UserController } from "@/controllers/user.controller";
 import { AuthController } from "@/controllers/auth.controller";
 import type { IUserProfile } from "model/user-profile.types";
 import { PageWidthContainer } from "@/framework/PageWidthContainer";
-import { PageHeadingContainer } from "@/framework/PageHeadingContainer";
+import { usePageHeading } from "@/hooks/usePageHeading";
 import { PageSectionContainer } from "@/framework/PageSectionContainer";
 import { FlexColumnLayout } from "@/framework/FlexColumnLayout";
 import DashboardCard from "@/components/DashboardCard";
@@ -60,9 +60,9 @@ export default function DashboardPage() {
     },
   ];
 
+  usePageHeading("My Account");
   return (
     <>
-      <PageHeadingContainer heading="My Account" />
       <PageWidthContainer>
         <FlexColumnLayout spacing="medium">
           {userProfile ? (

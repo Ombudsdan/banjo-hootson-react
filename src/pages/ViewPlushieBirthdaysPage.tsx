@@ -1,13 +1,13 @@
 // Static page; no router/state used
 import { PageWidthContainer } from "@/framework/PageWidthContainer";
-import { PageHeadingContainer } from "@/framework/PageHeadingContainer";
+import { usePageHeading } from "@/hooks/usePageHeading";
 import { PageSectionContainer } from "@/framework/PageSectionContainer";
 import GoogleCalendar from "@/components/GoogleCalendar";
 
 export default function ViewPlushieBirthdaysPage() {
+  usePageHeading("Plushie Birthday Calendar");
   return (
     <>
-      <PageHeadingContainer heading="Plushie Birthday Calendar" />
       <PageWidthContainer>
         <PageSectionContainer>
           <div className="google-calendar-container google-calendar-container--large">

@@ -1,20 +1,19 @@
 import AlertCard from "@/components/AlertCard";
 import { PageWidthContainer } from "@/framework/PageWidthContainer";
 import { FlexColumnLayout } from "@/framework/FlexColumnLayout";
-import { PageHeadingContainer } from "@/framework/PageHeadingContainer";
+import { usePageHeading } from "@/hooks/usePageHeading";
 
 export default function UnauthorizedPage() {
+  usePageHeading("Access Denied");
+
   return (
-    <>
-      <PageHeadingContainer heading="Access Denied" />
-      <PageWidthContainer>
-        <FlexColumnLayout>
-          <AlertCard
-            heading="You are not authorized to view this page."
-            variant="error"
-          />
-        </FlexColumnLayout>
-      </PageWidthContainer>
-    </>
+    <PageWidthContainer>
+      <FlexColumnLayout>
+        <AlertCard
+          heading="You are not authorized to view this page."
+          variant="error"
+        />
+      </FlexColumnLayout>
+    </PageWidthContainer>
   );
 }

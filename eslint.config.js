@@ -17,5 +17,22 @@ export default defineConfig([
       ecmaVersion: 2020,
       globals: globals.browser,
     },
+    rules: {
+      // Keep rules minimal until Angular ruleset is mirrored (placeholder for mirroring step)
+    },
+  },
+  {
+    // Prevent direct PageHeadingContainer usage in page components; enforce central heading outlet
+    files: ["src/pages/**/*.{ts,tsx}"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          name: "@/framework/PageHeadingContainer",
+          message:
+            "Do not import PageHeadingContainer directly in pages; use usePageHeading or useHeading instead (rendered via HeadingOutlet).",
+        },
+      ],
+    },
   },
 ]);

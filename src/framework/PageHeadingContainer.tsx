@@ -1,19 +1,16 @@
 import { PropsWithChildren, ReactNode } from "react";
 import { PageWidthContainer } from "./PageWidthContainer";
+import { HeadingTheme } from "@/services/heading.service";
 
 export function PageHeadingContainer({
-  variant = "light",
+  theme,
   image,
   heading,
   subheading,
   children,
 }: Props) {
   return (
-    <div
-      className={`page-heading-container page-heading-container--${
-        variant || "light"
-      }`}
-    >
+    <div className={`page-heading-container page-heading-container--${theme}`}>
       <PageWidthContainer>
         {image && <div className="page-heading-container__image">{image}</div>}
 
@@ -34,8 +31,8 @@ export function PageHeadingContainer({
 }
 
 type Props = PropsWithChildren<{
-  variant?: "light" | "dark";
-  image?: ReactNode;
   heading?: ReactNode;
   subheading?: ReactNode;
+  image?: ReactNode;
+  theme?: HeadingTheme;
 }>;

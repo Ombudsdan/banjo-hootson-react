@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PageWidthContainer } from "@/framework/PageWidthContainer";
-import { PageHeadingContainer } from "@/framework/PageHeadingContainer";
+import { usePageHeading } from "@/hooks/usePageHeading";
 import { FlexColumnLayout } from "@/framework/FlexColumnLayout";
 import { AuthController } from "@/controllers/auth.controller";
 import { UserController } from "@/controllers/user.controller";
@@ -154,9 +154,9 @@ export default function SignupPage() {
     }
   };
 
+  usePageHeading("Create Account");
   return (
     <>
-      <PageHeadingContainer heading="Create Account" />
       <PageWidthContainer>
         <FlexColumnLayout spacing="medium">
           <div className="signup-page">
