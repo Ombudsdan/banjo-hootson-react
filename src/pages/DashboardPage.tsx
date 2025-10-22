@@ -61,54 +61,58 @@ export default function DashboardPage() {
   ];
 
   return (
-    <PageWidthContainer>
+    <>
       <PageHeadingContainer heading="My Account" />
-      <FlexColumnLayout spacing="medium">
-        {userProfile ? (
-          <>
-            <PageSectionContainer className="welcome-section">
-              <p className="welcome-section__email-address">
-                {userProfile.email}
-              </p>
-              <UserSubscriptionTierBadge tier={userProfile.subscriptionTier} />
-            </PageSectionContainer>
+      <PageWidthContainer>
+        <FlexColumnLayout spacing="medium">
+          {userProfile ? (
+            <>
+              <PageSectionContainer className="welcome-section">
+                <p className="welcome-section__email-address">
+                  {userProfile.email}
+                </p>
+                <UserSubscriptionTierBadge
+                  tier={userProfile.subscriptionTier}
+                />
+              </PageSectionContainer>
 
-            <PageSectionContainer heading="Available Features">
-              <div className="dashboard-page__features">
-                {availableCards.map((c) => (
-                  <DashboardCard
-                    key={c.key}
-                    description={c.description}
-                    onClick={c.action}
+              <PageSectionContainer heading="Available Features">
+                <div className="dashboard-page__features">
+                  {availableCards.map((c) => (
+                    <DashboardCard
+                      key={c.key}
+                      description={c.description}
+                      onClick={c.action}
+                    >
+                      <h3>{c.title}</h3>
+                    </DashboardCard>
+                  ))}
+                </div>
+              </PageSectionContainer>
+
+              <PageSectionContainer>
+                <div className="dashboard-page__actions">
+                  <button
+                    className="dashboard-page__sign-out-button"
+                    disabled={isSigningOut}
+                    onClick={onSignOut}
                   >
-                    <h3>{c.title}</h3>
-                  </DashboardCard>
-                ))}
-              </div>
-            </PageSectionContainer>
-
-            <PageSectionContainer>
-              <div className="dashboard-page__actions">
-                <button
-                  className="dashboard-page__sign-out-button"
-                  disabled={isSigningOut}
-                  onClick={onSignOut}
-                >
-                  {isSigningOut && (
-                    <span className="dashboard-page__loading-spinner" />
-                  )}
-                  {isSigningOut ? "Signing Out..." : "Sign Out"}
-                </button>
-              </div>
-            </PageSectionContainer>
-          </>
-        ) : (
-          <div className="dashboard-page__loading">
-            <div className="dashboard-page__loading-spinner"></div>
-            <p>Loading your dashboard...</p>
-          </div>
-        )}
-      </FlexColumnLayout>
-    </PageWidthContainer>
+                    {isSigningOut && (
+                      <span className="dashboard-page__loading-spinner" />
+                    )}
+                    {isSigningOut ? "Signing Out..." : "Sign Out"}
+                  </button>
+                </div>
+              </PageSectionContainer>
+            </>
+          ) : (
+            <div className="dashboard-page__loading">
+              <div className="dashboard-page__loading-spinner"></div>
+              <p>Loading your dashboard...</p>
+            </div>
+          )}
+        </FlexColumnLayout>
+      </PageWidthContainer>
+    </>
   );
 }

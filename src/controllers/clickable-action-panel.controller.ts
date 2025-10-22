@@ -8,8 +8,11 @@ export type ActionPanelOption =
 
 export type ActionPanelTheme = "instagram" | "facebook" | "threads" | "default";
 
+import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import { ICONS } from "@/icons";
+
 export interface IActionPanel {
-  icon?: string; // In React we do not import FA icons; class handled in CSS or replaced later
+  icon?: IconDefinition;
   link: string;
   text: string;
   isExternal?: boolean;
@@ -47,15 +50,47 @@ export class ClickableActionPanelController {
 const PANEL_CONTENT_MAP = new Map<ActionPanelOption, IActionPanel>([
   [
     "instagram",
-    { link: "https://instagram.com/banjohootson", text: "Instagram" },
+    {
+      icon: ICONS.instagram,
+      link: "https://instagram.com/banjohootson",
+      text: "Instagram",
+    },
   ],
-  ["facebook", { link: "https://facebook.com/banjohootson", text: "Facebook" }],
-  ["threads", { link: "https://threads.net/banjohootson", text: "Threads" }],
-  ["calendar", { link: "/calendar", text: "Birthday Calendar" }],
-  ["submitBirthday", { link: "/calendar/submit", text: "Submit Birthday" }],
+  [
+    "facebook",
+    {
+      icon: ICONS.facebook,
+      link: "https://facebook.com/banjohootson",
+      text: "Facebook",
+    },
+  ],
+  [
+    "threads",
+    {
+      icon: ICONS.threads,
+      link: "https://threads.net/banjohootson",
+      text: "Threads",
+    },
+  ],
+  [
+    "calendar",
+    { icon: ICONS.calendar, link: "/calendar", text: "Birthday Calendar" },
+  ],
+  [
+    "submitBirthday",
+    {
+      icon: ICONS.submitBirthday,
+      link: "/calendar/submit",
+      text: "Submit Birthday",
+    },
+  ],
   [
     "beer",
-    { link: "https://buymeacoffee.com/banjohootson", text: "Buy Me A Beer?" },
+    {
+      icon: ICONS.beer,
+      link: "https://buymeacoffee.com/banjohootson",
+      text: "Buy Me A Beer?",
+    },
   ],
 ]);
 

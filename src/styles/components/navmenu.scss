@@ -2,8 +2,7 @@
 @use "sass:color";
 
 .nav {
-  height: variables.$nav-height;
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   right: 0;
@@ -100,22 +99,11 @@
       width: 100%;
     }
   }
-  &__button {
-    text-decoration: none;
-    border-radius: 8px;
-    background: variables.$colour-orange;
-    color: variables.$colour-white;
-    padding: 0.5rem 1rem;
-    box-sizing: border-box;
-    &:hover,
-    &:focus {
-      background: variables.$colour-button-primary-hover;
-      color: variables.$colour-white;
-    }
-  }
+
   &__spacer {
     display: block;
   }
+
   &__item--has-dropdown {
     position: relative;
     padding: 0;

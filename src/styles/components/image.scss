@@ -1,7 +1,7 @@
 @use "../variables";
 
-@mixin frame {
-  border: 5px solid variables.$colour-white;
+@mixin frame($colour: variables.$colour-white) {
+  border: 0.5rem solid $colour;
 }
 
 @mixin frame-box-shadow($color) {
@@ -13,6 +13,7 @@
   width: 100%;
   opacity: 0;
   transition: opacity 0.3s ease;
+  box-sizing: border-box; /* Include frame border in declared width */
 
   &--heading {
     width: 200px;
@@ -58,14 +59,46 @@
   }
 
   &--framed {
-    @include frame;
+    position: relative;
+    @include frame(); /* 5px white border included in width */
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3); /* Subtle depth only */
+
+    /* Decorative concentric ring effect re-created inside bounds */
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0; /* Start at border edge */
+      pointer-events: none;
+      border-radius: inherit;
+      /* Create two inner rings using multiple inset shadows */
+      /* colour layer + soft highlight similar to original outer stack */
+      box-shadow: inset 0 0 0 4px rgba(255, 255, 255, 0.3),
+        inset 0 0 0 8px rgba(0, 0, 0, 0.05);
+    }
+
     &--dark {
-      @include frame-box-shadow(variables.$colour-brown);
+      @include frame(variables.$colour-brown);
+      /* Dark theme tint: simulate original brown outer ring without expanding box */
+      &::after {
+        box-shadow: inset 0 0 0 4px rgba(255, 255, 255, 0.3),
+          inset 0 0 0 8px rgba(90, 62, 39, 0.25);
+      }
     }
     &--light {
-      @include frame-box-shadow(variables.$colour-tan);
+      @include frame(variables.$colour-tan);
+      &::after {
+        box-shadow: inset 0 0 0 4px rgba(255, 255, 255, 0.3),
+          inset 0 0 0 8px rgba(210, 180, 140, 0.35);
+      }
     }
   }
+
+  /* Optional alternative: inward shadow variant (currently unused)
+  &--framed-inset {
+    @include frame;
+    box-shadow: inset 0 0 0 4px rgba(255,255,255,0.3), 0 2px 12px rgba(0,0,0,0.25);
+  }
+  */
 }
 
 @keyframes shimmer {

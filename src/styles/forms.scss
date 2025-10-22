@@ -15,7 +15,8 @@ form {
 .form-content {
   @include mixins.flex-column-center;
 }
-.form-group:not(:last-child) {
+
+form .form-group:not(:last-child) {
   margin-bottom: 1.5rem;
 }
 

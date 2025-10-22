@@ -20,14 +20,20 @@ export default function ProfilePage() {
   ];
 
   return (
-    <PageWidthContainer>
+    <>
       <PageHeadingContainer heading="Account Settings" />
-      <FlexColumnLayout spacing="small">
-        <PageNavigation tabs={tabs} activeKey={activeTab} onSelect={() => {}} />
-        {activeTab === "PROFILE" && <ProfileTabSection />}
-        {activeTab === "ACCOUNT" && <AccountTabSection />}
-        {activeTab === "PREFERENCES" && <PreferencesTabSection />}
-      </FlexColumnLayout>
-    </PageWidthContainer>
+      <PageWidthContainer>
+        <FlexColumnLayout spacing="small">
+          <PageNavigation
+            tabs={tabs}
+            activeKey={activeTab}
+            onSelect={() => {}}
+          />
+          {activeTab === "PROFILE" && <ProfileTabSection />}
+          {activeTab === "ACCOUNT" && <AccountTabSection />}
+          {activeTab === "PREFERENCES" && <PreferencesTabSection />}
+        </FlexColumnLayout>
+      </PageWidthContainer>
+    </>
   );
 }

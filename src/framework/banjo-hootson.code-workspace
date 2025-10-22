@@ -1,0 +1,14 @@
+{
+  "folders": [
+    {
+      "path": "../../../banjo-hootson-frontend"
+    },
+    {
+      "path": "../../../banjo-hootson-api"
+    },
+    {
+      "path": "../../../banjo-hootson-react"
+    }
+  ],
+  "settings": {}
+}

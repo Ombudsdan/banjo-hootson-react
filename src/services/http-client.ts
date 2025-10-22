@@ -8,6 +8,11 @@ interface RequestOptions<TBody> {
   body?: TBody;
   headers?: Record<string, string>;
   query?: Record<string, string | number | boolean | undefined>;
+  /**
+   * When true will send cookies / auth-related credentials cross-origin.
+   * Keep false (default) for public / cacheable endpoints to simplify CORS.
+   */
+  withCredentials?: boolean;
 }
 
 export class HttpClient {
@@ -33,7 +38,14 @@ export class HttpClient {
   static async request<TResponse = unknown, TBody = unknown>(
     options: RequestOptions<TBody>
   ): Promise<TResponse> {
-    const { path, method = "GET", body, headers, query } = options;
+    const {
+      path,
+      method = "GET",
+      body,
+      headers,
+      query,
+      withCredentials = false,
+    } = options;
     const url = this.buildUrl(path, query);
     const start =
       typeof performance !== "undefined" ? performance.now() : Date.now();
@@ -47,7 +59,7 @@ export class HttpClient {
         ...headers,
       },
       body: body ? JSON.stringify(body) : undefined,
-      credentials: "include",
+      credentials: withCredentials ? "include" : "omit",
     });
 
     const text = await res.text();
