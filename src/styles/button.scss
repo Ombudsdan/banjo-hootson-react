@@ -1,0 +1,207 @@
+@use "sass:map";
+@use "./variables";
+@use "./mixins";
+
+$button-styles: (
+  "main": (
+    bg: variables.$colour-button-primary,
+    text: variables.$colour-button-primary-text,
+    border: variables.$colour-button-primary-border,
+    hover: variables.$colour-button-primary-hover,
+    active: variables.$colour-button-primary-active,
+  ),
+  "secondary": (
+    bg: variables.$colour-button-secondary,
+    text: variables.$colour-button-secondary-text,
+    border: variables.$colour-button-secondary-border,
+    hover: variables.$colour-button-secondary-hover,
+    active: variables.$colour-button-secondary-active,
+  ),
+  "tertiary": (
+    bg: rgba(variables.$colour-orange, 0.2),
+    text: variables.$colour-brown,
+    border: rgba(variables.$colour-orange, 0.3),
+    hover: rgba(variables.$colour-orange, 0.15),
+    active: rgba(variables.$colour-orange, 0.1),
+  ),
+  "danger": (
+    bg: variables.$colour-error,
+    text: variables.$colour-white,
+    border: variables.$colour-error-dark,
+    hover: rgba(variables.$colour-error, 0.8),
+    active: rgba(variables.$colour-error, 0.7),
+  ),
+);
+
+a {
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+  font-weight: variables.$font-weight-semi-bold;
+  color: variables.$colour-orange;
+  &.external-link {
+    color: variables.$colour-link;
+    text-decoration: underline solid variables.$colour-link-underline;
+    &:hover {
+      color: variables.$colour-link-hover;
+      text-decoration-color: currentColor;
+    }
+    &:visited {
+      color: variables.$colour-link-visited;
+    }
+    &:active {
+      color: variables.$colour-link-active;
+    }
+    &:focus {
+      text-decoration: underline 2px solid variables.$colour-orange;
+      outline: unset;
+    }
+  }
+}
+
+button {
+  border: none;
+  border-radius: 8px;
+  padding: 0.5em 1em;
+  font-size: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+  display: inline-block;
+  width: fit-content;
+  font-family: inherit;
+}
+
+.button {
+  @each $variant, $button-style-values in $button-styles {
+    $colour-button-background: map.get($button-style-values, bg);
+    $colour-button-text: map.get($button-style-values, text);
+    $colour-button-hover: map.get($button-style-values, hover);
+
+    &--#{$variant} {
+      background-color: $colour-button-background;
+      color: $colour-button-text;
+      &:hover:not(:disabled) {
+        background-color: $colour-button-hover;
+      }
+      &--outline {
+        background-color: rgba($colour-button-background, 0.05);
+        border: 1px solid $colour-button-background;
+        color: $colour-button-background;
+        &:hover:not(:disabled) {
+          background-color: rgba($colour-button-background, 0.2);
+          color: $colour-button-background;
+        }
+      }
+      &--compact {
+        font-size: 0.9rem;
+        @include mixins.compact-button;
+      }
+      &--rounded {
+        border-radius: 5rem;
+      }
+    }
+  }
+
+  &--link {
+    color: variables.$colour-link;
+    background: none;
+    border: none;
+    padding: 0;
+    min-height: 0;
+    &:hover {
+      transform: unset;
+      background-color: unset;
+      border-color: unset;
+      box-shadow: unset;
+    }
+    &:focus {
+      outline: unset;
+      border: unset;
+    }
+    @extend a;
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+.form__button {
+  padding: 0.875rem 1.25rem;
+  align-self: center;
+  border: none;
+  border-radius: 8px;
+  font-size: variables.$font-size-base;
+  font-weight: variables.$font-weight-medium;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  @media (max-width: variables.$breakpoint-m) {
+    min-height: 3.5rem;
+  }
+  &:hover {
+    @include mixins.button-elevation;
+  }
+  &:hover:not(:disabled) {
+    @media screen and (max-width: variables.$breakpoint-m) {
+      transform: none;
+    }
+  }
+  &:active {
+    transform: translateY(0);
+    @media screen and (max-width: variables.$breakpoint-m) {
+      transform: scale(0.98);
+    }
+  }
+  &:focus {
+    @include mixins.button-elevation;
+    @media screen and (max-width: variables.$breakpoint-m) {
+      outline: 3px solid variables.$colour-orange;
+      outline-offset: 2px;
+    }
+  }
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    @media screen and (max-width: variables.$breakpoint-m) {
+      opacity: 0.5;
+    }
+  }
+  &--primary {
+    background: variables.$colour-button-primary;
+    color: variables.$colour-white;
+    font-weight: variables.$font-weight-semi-bold;
+    &:hover {
+      background: variables.$colour-button-primary-hover;
+    }
+  }
+  &--secondary {
+    background: variables.$colour-white;
+    color: variables.$colour-text;
+    font-weight: variables.$font-weight-semi-bold;
+    &:hover {
+      border-color: variables.$colour-brown;
+      background: variables.$colour-white;
+    }
+    &:focus {
+      outline: none;
+      border-color: variables.$colour-brown;
+      background: variables.$colour-white;
+    }
+  }
+  &--compact {
+    @include mixins.compact-button;
+    @media screen and (max-width: variables.$breakpoint-m) {
+      min-height: 2.75rem;
+      padding: 0.75rem 1rem;
+    }
+  }
+  &--inline {
+    @include mixins.compact-button;
+    align-self: stretch;
+  }
+  @media screen and (max-width: variables.$breakpoint-m) {
+    &--today {
+      @include mixins.mobile-hidden;
+    }
+  }
+}

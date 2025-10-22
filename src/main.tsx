@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "./index.css";
+import "./styles/index.scss";
 import { Suspense } from "react";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./routes/app.routes";
@@ -20,3 +20,6 @@ createRoot(document.getElementById("root")!).render(
     </Suspense>
   </StrictMode>
 );
+
+// Mark body as loaded after initial paint to trigger CSS fade-in
+requestAnimationFrame(() => document.body.classList.add("loaded"));

@@ -1,0 +1,16 @@
+@use "../variables";
+
+.google-calendar-container {
+  &--large {
+    display: none;
+    @media (min-width: variables.$breakpoint-l) {
+      display: block;
+    }
+  }
+  &--small {
+    display: block;
+    @media (min-width: variables.$breakpoint-l) {
+      display: none;
+    }
+  }
+}

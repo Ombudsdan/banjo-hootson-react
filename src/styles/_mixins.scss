@@ -1,0 +1,123 @@
+@use "./variables";
+
+@mixin heading-decoration {
+  content: "";
+  display: block;
+  margin: 1rem auto;
+  width: 5rem;
+  height: 0.5rem;
+  background: variables.$colour-orange;
+  border-radius: 25px;
+
+  @media screen and (max-width: variables.$breakpoint-s) {
+    margin: variables.$font-size-h2 auto;
+  }
+}
+
+@mixin heading-shadow {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+@mixin page-narrow-width {
+  width: calc(variables.$page-width / 2.5);
+  max-width: calc(variables.$page-width / 2.5);
+}
+
+@mixin page-narrow {
+  @include page-narrow-width;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0 auto;
+  @media (max-width: variables.$breakpoint-s) {
+    padding: 0 2rem;
+    width: calc(100% - 4rem);
+  }
+}
+
+@mixin flex-column-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+@mixin flex-row-center {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+@mixin flex-row-space-between {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+@mixin flex-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  max-width: 100%;
+  margin: 0 auto;
+}
+@mixin flex-wrap-item {
+  display: flex;
+  max-height: 100%;
+  object-fit: cover;
+}
+@mixin mobile-only {
+  display: none;
+  @media screen and (max-width: variables.$breakpoint-s) {
+    display: block;
+  }
+}
+@mixin mobile-hidden {
+  display: block;
+  @media screen and (max-width: variables.$breakpoint-s) {
+    display: none;
+  }
+}
+
+@mixin form-input-error {
+  border-color: variables.$colour-error;
+  background: variables.$colour-error-light;
+}
+
+@mixin button-elevation {
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.18), inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+@mixin compact-button {
+  padding: 0.5rem 0.75rem;
+  font-size: variables.$font-size-base;
+  margin: 0;
+  width: auto;
+}
+
+@mixin clickable-panel($colour) {
+  & {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  &:hover {
+    cursor: pointer;
+    background-color: rgba($colour, 0.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s ease-in-out;
+  }
+  &:focus {
+    outline: none;
+    border: 3px solid $colour;
+  }
+}
+
+@mixin clickable-panel-border($colour: null) {
+  & {
+    border-radius: 12px;
+    @if $colour {
+      border: 1px solid $colour;
+    } @else {
+      border: 0;
+    }
+  }
+}

@@ -1,0 +1,8 @@
+@use "../variables";
+
+.default-page-layout {
+  margin-top: 4rem;
+  @media screen and (max-width: variables.$breakpoint-l) {
+    margin-top: 5rem;
+  }
+}

@@ -1,0 +1,34 @@
+@use "../variables";
+@use "./profile" as profile;
+
+.personal-information-section {
+  .title {
+    @include profile.section-title;
+  }
+}
+
+.plushie-instagram-account-section {
+  .title {
+    @include profile.section-title;
+  }
+  &__description {
+    line-height: 1.4;
+    margin-bottom: 1rem;
+  }
+  &__remove-instagram-button {
+    color: variables.$colour-error;
+  }
+  &__add-instagram-button {
+    background-color: variables.$colour-tan;
+    color: variables.$colour-orange-800;
+    border: 1px solid variables.$colour-brown;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+    &:hover {
+      background-color: rgba(variables.$colour-tan, 0.8);
+    }
+  }
+}

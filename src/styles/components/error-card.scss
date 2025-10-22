@@ -1,0 +1,17 @@
+@use "../variables";
+
+.error-card {
+  &__messages {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 0;
+  }
+
+  &__message {
+    color: variables.$colour-error;
+
+    &:not(:last-child) {
+      margin-bottom: 0.5rem;
+    }
+  }
+}

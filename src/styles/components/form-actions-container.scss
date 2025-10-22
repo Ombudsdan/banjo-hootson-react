@@ -1,0 +1,9 @@
+@use "../variables";
+@use "../mixins";
+
+.form-actions-container {
+  @include mixins.flex-row-center;
+  border-top: 1px solid variables.$colour-feint-border;
+  width: 100%;
+  padding: 1rem 0 0;
+}

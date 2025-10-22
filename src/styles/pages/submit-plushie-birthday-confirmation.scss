@@ -1,0 +1,40 @@
+@use "../variables";
+@use "../mixins";
+
+.submit-plushie-birthday-confirmation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 600px;
+  margin: 0.5rem auto 0;
+  padding: 0 1rem;
+  gap: 1.5rem;
+
+  &__action-button-wrapper {
+    @include mixins.flex-row-center;
+    gap: 1rem;
+    width: 100%;
+    button {
+      flex: 0 1 auto;
+    }
+  }
+
+  &__support-card {
+    border-radius: 12px;
+    padding: 1.5rem 1rem;
+    width: 100%;
+    margin-bottom: 2rem;
+    border: 2px dashed variables.$colour-orange;
+    text-align: center;
+    &-title {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+    &-text {
+      margin-bottom: 1.5rem;
+    }
+    &-button {
+      border-radius: 50px;
+    }
+  }
+}

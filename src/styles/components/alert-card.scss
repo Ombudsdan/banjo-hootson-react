@@ -1,0 +1,48 @@
+@use "../variables";
+
+.alert-card {
+  border-radius: 12px;
+  padding: 1.5rem 1rem;
+  width: 100%;
+  text-align: center;
+  box-sizing: border-box;
+  margin: 0;
+
+  &__heading {
+    font-size: variables.$font-size-h3;
+  }
+
+  &__messages {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 0;
+  }
+
+  &__message {
+    color: variables.$colour-error;
+
+    &:not(:last-child) {
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  &--success {
+    background-color: variables.$colour-success-light;
+    border: 2px solid variables.$colour-success;
+  }
+
+  &--info {
+    background-color: variables.$colour-info-light;
+    border: 2px solid variables.$colour-info;
+  }
+
+  &--warning {
+    background-color: variables.$colour-warning-light;
+    border: 2px solid variables.$colour-warning;
+  }
+
+  &--error {
+    background-color: variables.$colour-error-light;
+    border: 2px solid variables.$colour-error;
+  }
+}

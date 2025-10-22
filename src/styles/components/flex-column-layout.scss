@@ -1,0 +1,17 @@
+.flex-column-layout {
+  display: flex;
+  flex-direction: column;
+
+  &--spacing-none {
+    gap: 0;
+  }
+  &--spacing-small {
+    gap: 1rem;
+  }
+  &--spacing-medium {
+    gap: 2rem;
+  }
+  &--spacing-large {
+    gap: 3rem;
+  }
+}

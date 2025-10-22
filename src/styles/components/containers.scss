@@ -1,0 +1,23 @@
+@use "../variables";
+@use "../mixins";
+
+.container {
+  box-sizing: border-box;
+  max-width: variables.$page-width;
+  margin: 0 auto;
+  padding: 1rem;
+  @media screen and (max-width: variables.$breakpoint-m) {
+    padding: 0 1rem;
+  }
+
+  &--narrow {
+    @include mixins.page-narrow;
+  }
+}
+
+.flex-row {
+  @include mixins.flex-row-space-between;
+}
+.flex-column {
+  @include mixins.flex-column-center;
+}

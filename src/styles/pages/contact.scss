@@ -1,0 +1,9 @@
+@use "../mixins";
+
+.contact-page {
+  &__message-container {
+    @include mixins.flex-column-center;
+    text-align: center;
+    gap: 1rem;
+  }
+}

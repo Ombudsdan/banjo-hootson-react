@@ -1,0 +1,80 @@
+@use "sass:color";
+@use "../variables";
+@use "../mixins";
+
+.view-plushie-birthday {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 600px;
+  margin: 0 auto;
+  gap: 1.5rem;
+
+  &__event {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 0.5rem 0 0;
+  }
+  &__event-row {
+    @include mixins.flex-column-center;
+    &:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+  }
+  &__event-detail-label {
+    color: color.mix(variables.$colour-text, variables.$colour-white, 70%);
+    font-weight: variables.$font-weight-medium;
+    font-size: variables.$font-size-base;
+  }
+  &__event-detail-value {
+    font-weight: variables.$font-weight-semi-bold;
+    font-size: variables.$font-size-h4;
+    &--countdown-message {
+      font-weight: variables.$font-weight-semi-bold;
+      font-size: variables.$font-size-h4;
+      color: variables.$colour-orange;
+    }
+  }
+  &__link {
+    text-decoration: unset;
+  }
+  &__icon {
+    margin-right: 0.1rem;
+    vertical-align: -0.045rem;
+    &--instagram {
+      color: variables.$colour-instagram;
+    }
+  }
+  &__action-button-wrapper {
+    @include mixins.flex-row-center;
+    gap: 1rem;
+    width: 100%;
+    button {
+      flex: 0 1 auto;
+    }
+  }
+}
+
+.action-buttons {
+  @include mixins.flex-row-center;
+  gap: 1rem;
+  width: 100%;
+  button {
+    flex: 0 1 auto;
+  }
+}
+
+.error-card {
+  background-color: #ffebee;
+  border: 1px solid #ffcdd2;
+  border-radius: 12px;
+  padding: 1.5rem;
+  width: 100%;
+  text-align: center;
+  p {
+    color: variables.$colour-error;
+    margin-bottom: 1rem;
+  }
+}
