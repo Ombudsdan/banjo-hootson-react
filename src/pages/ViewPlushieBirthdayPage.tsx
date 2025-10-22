@@ -1,72 +1,69 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useMemo, useState } from "react";
-import { BirthdayController } from "controllers";
-import { AlertCardVariant } from "model/page-validation-alert";
-import { IPlushieBirthday } from "model/plushie-birthday";
-import { AlertCard } from "components";
-import { usePageHeading } from "hooks";
+import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
+import { BirthdayController } from 'controllers';
+import { IPlushieBirthday } from 'model/plushie-birthday.model';
+import { AlertCard } from 'components';
+import { usePageHeading } from 'hooks';
+import { AlertCardVariant } from 'enums';
 
 export default function ViewPlushieBirthdayPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [item, setItem] = useState<IPlushieBirthday | null>(null);
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!id) return;
     setLoading(true);
-    setError("");
+    setError('');
     BirthdayController.loadByEventId(id)
-      .then((r) => setItem(r))
-      .catch((e) => setError((e as Error)?.message || String(e)))
+      .then(r => setItem(r))
+      .catch(e => setError((e as Error)?.message || String(e)))
       .finally(() => setLoading(false));
   }, [id]);
 
-  const heading = item?.name || "Plushie Birthday Details";
+  const heading = item?.name || 'Plushie Birthday Details';
 
-  const username = useMemo(() => item?.username || "", [item]);
+  const username = useMemo(() => item?.username || '', [item]);
 
   const birthDateText = useMemo(() => {
-    if (!item?.birthday) return "";
+    if (!item?.birthday) return '';
     const d = new Date(item.birthday);
     if (isNaN(d.getTime())) return item.birthday;
-    return d.toLocaleDateString("en-GB", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
+    return d.toLocaleDateString('en-GB', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
     });
   }, [item]);
 
   const ageText = useMemo(() => {
-    if (!item?.birthday) return "";
+    if (!item?.birthday) return '';
     const d = new Date(item.birthday);
-    if (isNaN(d.getTime()) || isNaN(d.getFullYear())) return "";
+    if (isNaN(d.getTime()) || isNaN(d.getFullYear())) return '';
     const now = new Date();
     let age = now.getFullYear() - d.getFullYear();
     const hasHadBirthdayThisYear =
-      now.getMonth() > d.getMonth() ||
-      (now.getMonth() === d.getMonth() && now.getDate() >= d.getDate());
+      now.getMonth() > d.getMonth() || (now.getMonth() === d.getMonth() && now.getDate() >= d.getDate());
     if (!hasHadBirthdayThisYear) age -= 1;
-    return age >= 0 ? `${age} years old` : "";
+    return age >= 0 ? `${age} years old` : '';
   }, [item]);
 
   const countdownText = useMemo(() => {
-    if (!item?.birthday) return "";
+    if (!item?.birthday) return '';
     const d = new Date(item.birthday);
-    if (isNaN(d.getTime())) return "";
+    if (isNaN(d.getTime())) return '';
     const now = new Date();
     const thisYear = now.getFullYear();
     let next = new Date(thisYear, d.getMonth(), d.getDate());
     if (next < new Date(now.getFullYear(), now.getMonth(), now.getDate())) {
       next = new Date(thisYear + 1, d.getMonth(), d.getDate());
     }
-    const diffMs =
-      next.getTime() -
-      new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+    const diffMs = next.getTime() - new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
     const days = Math.round(diffMs / (1000 * 60 * 60 * 24));
-    if (days === 0) return "Today is the big day!";
-    if (days === 1) return "1 day to go";
+    if (days === 0) return 'Today is the big day!';
+    if (days === 1) return '1 day to go';
     return `${days} days to go`;
   }, [item]);
 
@@ -79,17 +76,11 @@ export default function ViewPlushieBirthdayPage() {
         <>
           <div className="view-plushie-birthday__event">
             <div className="view-plushie-birthday__event-row">
-              <span className="view-plushie-birthday__event-detail-label">
-                Name
-              </span>
-              <span className="view-plushie-birthday__event-detail-value">
-                {item.name}
-              </span>
+              <span className="view-plushie-birthday__event-detail-label">Name</span>
+              <span className="view-plushie-birthday__event-detail-value">{item.name}</span>
             </div>
             <div className="view-plushie-birthday__event-row">
-              <span className="view-plushie-birthday__event-detail-label">
-                Account
-              </span>
+              <span className="view-plushie-birthday__event-detail-label">Account</span>
               <div className="view-plushie-birthday__event-detail-value">
                 <span
                   aria-hidden="true"
@@ -110,25 +101,14 @@ export default function ViewPlushieBirthdayPage() {
               </div>
             </div>
             <div className="view-plushie-birthday__event-row">
-              <span className="view-plushie-birthday__event-detail-label">
-                Birthday
-              </span>
-              <span
-                className="view-plushie-birthday__event-detail-value"
-                id="birthDate"
-              >
+              <span className="view-plushie-birthday__event-detail-label">Birthday</span>
+              <span className="view-plushie-birthday__event-detail-value" id="birthDate">
                 {birthDateText}
               </span>
-              <span
-                className="view-plushie-birthday__event-detail-value"
-                id="age"
-              >
+              <span className="view-plushie-birthday__event-detail-value" id="age">
                 {ageText}
               </span>
-              <span
-                className="view-plushie-birthday__event-detail-value"
-                id="countdown"
-              >
+              <span className="view-plushie-birthday__event-detail-value" id="countdown">
                 {countdownText}
               </span>
             </div>
@@ -137,7 +117,7 @@ export default function ViewPlushieBirthdayPage() {
             <button
               className="button button--secondary--outline button--secondary--compact"
               id="submit-a-new-birthday-button"
-              onClick={() => navigate("/calendar/submit")}
+              onClick={() => navigate('/calendar/submit')}
             >
               Submit a New Birthday
             </button>
@@ -147,14 +127,12 @@ export default function ViewPlushieBirthdayPage() {
 
       {!item && !loading && (
         <AlertCard
+          id="error-loading-birthday"
           variant={AlertCardVariant.ERROR}
           heading="Oops! This plushie seems to be hiding!"
-          messages={["Unable to load birthday details. Please try again."]}
+          messages={['Unable to load birthday details. Please try again.']}
         >
-          <button
-            className="button button--main"
-            onClick={() => navigate("/calendar")}
-          >
+          <button className="button button--main" onClick={() => navigate('/calendar')}>
             Explore Other Birthdays
           </button>
         </AlertCard>

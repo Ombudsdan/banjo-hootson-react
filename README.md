@@ -32,8 +32,8 @@ PORT=5174
 Import directly from the relevant submodule:
 
 ```ts
-import { IPlushieBirthday } from "model/plushie-birthday";
-import { IUserProfile } from "model/user-profile";
+import { IPlushieBirthday } from 'model/plushie-birthday';
+import { IUserProfile } from 'model/user-profile';
 ```
 
 This avoids circular dependencies and is enforced by ESLint. If a barrel index.ts is reintroduced, it must not be used for imports.
@@ -58,11 +58,11 @@ Pages should not render heading or aggregated validation alert markup directly. 
 #### Simple heading-only page
 
 ```tsx
-import { PageContainer } from "framework";
-import { usePageHeading } from "hooks";
+import { PageContainer } from 'framework';
+import { usePageHeading } from 'hooks';
 
 export default function AboutPage() {
-  usePageHeading("About Banjo");
+  usePageHeading('About Banjo');
   return <PageContainer>...</PageContainer>;
 }
 ```
@@ -70,18 +70,14 @@ export default function AboutPage() {
 #### Manually setting a heading with subheading/image
 
 ```tsx
-import { useEffect } from "react";
-import { useHeading } from "hooks";
+import { useEffect } from 'react';
+import { useHeading } from 'hooks';
 
 export default function GalleryPage() {
-  const { setHeading, clearHeading } = useHeading();
-  useEffect(() => {
-    setHeading({
-      heading: "Photo Gallery",
-      subheading: "Memories & adventures",
-    });
-    return () => clearHeading();
-  }, [setHeading, clearHeading]);
+  useHeading({
+    heading: 'Photo Gallery',
+    subheading: 'Memories & adventures'
+  });
   return <>...</>;
 }
 ```
@@ -89,24 +85,21 @@ export default function GalleryPage() {
 #### Aggregated (delayed) validation alert after submit attempt
 
 ```tsx
-import { useValidationAlert } from "hooks";
-import { useEffect, useMemo, useState } from "react";
+import { useValidationAlert } from 'hooks';
+import { useEffect, useMemo, useState } from 'react';
 
 export function ExampleForm() {
   const { setValidationAlert, clearValidationAlert } = useValidationAlert();
   const [submitted, setSubmitted] = useState(false);
-  const errors: string[] = useMemo(
-    () => (submitted ? ["Name is required", "Date is invalid"] : []),
-    [submitted]
-  );
+  const errors: string[] = useMemo(() => (submitted ? ['Name is required', 'Date is invalid'] : []), [submitted]);
 
   useEffect(() => {
     if (errors.length) {
       setValidationAlert({
-        heading: "Please fix the following errors",
+        heading: 'Please fix the following errors',
         messages: errors,
-        variant: "error",
-        focus: true,
+        variant: 'error',
+        focus: true
       });
     } else {
       clearValidationAlert();
@@ -115,7 +108,7 @@ export function ExampleForm() {
 
   return (
     <form
-      onSubmit={(e) => {
+      onSubmit={e => {
         e.preventDefault();
         setSubmitted(true);
       }}
@@ -136,7 +129,7 @@ Ensure new routed pages use one of the heading mechanisms above to remain consis
 
 #### Lint rule
 
-An ESLint rule (`no-restricted-imports`) prevents importing `@/framework/PageHeadingContainer` inside `src/pages/**`. Use `usePageHeading` or `useHeading` instead; the layout renders the outlet centrally.
+An ESLint rule (`no-restricted-imports`) prevents importing `@/framework/PageHeading` inside `src/pages/**`. Use `usePageHeading` or `useHeading` instead; the layout renders the outlet centrally.
 
 Note: `AlertCard` can still be imported directly in pages for non-validation messages (info, success, warnings). Only aggregated validation error groups should flow through `useValidationAlert` so they appear in the consistent global position.
 
@@ -155,7 +148,7 @@ const {
   replaceAlerts,
   updateAlert,
   pauseAlertTimer,
-  resumeAlertTimer,
+  resumeAlertTimer
 } = usePageAlerts();
 ```
 
@@ -182,39 +175,39 @@ Builder helpers (`PageAlertBuilders`):
 
 ```ts
 PageAlert.success({
-  heading: "Saved",
-  id: "success-alert",
+  heading: 'Saved',
+  id: 'success-alert',
   messages: [],
-  timeoutMs: 4000,
+  timeoutMs: 4000
 });
-PageAlert.error({ heading: "Failed", id: "error-alert", messages: [] });
-PageAlert.info({ heading: "Heads up", id: "info-alert" });
-PageAlert.warning({ heading: "Be careful", id: "warning-alert" });
-PageAlert.saved("Profile"); // => "Profile saved"
-PageAlert.deleted("Photo"); // => "Photo deleted"
-PageAlert.buildPageAlert("success", "My Custom Alert", "custom-alert")
+PageAlert.error({ heading: 'Failed', id: 'error-alert', messages: [] });
+PageAlert.info({ heading: 'Heads up', id: 'info-alert' });
+PageAlert.warning({ heading: 'Be careful', id: 'warning-alert' });
+PageAlert.saved('Profile'); // => "Profile saved"
+PageAlert.deleted('Photo'); // => "Photo deleted"
+PageAlert.buildPageAlert('success', 'My Custom Alert', 'custom-alert')
   .setAutoFocus(false)
   .setContent(<span>Example Content</span>)
   .setTimeoutMs(2000)
-  .includeMessage("Message 1")
-  .includeMessage("Message 2")
+  .includeMessage('Message 1')
+  .includeMessage('Message 2')
   .create();
 ```
 
 Example – success notification with auto‑dismiss:
 
 ```tsx
-import { useEffect } from "react";
-import { usePageAlerts } from "hooks";
-import { PageAlert } from "builders";
+import { useEffect } from 'react';
+import { usePageAlerts } from 'hooks';
+import { PageAlert } from 'builders';
 
 export function ProfileSavedNotice() {
   const { addAlert, updateAlert } = usePageAlerts();
   useEffect(() => {
-    const id = addAlert(PageAlertBuilders.saved("Profile"));
+    const id = addAlert(PageAlertBuilders.saved('Profile'));
     // Extend its lifetime and change heading after 1s
     const t = setTimeout(() => {
-      updateAlert(id, { heading: "Profile saved (synced)", timeoutMs: 6000 });
+      updateAlert(id, { heading: 'Profile saved (synced)', timeoutMs: 6000 });
     }, 1000);
     return () => clearTimeout(t);
   }, [addAlert, updateAlert]);
@@ -226,10 +219,10 @@ Rich content (custom action inside the card):
 
 ```tsx
 addAlert({
-  heading: "New version available",
-  variant: "info",
+  heading: 'New version available',
+  variant: 'info',
   content: <button onClick={reload}>Reload Now</button>,
-  timeoutMs: 0, // 0 or undefined means it persists until manually dismissed
+  timeoutMs: 0 // 0 or undefined means it persists until manually dismissed
 });
 ```
 
@@ -244,12 +237,12 @@ resumeAlertTimer(id);
 Update in place (e.g. progressive status):
 
 ```ts
-const id = addAlert({ heading: "Uploading...", variant: "info", timeoutMs: 0 });
+const id = addAlert({ heading: 'Uploading...', variant: 'info', timeoutMs: 0 });
 // after work
 updateAlert(id, {
-  heading: "Upload complete",
-  variant: "success",
-  timeoutMs: 4000,
+  heading: 'Upload complete',
+  variant: 'success',
+  timeoutMs: 4000
 });
 ```
 
@@ -293,34 +286,34 @@ Examples:
 
 ```ts
 // Auth helpers (Firebase auth wrapper)
-import { onAuthTokenChange, initFirebase } from "auth";
+import { onAuthTokenChange, initFirebase } from 'auth';
 
 // Layout Components (Page Heading, Page Alerts, etc.)
-import { HeadingProvider, PageAlertsProvider } from "layout-components";
+import { HeadingProvider, PageAlertsProvider } from 'layout-components';
 
 // Hooks (custom React hooks barrel)
-import { usePageHeading, usePageAlerts } from "hooks";
+import { usePageHeading, usePageAlerts } from 'hooks';
 
 // UI primitives / layout
-import { PageContainer, OverlayHost } from "framework";
+import { PageContainer, OverlayHost } from 'framework';
 
 // Layout root (aggregated providers, etc.)
-import { DefaultLayout } from "layout";
+import { DefaultLayout } from 'layout';
 
 // Shared components
-import { AlertCard, DashboardCard } from "components";
+import { AlertCard, DashboardCard } from 'components';
 
 // Controllers (non-visual logic facades)
-import { BirthdayCalendarController } from "controllers";
+import { BirthdayCalendarController } from 'controllers';
 
 // Route objects / helpers (router export)
-import { router } from "routes";
+import { router } from 'routes';
 
 // Utilities & pure helpers
-import { formatDisplayDate, sortPlushies } from "utils";
+import { formatDisplayDate, sortPlushies } from 'utils';
 
 // Domain models / types
-import { IPlushieBirthday, IUserProfile } from "model";
+import { IPlushieBirthday, IUserProfile } from 'model';
 ```
 
 Guidelines:

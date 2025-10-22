@@ -1,18 +1,18 @@
-import { library } from "@fortawesome/fontawesome-svg-core";
-import {
-  faFacebook,
-  faInstagram,
-  faThreads,
-} from "@fortawesome/free-brands-svg-icons";
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faFacebook, faInstagram, faThreads } from '@fortawesome/free-brands-svg-icons';
 import {
   faBeer,
   faBirthdayCake,
   faCalendarAlt,
   faCalendarPlus,
+  faEdit,
   faListCheck,
+  faPlusCircle,
+  faTrash,
   faUser,
   faUserGear,
-} from "@fortawesome/free-solid-svg-icons";
+  faXmark
+} from '@fortawesome/free-solid-svg-icons';
 
 // Register icons once
 library.add(
@@ -25,7 +25,11 @@ library.add(
   faCalendarAlt,
   faUser,
   faUserGear,
-  faListCheck
+  faListCheck,
+  faEdit,
+  faTrash,
+  faPlusCircle,
+  faXmark
 );
 
 export const ICONS = {
@@ -39,4 +43,8 @@ export const ICONS = {
   calendarAlt: faCalendarAlt,
   userGear: faUserGear,
   listCheck: faListCheck,
+  edit: faEdit,
+  trash: faTrash,
+  plus: faPlusCircle,
+  close: faXmark
 };

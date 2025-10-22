@@ -33,6 +33,7 @@ export default defineConfig([
             "../*/auth/*",
             "../*/components/*",
             "../*/controllers/*",
+            "../*/enums/*",
             "../*/env/*",
             "../*/framework/*",
             "../*/hooks/*",
@@ -53,6 +54,7 @@ export default defineConfig([
             "src/routes/*",
             "src/services/*",
             "src/utils/*",
+            "src/validators/*",
           ],
           message:
             "Use the configured path alias (e.g. 'components', 'services', 'auth') instead of relative or 'src/*' import paths.",
@@ -61,15 +63,15 @@ export default defineConfig([
     },
   },
   {
-    // Prevent direct PageHeadingContainer usage in page components; enforce central heading outlet
+    // Prevent direct PageHeading usage in page components; enforce central heading outlet
     files: ["src/pages/**/*.{ts,tsx}"],
     rules: {
       "no-restricted-imports": [
         "error",
         {
-          name: "@/framework/PageHeadingContainer",
+          name: "@/framework/PageHeading",
           message:
-            "Do not import PageHeadingContainer directly in pages; use usePageHeading or useHeading instead (rendered via HeadingOutlet).",
+            "Do not import PageHeading directly in pages; use usePageHeading or useHeading instead (rendered via HeadingOutlet).",
         },
       ],
     },

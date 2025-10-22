@@ -1,26 +1,29 @@
-export { default as ErrorBoundary } from "./ErrorBoundary";
-export * from "./ErrorBoundary";
+export * from './ErrorBoundary';
+export { default as ErrorBoundary } from './ErrorBoundary';
 
-export { default as Footer } from "./Footer";
-export * from "./Footer";
+export * from './Footer';
+export { default as Footer } from './Footer';
 
-export { default as Image } from "./Image";
-export * from "./Image";
+export * from './Image';
+export { default as Image } from './Image';
 
-export { default as NavMenu } from "./NavMenu";
-export * from "./NavMenu";
+export * from './InstagramInputGroup';
+export { default as InstagramInputGroup } from './InstagramInputGroup';
 
-export { default as PageContainer } from "./PageContainer";
-export * from "./PageContainer";
+export * from './NavMenu';
+export { default as NavMenu } from './NavMenu';
 
-export { default as PageContentContainer } from "./PageContentContainer";
-export * from "./PageContentContainer";
+export * from './PageContainer';
+export { default as PageContainer } from './PageContainer';
 
-export { default as PageHeadingContainer } from "./PageHeadingContainer";
-export * from "./PageHeadingContainer";
+export * from './PageContentContainer';
+export { default as PageContentContainer } from './PageContentContainer';
 
-export { default as PageSectionContainer } from "./PageSectionContainer";
-export * from "./PageSectionContainer";
+export * from './PageHeading';
+export { default as PageHeading } from './PageHeading';
 
-export { default as ScrollToTop } from "./ScrollToTop";
-export * from "./ScrollToTop";
+export * from './PageSectionContainer';
+export { default as PageSectionContainer } from './PageSectionContainer';
+
+export * from './ScrollToTop';
+export { default as ScrollToTop } from './ScrollToTop';

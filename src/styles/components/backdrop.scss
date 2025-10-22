@@ -1,0 +1,15 @@
+@use "../variables";
+
+.backdrop {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  position: fixed;
+  inset: 0;
+
+  background: variables.$colour-overlay-backdrop;
+  transition: opacity 0.2s ease;
+  padding: calc(variables.$nav-height + 2rem) 1rem 2rem;
+  z-index: variables.$zindex-backdrop;
+  overflow-y: auto;
+}

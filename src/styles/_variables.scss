@@ -86,19 +86,18 @@ $colour-link-visited: $colour-blue;
 $colour-link-active: $colour-orange;
 
 $status-colours: (
-  "info": $colour-info,
-  "success": $colour-success,
-  "warning": $colour-warning,
-  "error": $colour-error,
+  'info': $colour-info,
+  'success': $colour-success,
+  'warning': $colour-warning,
+  'error': $colour-error
 );
 
 $colour-instagram: rgb(229, 39, 101);
 $colour-threads: rgb(207, 43, 206);
 $colour-facebook: rgb(60, 93, 159);
 
-$font-family-heading: "Coiny", system-ui, "Arial Black", Arial, sans-serif;
-$font-family-body: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto,
-  Arial, sans-serif;
+$font-family-heading: 'Coiny', system-ui, 'Arial Black', Arial, sans-serif;
+$font-family-body: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
 
 // This is to accommodate for the fact Poppins font is vertically misaligned
 $line-height-override: 1.4;
@@ -132,3 +131,8 @@ $breakpoint-xs: 480px;
 $page-width: 1320px;
 $width-responsive: 100%;
 $nav-height: 72px;
+
+$zindex-backdrop: 1000;
+$zindex-nav: calc($zindex-backdrop - 1);
+$zindex-nav-above-backdrop: calc($zindex-backdrop + 1);
+$zindex-dialog: calc($zindex-backdrop + 2);

@@ -1,6 +1,12 @@
 @use "../variables";
+@use "../mixins";
 
 .alert-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  row-gap: 1rem;
   border-radius: 12px;
   padding: 1.5rem 1rem;
   width: 100%;
@@ -13,17 +19,11 @@
   }
 
   &__messages {
-    list-style: none;
-    padding: 0;
-    margin-bottom: 0;
+    @include mixins.alert-card-list;
   }
 
   &__message {
-    color: variables.$colour-error;
-
-    &:not(:last-child) {
-      margin-bottom: 0.5rem;
-    }
+    @include mixins.alert-card-list-item();
   }
 
   &--success {

@@ -1,14 +1,13 @@
-import { useMemo } from "react";
-import { ClickableActionPanelGroup, Gallery } from "components";
-import { Image, PageContentContainer, PageSectionContainer } from "framework";
-import { GalleryController } from "controllers";
-import { usePageHeading } from "hooks";
-import { PageHeadingTheme } from "model/page-heading";
-import { ImageFrame, ImageLoadingState, ImageUsage } from "model/image";
+import { useMemo } from 'react';
+import { ClickableActionPanelGroup, Gallery } from 'components';
+import { Image, PageContentContainer, PageSectionContainer } from 'framework';
+import { GalleryController } from 'controllers';
+import { usePageHeading } from 'hooks';
+import { ImageFrame, ImageUsage, PageHeadingTheme } from 'enums';
 
 export default function HomePage() {
-  usePageHeading("Banjo Hootson", {
-    subheading: "Friendly neighbourhood Djungelskog and sound Yorkshireman",
+  usePageHeading('Banjo Hootson', {
+    subheading: 'Friendly neighbourhood Djungelskog and sound Yorkshireman',
     theme: PageHeadingTheme.DARK,
     image: useMemo(
       () => (
@@ -17,17 +16,17 @@ export default function HomePage() {
           alt="Home page heading image showing Banjo in Rotterdam with the TV tower in the background"
           usage={ImageUsage.HEADING}
           frame={ImageFrame.LIGHT}
-          loading={ImageLoadingState.EAGER}
+          loading="eager"
         />
       ),
       []
-    ),
+    )
   });
 
   return (
     <PageContentContainer spacing="medium">
       <PageSectionContainer heading="Plushie Community">
-        <ClickableActionPanelGroup group={"community-links"} />
+        <ClickableActionPanelGroup group={'community-links'} />
       </PageSectionContainer>
 
       <PageSectionContainer heading="Exploring the plushie world is my passion...">
@@ -35,7 +34,7 @@ export default function HomePage() {
       </PageSectionContainer>
 
       <PageSectionContainer heading="Come join me on my adventures!">
-        <ClickableActionPanelGroup group={"social-links"} />
+        <ClickableActionPanelGroup group={'social-links'} />
       </PageSectionContainer>
     </PageContentContainer>
   );

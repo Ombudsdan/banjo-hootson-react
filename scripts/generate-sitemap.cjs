@@ -29,7 +29,8 @@ async function generate() {
 
   await fs.promises.mkdir(DIST_DIR, { recursive: true });
   await fs.promises.writeFile(path.join(DIST_DIR, "sitemap.xml"), xml, "utf-8");
-  console.log("Sitemap generated:", path.join(DIST_DIR, "sitemap.xml"));
+
+  console.info("Sitemap generated:", path.join(DIST_DIR, "sitemap.xml"));
 }
 
 generate().catch((err) => {

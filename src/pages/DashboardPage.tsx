@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { AuthController, UserController } from "controllers";
-import { usePageHeading } from "hooks";
-import { PageContentContainer, PageSectionContainer } from "framework";
-import { DashboardCard, UserSubscriptionTierBadge } from "components";
-import { IUserProfile } from "model/user-profile";
-import { ICONS } from "icons";
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AuthController, UserController } from 'controllers';
+import { usePageHeading } from 'hooks';
+import { PageContentContainer, PageSectionContainer } from 'framework';
+import { DashboardCard, UserSubscriptionTierBadge } from 'components';
+import { ICONS } from 'icons';
+import { IUser } from 'model/user.model';
 
 export default function DashboardPage() {
   const navigate = useNavigate();
-  const [userProfile, setUserProfile] = useState<IUserProfile | null>(null);
+  const [userProfile, setUserProfile] = useState<IUser | null>(null);
   const [isSigningOut, setIsSigningOut] = useState(false);
 
   useEffect(() => {
-    UserController.me().then((u) => setUserProfile(u));
+    UserController.me().then(u => setUserProfile(u));
   }, []);
 
   const onSignOut = async () => {
@@ -21,9 +21,9 @@ export default function DashboardPage() {
     setIsSigningOut(true);
     try {
       await AuthController.signOut();
-      navigate("/login?loggedOut=1");
+      navigate('/login?loggedOut=1');
     } catch {
-      navigate("/");
+      navigate('/');
     } finally {
       setIsSigningOut(false);
     }
@@ -31,51 +31,44 @@ export default function DashboardPage() {
 
   const availableCards = [
     {
-      key: "PROFILE_SETTINGS",
-      title: "My Profile",
-      description: "Manage your profile settings",
-      action: () => navigate({ pathname: "/profile", search: "?tab=PROFILE" }),
-      icon: ICONS.user,
+      key: 'PROFILE_SETTINGS',
+      title: 'My Profile',
+      description: 'Manage your profile settings',
+      // action: () => navigate({ pathname: "/profile", search: "?tab=PROFILE" }),
+      action: () => navigate({ pathname: '/manage-profile' }),
+      icon: ICONS.user
     },
     {
-      key: "ACCOUNT_SETTINGS",
-      title: "Account Settings",
-      description: "Manage your account preferences",
-      action: () => navigate({ pathname: "/profile", search: "?tab=ACCOUNT" }),
-      icon: ICONS.userGear,
+      key: 'ACCOUNT_SETTINGS',
+      title: 'Account Settings',
+      description: 'Manage your account preferences',
+      action: () => navigate({ pathname: '/profile', search: '?tab=ACCOUNT' }),
+      icon: ICONS.userGear
     },
     {
-      key: "PREFERENCES",
-      title: "Preferences",
-      description: "Manage your user preferences",
-      action: () =>
-        navigate({ pathname: "/profile", search: "?tab=PREFERENCES" }),
-      icon: ICONS.listCheck,
-    },
+      key: 'PREFERENCES',
+      title: 'Preferences',
+      description: 'Manage your user preferences',
+      action: () => navigate({ pathname: '/profile', search: '?tab=PREFERENCES' }),
+      icon: ICONS.listCheck
+    }
   ];
 
-  usePageHeading("My Account");
+  usePageHeading('My Account');
 
   return (
     <PageContentContainer spacing="medium">
       {userProfile ? (
         <>
           <PageSectionContainer className="welcome-section">
-            <p className="welcome-section__email-address">
-              {userProfile.email}
-            </p>
+            <p className="welcome-section__email-address">{userProfile.email}</p>
             <UserSubscriptionTierBadge tier={userProfile.subscriptionTier} />
           </PageSectionContainer>
 
           <PageSectionContainer heading="Available Features">
             <div className="dashboard-page__features">
-              {availableCards.map((c) => (
-                <DashboardCard
-                  key={c.key}
-                  description={c.description}
-                  onClick={c.action}
-                  icon={c.icon}
-                >
+              {availableCards.map(c => (
+                <DashboardCard key={c.key} description={c.description} onClick={c.action} icon={c.icon}>
                   <h3>{c.title}</h3>
                 </DashboardCard>
               ))}
@@ -84,15 +77,9 @@ export default function DashboardPage() {
 
           <PageSectionContainer>
             <div className="dashboard-page__actions">
-              <button
-                className="dashboard-page__sign-out-button"
-                disabled={isSigningOut}
-                onClick={onSignOut}
-              >
-                {isSigningOut && (
-                  <span className="dashboard-page__loading-spinner" />
-                )}
-                {isSigningOut ? "Signing Out..." : "Sign Out"}
+              <button className="dashboard-page__sign-out-button" disabled={isSigningOut} onClick={onSignOut}>
+                {isSigningOut && <span className="dashboard-page__loading-spinner" />}
+                {isSigningOut ? 'Signing Out...' : 'Sign Out'}
               </button>
             </div>
           </PageSectionContainer>

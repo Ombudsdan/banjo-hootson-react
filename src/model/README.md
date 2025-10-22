@@ -9,8 +9,8 @@ Domain type definitions only – interfaces, enums, type aliases. **No runtime c
 Import directly from the relevant submodule:
 
 ```ts
-import { IPlushieBirthday } from "model/plushie-birthday";
-import { IUserProfile } from "model/user-profile";
+import { IPlushieBirthday } from 'model/plushie-birthday';
+import { IUserProfile } from 'model/user';
 ```
 
 This avoids circular dependencies and is enforced by ESLint. If a barrel index.ts is reintroduced, it must not be used for imports.

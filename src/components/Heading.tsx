@@ -1,10 +1,12 @@
-import { createElement } from "react";
-import { HeadingLevel, IHeading } from "model/heading";
+import { createElement } from 'react';
+import { HeadingLevelType } from 'enums';
 
-export default function Heading({
-  level = HeadingLevel.H2,
-  text,
-  classNames,
-}: IHeading) {
+export default function Heading({ level = 'h2', text, classNames }: IHeading) {
   return createElement(level, { className: classNames }, text);
+}
+
+interface IHeading {
+  level?: HeadingLevelType;
+  text: string;
+  classNames?: string;
 }

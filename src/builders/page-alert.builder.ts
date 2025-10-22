@@ -1,14 +1,10 @@
-import {
-  IPageAlert,
-  PageAlertVariant,
-  PageAlertVariantType,
-} from "model/page-alert";
-import { ReactNode } from "react";
 
-const DEFAULT_PAGE_ALERT: Partial<IPageAlert> = {
+import { IAlertCard } from "components";
+import { PageAlertVariant, PageAlertVariantType } from "enums";
+
+const DEFAULT_PAGE_ALERT: Partial<IAlertCard> = {
   messages: [],
-  autoFocus: true,
-  content: undefined,
+  children: undefined,
   timeoutMs: undefined,
 };
 
@@ -74,7 +70,7 @@ export default class PageAlert {
     ).create();
   }
 
-  static saved(entity: string = "Changes"): IPageAlert {
+  static saved(entity: string = "Changes"): IAlertCard {
     const message = `${entity} saved`;
     const id = `${entity.toLowerCase().replace(/\s+/g, "-")}-saved-alert`;
     const options = { timeoutMs: 4000 };
@@ -87,7 +83,7 @@ export default class PageAlert {
     ).create();
   }
 
-  static deleted(entity: string = "Item"): IPageAlert {
+  static deleted(entity: string = "Item"): IAlertCard {
     const message = `${entity} deleted`;
     const id = `${entity.toLowerCase().replace(/\s+/g, "-")}-deleted-alert`;
     const options = { timeoutMs: 4000 };
@@ -102,7 +98,7 @@ export default class PageAlert {
 }
 
 class PageAlertBuilder {
-  private pageAlert: IPageAlert;
+  private pageAlert: IAlertCard;
 
   constructor(
     variant: PageAlertVariantType,
@@ -119,19 +115,14 @@ class PageAlertBuilder {
     };
   }
 
-  setAutoFocus(autoFocus: boolean) {
-    this.pageAlert.autoFocus = autoFocus;
+  setDisableAutoFocus(disableAutoFocus: boolean) {
+    this.pageAlert.disableAutoFocus = disableAutoFocus;
     return this;
   }
 
   includeMessage(message: string) {
     this.pageAlert.messages ??= [];
     this.pageAlert.messages.push(message);
-    return this;
-  }
-
-  setContent(content: ReactNode) {
-    this.pageAlert.content = content;
     return this;
   }
 
@@ -147,4 +138,4 @@ class PageAlertBuilder {
 }
 
 interface IPageAlertBuilderOverrides
-  extends Partial<Omit<IPageAlert, "id" | "variant" | "heading">> {}
+  extends Partial<Omit<IAlertCard, "id" | "variant" | "heading">> {}

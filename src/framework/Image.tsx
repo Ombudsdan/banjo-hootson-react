@@ -1,18 +1,12 @@
-import {
-  IImage,
-  ImageFrame,
-  ImageLoadingState,
-  ImageShape,
-  ImageUsage,
-} from "model/image";
-import { useEffect, useRef, useState, useCallback } from "react";
-import { generateClassName } from "utils";
+import { ImageFrame, ImageFrameType, ImageShape, ImageShapeType, ImageUsageType } from 'enums';
+import { useEffect, useRef, useState, useCallback } from 'react';
+import { generateClassName } from 'utils';
 // Allow use of webpack require.context in TypeScript ESM build
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const require: any;
 
 // Transparent 1x1 gif for error fallback (mirrors Angular placeholder)
-const ERROR_SRC = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
+const ERROR_SRC = 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=';
 
 /**
  * Image component (Angular parity)
@@ -33,14 +27,7 @@ const ERROR_SRC = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
  *  - On error: if webp attempted -> try jpg; if jpg fails -> transparent gif placeholder.
  *  - Class names mirror Angular BEM structure for styling reuse.
  */
-export default function Image({
-  fileName,
-  alt,
-  usage,
-  shape,
-  frame,
-  loading = ImageLoadingState.LAZY,
-}: IImage) {
+export default function Image({ fileName, alt, usage, shape, frame, loading = 'lazy' }: IImage) {
   const imgRef = useRef<HTMLImageElement | null>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
@@ -50,13 +37,13 @@ export default function Image({
   let resolvedWebp: string | undefined;
   let resolvedJpg: string | undefined;
   try {
-    const webpContext = require.context("../assets/images", false, /\.webp$/);
+    const webpContext = require.context('../assets/images', false, /\.webp$/);
     resolvedWebp = webpContext(`./${fileName}.webp`);
   } catch {
     // ignore – will fall back to static path
   }
   try {
-    const jpgContext = require.context("../assets/images", false, /\.(jpe?g)$/);
+    const jpgContext = require.context('../assets/images', false, /\.(jpe?g)$/);
     resolvedJpg = jpgContext(`./${fileName}.jpg`);
   } catch {
     // ignore
@@ -65,24 +52,18 @@ export default function Image({
   const webpSrc = resolvedWebp || `/assets/images/${fileName}.webp`;
   const jpgSrc = resolvedJpg || `/assets/images/${fileName}.jpg`;
 
-  const isLazyLoaded = loading === ImageLoadingState.LAZY;
-  const supportsIO =
-    typeof window !== "undefined" && "IntersectionObserver" in window;
+  const isLazyLoaded = loading === 'lazy';
+  const supportsIO = typeof window !== 'undefined' && 'IntersectionObserver' in window;
   const shouldUseObserver = isLazyLoaded && supportsIO;
 
   // If not using IO lazy path, set initial src immediately (parity with Angular eager behavior)
   // Use null instead of empty string so we can omit the src attribute entirely until a value is ready.
-  const [src, setSrc] = useState<string | null>(() =>
-    !shouldUseObserver ? webpSrc : null
-  );
+  const [src, setSrc] = useState<string | null>(() => (!shouldUseObserver ? webpSrc : null));
   const [hasErroredOnce, setHasErroredOnce] = useState(false);
   const isLoading = !src && isLazyLoaded;
   const className = generateClass(usage, shape, frame, isLoading);
 
-  const startLoadingWebp = useCallback(
-    () => setSrc((prev) => prev || webpSrc),
-    [webpSrc]
-  );
+  const startLoadingWebp = useCallback(() => setSrc(prev => prev || webpSrc), [webpSrc]);
 
   // Kick off loading when needed
   useEffect(() => {
@@ -99,15 +80,15 @@ export default function Image({
     if (!el) return;
 
     observerRef.current = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
+      entries => {
+        entries.forEach(entry => {
           if (entry.isIntersecting && !src) {
             startLoadingWebp();
             observerRef.current?.unobserve(entry.target);
           }
         });
       },
-      { rootMargin: "50px", threshold: 0.1 }
+      { rootMargin: '50px', threshold: 0.1 }
     );
 
     observerRef.current.observe(el);
@@ -129,8 +110,7 @@ export default function Image({
       const el = imgRef.current;
       if (!el) return;
       const rect = el.getBoundingClientRect();
-      const vpHeight =
-        window.innerHeight || document.documentElement.clientHeight;
+      const vpHeight = window.innerHeight || document.documentElement.clientHeight;
       const inPreloadRange = rect.top < vpHeight + 100; // 100px preload buffer
       if (inPreloadRange) startLoadingWebp();
     }, 400);
@@ -154,57 +134,58 @@ export default function Image({
       {...{
         ref: imgRef,
         alt,
-        loading: shouldUseObserver ? ImageLoadingState.EAGER : loading,
+        loading: shouldUseObserver ? 'eager' : loading,
         className,
-        ...(src ? { src, onError: handleError } : {}),
+        ...(src ? { src, onError: handleError } : {})
       }}
     />
   );
 }
 
-function generateClass(
-  usage: IImage["usage"],
-  shape: IImage["shape"],
-  frame: IImage["frame"],
-  isLoading: boolean
-) {
+function generateClass(usage: IImage['usage'], shape: IImage['shape'], frame: IImage['frame'], isLoading: boolean) {
   return generateClassName([
-    "image",
+    'image',
     usage && `image--${usage}`,
     generateShapeClass(shape, usage),
     generateFrameClass(frame, usage),
-    isLoading && "image--loading",
+    isLoading && 'image--loading'
   ]);
 }
 
 /** Generate the shape class for the image */
-function generateShapeClass(
-  shape: IImage["shape"],
-  usage: IImage["usage"]
-): string | undefined {
+function generateShapeClass(shape: IImage['shape'], usage: IImage['usage']): string | undefined {
   if (shape) {
     return `image--${shape}`;
-  } else if (usage === ImageUsage.HEADING) {
+  } else if (usage === 'heading') {
     return `image--${ImageShape.CIRCLE}`;
-  } else if (usage === ImageUsage.BIO || usage === ImageUsage.GALLERY) {
+  } else if (usage === 'bio' || usage === 'gallery') {
     return `image--${ImageShape.ROUNDED_SQUARE}`;
   } else return undefined;
 }
 
 /** Generate the frame class for the image */
-function generateFrameClass(frame: IImage["frame"], usage: IImage["usage"]) {
+function generateFrameClass(frame: IImage['frame'], usage: IImage['usage']) {
   const classes = [];
 
-  const hasFrame = !!frame || usage === ImageUsage.HEADING;
+  const hasFrame = !!frame || usage === 'heading';
   if (hasFrame) {
     classes.push(`image--framed`);
   }
 
   if (frame) {
     classes.push(`image--framed--${frame}`);
-  } else if (usage === ImageUsage.HEADING) {
+  } else if (usage === 'heading') {
     classes.push(`image--framed--${ImageFrame.DARK}`);
   }
 
   return generateClassName(classes);
+}
+
+interface IImage {
+  fileName: string;
+  alt: string;
+  usage?: ImageUsageType;
+  shape?: ImageShapeType;
+  frame?: ImageFrameType;
+  loading?: HTMLImageElement['loading'];
 }

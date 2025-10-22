@@ -3,54 +3,65 @@
 @use "./mixins";
 
 $button-styles: (
-  "main": (
+  'main': (
     bg: variables.$colour-button-primary,
     text: variables.$colour-button-primary-text,
     border: variables.$colour-button-primary-border,
     hover: variables.$colour-button-primary-hover,
-    active: variables.$colour-button-primary-active,
+    active: variables.$colour-button-primary-active
   ),
-  "secondary": (
+  'secondary': (
     bg: variables.$colour-button-secondary,
     text: variables.$colour-button-secondary-text,
     border: variables.$colour-button-secondary-border,
     hover: variables.$colour-button-secondary-hover,
-    active: variables.$colour-button-secondary-active,
+    active: variables.$colour-button-secondary-active
   ),
-  "tertiary": (
+  'tertiary': (
     bg: rgba(variables.$colour-orange, 0.2),
     text: variables.$colour-brown,
     border: rgba(variables.$colour-orange, 0.3),
     hover: rgba(variables.$colour-orange, 0.15),
-    active: rgba(variables.$colour-orange, 0.1),
+    active: rgba(variables.$colour-orange, 0.1)
   ),
-  "danger": (
+  'primary': (
+    bg: variables.$colour-button-primary,
+    text: variables.$colour-button-primary-text,
+    border: variables.$colour-button-primary-border,
+    hover: variables.$colour-button-primary-hover,
+    active: variables.$colour-button-primary-active
+  ),
+  'danger': (
     bg: variables.$colour-error,
     text: variables.$colour-white,
     border: variables.$colour-error-dark,
     hover: rgba(variables.$colour-error, 0.8),
-    active: rgba(variables.$colour-error, 0.7),
-  ),
+    active: rgba(variables.$colour-error, 0.7)
+  )
 );
 
 a {
-  transition: color 0.2s ease, text-decoration-color 0.2s ease;
-  font-weight: variables.$font-weight-semi-bold;
-  color: variables.$colour-orange;
+  @include mixins.link;
+
   &.external-link {
     color: variables.$colour-link;
     text-decoration: underline solid variables.$colour-link-underline;
+
     &:hover {
       color: variables.$colour-link-hover;
       text-decoration-color: currentColor;
     }
+
     &:visited {
       color: variables.$colour-link-visited;
     }
+
     &:active {
       color: variables.$colour-link-active;
     }
+
     &:focus {
+      text-decoration-color: variables.$colour-orange;
       text-decoration: underline 2px solid variables.$colour-orange;
       outline: unset;
     }
@@ -102,22 +113,17 @@ button {
   }
 
   &--link {
+    @include mixins.button-displayed-as-link;
+
     color: variables.$colour-link;
-    background: none;
-    border: none;
-    padding: 0;
-    min-height: 0;
+
+    // TODO - this is specific behaviour and shouldn't be under "link"
     &:hover {
       transform: unset;
       background-color: unset;
       border-color: unset;
       box-shadow: unset;
     }
-    &:focus {
-      outline: unset;
-      border: unset;
-    }
-    @extend a;
   }
 
   &:disabled {
@@ -203,5 +209,18 @@ button {
     &--today {
       @include mixins.mobile-hidden;
     }
+  }
+}
+
+.icon-button {
+  background-color: unset;
+  color: variables.$colour-orange;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  column-gap: 0.5rem;
+
+  svg {
+    order: 2;
   }
 }

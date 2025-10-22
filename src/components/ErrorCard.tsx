@@ -1,17 +1,9 @@
-import { AlertCard } from "components";
-import { AlertCardVariant, IAlertCard } from "model/page-validation-alert";
+import { AlertCard, IAlertCard } from 'components';
+import { AlertCardVariant } from 'enums';
 
-export default function ErrorCard({
-  heading,
-  errorMessages,
-  cardId,
-}: IErrorCard) {
+export default function ErrorCard({ heading, errorMessages, id }: IErrorCard) {
   return (
-    <AlertCard
-      heading={heading}
-      variant={AlertCardVariant.ERROR}
-      cardId={cardId || "error-card"}
-    >
+    <AlertCard heading={heading} variant={AlertCardVariant.ERROR} id={id}>
       <ul className="error-card__messages">
         {errorMessages.map((msg, i) => (
           <li className="error-card__message" key={i}>
@@ -23,6 +15,6 @@ export default function ErrorCard({
   );
 }
 
-interface IErrorCard extends Pick<IAlertCard, "heading" | "cardId"> {
+interface IErrorCard extends Pick<IAlertCard, 'heading' | 'id'> {
   errorMessages: string[];
 }

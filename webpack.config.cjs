@@ -28,8 +28,8 @@ module.exports = {
     alias: {
       builders: path.resolve(__dirname, "src/builders"),
       components: path.resolve(__dirname, "src/components"),
-      "layout-components": path.resolve(__dirname, "src/layout-components"),
       controllers: path.resolve(__dirname, "src/controllers"),
+      enums: path.resolve(__dirname, "src/enums/index.ts"),
       env: path.resolve(__dirname, "src/env/index.ts"),
       framework: path.resolve(__dirname, "src/framework"),
       hooks: path.resolve(__dirname, "src/hooks"),
@@ -39,6 +39,7 @@ module.exports = {
       routes: path.resolve(__dirname, "src/routes"),
       services: path.resolve(__dirname, "src/services"),
       utils: path.resolve(__dirname, "src/utils"),
+      validators: path.resolve(__dirname, "src/validators"),
     },
   },
   module: {

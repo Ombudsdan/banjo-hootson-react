@@ -1,21 +1,24 @@
-import { Outlet } from "react-router-dom";
-import { NavMenu, ScrollToTop, Footer } from "framework";
-import { OverlayHost } from "components";
+import { Outlet } from 'react-router-dom';
+import { NavMenu, ScrollToTop, Footer } from 'framework';
 import {
-  LayoutProviders,
+  DialogOutlet,
   PageAlertOutlet,
   PageContainerOutlet,
   PageHeadingOutlet,
-} from "layout";
-import { PageValidationAlertOutlet } from "./PageValidationAlert";
+  BackdropOutlet,
+  PageValidationAlertOutlet,
+  FormDialogOutlet
+} from 'hooks';
+import LayoutProviders from './LayoutProviders';
 
 export default function DefaultLayout() {
   return (
     <LayoutProviders>
       <NavMenu />
       <ScrollToTop />
-      <OverlayHost />
-
+      <BackdropOutlet />
+      <DialogOutlet />
+      <FormDialogOutlet />
       <PageHeadingOutlet />
       <PageValidationAlertOutlet />
       <PageAlertOutlet />

@@ -1,8 +1,5 @@
-import {
-  IPlushieBirthday,
-  IPlushieBirthdayFormData,
-} from "model/plushie-birthday";
-import { BirthdayCalendarService } from "services";
+import { IPlushieBirthday, IPlushieBirthdayFormData } from 'model/plushie-birthday.model';
+import { BirthdayCalendarService } from 'services';
 
 export default class BirthdayController {
   static async loadUpcoming(days = 7): Promise<IPlushieBirthday[]> {
@@ -17,9 +14,7 @@ export default class BirthdayController {
     return BirthdayCalendarService.getByEventId(eventId);
   }
 
-  static async create(
-    form: IPlushieBirthdayFormData
-  ): Promise<IPlushieBirthday> {
+  static async create(form: IPlushieBirthdayFormData): Promise<IPlushieBirthday> {
     return BirthdayCalendarService.create(form);
   }
 }

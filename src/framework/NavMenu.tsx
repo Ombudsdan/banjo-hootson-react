@@ -1,6 +1,8 @@
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { AuthController } from "controllers";
+import { Link, NavLink, useLocation } from 'react-router-dom';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { AuthController } from 'controllers';
+import { useBackdrop, useIsMobile } from 'hooks';
+import { getElementFromContentRef, setInert } from 'utils';
 
 export default function NavMenu() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -9,91 +11,95 @@ export default function NavMenu() {
   const menuButtonRef = useRef<HTMLButtonElement | null>(null);
   const navContentRef = useRef<HTMLUListElement | null>(null);
   const location = useLocation();
-  const navigate = useNavigate();
+  const { openBackdrop, closeBackdrop, addBackdropClickListener, removeBackdropClickListener } = useBackdrop();
+  const isMobile = useIsMobile();
 
-  const inertOverlayElements = useMemo<HTMLElement[]>(() => {
-    const selectors = ["main", "footer"];
-    return selectors
-      .map((s) => document.querySelector(s))
-      .filter((el): el is HTMLElement => el !== null);
-  }, []);
+  const setOverlayInert = useCallback((isInert: boolean) => setInert(['main', 'footer'], isInert), []);
 
-  useEffect(() => {
-    const unsub = AuthController.onAuthTokenChange((token) =>
-      setIsAuthenticated(!!token)
-    );
-    return () => unsub();
-  }, []);
-
-  const setOverlayInert = useCallback(
-    (inert: boolean) => {
-      inertOverlayElements.forEach((el) => {
-        if (inert) el.setAttribute("inert", "");
-        else el.removeAttribute("inert");
-        el.setAttribute("aria-hidden", inert ? "true" : "false");
-      });
-    },
-    [inertOverlayElements]
-  );
-
-  const focusFirstLinkOrButton = useCallback((opened: boolean) => {
-    if (opened) {
-      const firstLink = navContentRef.current?.querySelector(
-        "a"
-      ) as HTMLElement | null;
-      if (firstLink) firstLink.focus();
+  const focusFirstLinkOrButton = useCallback((hasOpened: boolean) => {
+    if (hasOpened) {
+      getElementFromContentRef(navContentRef, 'a')?.focus();
     } else {
-      menuButtonRef.current?.focus();
+      getElementFromContentRef(menuButtonRef)?.focus();
     }
   }, []);
 
-  const toggleMobile = (state?: boolean) => {
-    setMobileOpen((prev) => {
-      const next = state ?? !prev;
-      if (!next) setDropdownOpen(false);
-      // Side effects after state update
-      setTimeout(() => {
-        setOverlayInert(next);
-        focusFirstLinkOrButton(next);
+  // TODO - Probably overkill to use useCallback for these toggle functions
+  const toggleMobile = useCallback(
+    (state?: boolean) => {
+      setMobileOpen(prev => {
+        const next = state ?? !prev;
+        if (!next) setDropdownOpen(false);
+        setTimeout(() => {
+          setOverlayInert(next);
+          focusFirstLinkOrButton(next);
+        });
+        return next;
       });
-      return next;
-    });
-  };
+    },
+    [setOverlayInert, focusFirstLinkOrButton]
+  );
 
-  const toggleDropdown = () => setDropdownOpen((v) => !v);
-  const onNavigate = () => {
+  const toggleDropdown = useCallback(() => setDropdownOpen(v => !v), []);
+
+  const navigate = useCallback((to: string) => (window.location.href = to), []);
+
+  const onNavigate = useCallback(() => {
     setMobileOpen(false);
     setDropdownOpen(false);
     setOverlayInert(false);
-  };
+  }, [setOverlayInert]);
+
+  // Close dropdown when clicking outside (desktop only)
+  useEffect(() => {
+    if (!dropdownOpen) return;
+    document.addEventListener('mousedown', handleClickOutsideOfDropdown);
+    return () => document.removeEventListener('mousedown', handleClickOutsideOfDropdown);
+  }, [dropdownOpen]);
+
+  useEffect(() => {
+    const unsub = AuthController.onAuthTokenChange(token => setIsAuthenticated(!!token));
+    return () => unsub();
+  }, []);
 
   // Close menus on route changes (NavigationStart/Skipped equivalent)
-  useEffect(() => {
-    setMobileOpen(false);
-    setDropdownOpen(false);
-    setOverlayInert(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.key]);
+  useEffect(() => closeNavMenu, [location.key]);
 
   // Esc to close
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setDropdownOpen(false);
-        if (mobileOpen) {
-          setMobileOpen(false);
-          setOverlayInert(false);
-          menuButtonRef.current?.focus();
-        }
-      }
-    };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [mobileOpen, setOverlayInert]);
+    const onKey = (e: KeyboardEvent) => closeNavMenu(mobileOpen && e.key === 'Escape');
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [mobileOpen]);
+
+  // Register backdrop click listener to close mobile nav
+  useEffect(() => {
+    addBackdropClickListener(closeNavMenu);
+    return () => removeBackdropClickListener(closeNavMenu);
+  }, [addBackdropClickListener, removeBackdropClickListener]);
+
+  useEffect(() => (mobileOpen ? openBackdrop() : closeBackdrop()), [mobileOpen, openBackdrop, closeBackdrop]);
+
+  function closeNavMenu(shouldClose: boolean = true) {
+    if (shouldClose) {
+      setDropdownOpen(false);
+      setMobileOpen(false);
+      setOverlayInert(false);
+      menuButtonRef.current?.focus();
+    }
+  }
+
+  function handleClickOutsideOfDropdown(event: MouseEvent) {
+    const dropdown = getElementFromContentRef(navContentRef, '.nav__dropdown');
+    // Only close on desktop (not mobile)
+    if (dropdown && !dropdown.contains(event.target as Node) && !isMobile) {
+      setDropdownOpen(false);
+    }
+  }
 
   return (
     <>
-      <nav className="nav" role="navigation" aria-label="Main">
+      <nav className={`nav ${mobileOpen ? 'nav--mobile-open' : ''}`} role="navigation" aria-label="Main">
         <div className="nav__inner">
           <Link className="nav__brand" to="/" onClick={onNavigate}>
             Banjo Hootson
@@ -104,20 +110,14 @@ export default function NavMenu() {
             type="button"
             onClick={() => toggleMobile()}
             ref={menuButtonRef}
-            aria-label={
-              mobileOpen ? "Close navigation menu" : "Open navigation menu"
-            }
+            aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
             aria-expanded={mobileOpen}
             aria-controls="nav-menu"
           >
             {/* Using text icon to avoid external icon deps */}☰
           </button>
 
-          <ul
-            className={`nav__list ${mobileOpen ? "nav__list--open" : ""}`}
-            id="nav-menu"
-            ref={navContentRef}
-          >
+          <ul className={`nav__list ${mobileOpen ? 'nav__list--open' : ''}`} id="nav-menu" ref={navContentRef}>
             <li className="nav__item nav__item--has-dropdown">
               <button
                 className="nav__link nav__dropdown-toggle"
@@ -128,36 +128,18 @@ export default function NavMenu() {
                 aria-controls="birthdays-menu"
               >
                 Plushie Birthdays
-                <span
-                  className={`nav__caret ${
-                    dropdownOpen ? "nav__caret--open" : ""
-                  }`}
-                  aria-hidden
-                >
+                <span className={`nav__caret ${dropdownOpen ? 'nav__caret--open' : ''}`} aria-hidden>
                   ▾
                 </span>
               </button>
-              <ul
-                className={`nav__dropdown ${
-                  dropdownOpen ? "nav__dropdown--open" : ""
-                }`}
-                id="birthdays-menu"
-              >
+              <ul className={`nav__dropdown ${dropdownOpen ? 'nav__dropdown--open' : ''}`} id="birthdays-menu">
                 <li className="nav__item">
-                  <NavLink
-                    className="nav__link"
-                    to="/calendar"
-                    onClick={onNavigate}
-                  >
+                  <NavLink className="nav__link" to="/calendar" onClick={onNavigate}>
                     Birthday Calendar
                   </NavLink>
                 </li>
                 <li className="nav__item">
-                  <NavLink
-                    className="nav__link"
-                    to="/calendar/submit"
-                    onClick={onNavigate}
-                  >
+                  <NavLink className="nav__link" to="/calendar/submit" onClick={onNavigate}>
                     Submit a Birthday
                   </NavLink>
                 </li>
@@ -181,23 +163,16 @@ export default function NavMenu() {
                 type="button"
                 className="button button--main"
                 onClick={() => {
-                  navigate(isAuthenticated ? "/dashboard" : "/login");
+                  navigate(isAuthenticated ? '/dashboard' : '/login');
                   onNavigate();
                 }}
               >
-                {isAuthenticated ? "My Account" : "Sign In"}
+                {isAuthenticated ? 'My Account' : 'Sign In'}
               </button>
             </li>
           </ul>
         </div>
       </nav>
-
-      <div
-        className={`backdrop ${mobileOpen ? "backdrop--visible" : ""}`}
-        onClick={() => toggleMobile(false)}
-        onKeyDown={(e) => e.key === "Escape" && toggleMobile(false)}
-        tabIndex={0}
-      />
     </>
   );
 }

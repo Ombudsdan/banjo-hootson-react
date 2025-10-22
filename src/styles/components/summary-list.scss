@@ -1,0 +1,54 @@
+.summary-list {
+  border-collapse: collapse;
+  display: table;
+
+  table-layout: fixed;
+  width: 100%;
+  margin: 0;
+
+  &__row {
+    display: table-row;
+  }
+
+  &__key {
+    display: table-cell;
+    width: 30%;
+    overflow-wrap: break-word;
+    margin: 0;
+    vertical-align: top;
+  }
+
+  &__value {
+    display: table-cell;
+    width: 50%;
+    padding-right: 1rem;
+    overflow-wrap: break-word;
+    margin: 0;
+    vertical-align: top;
+  }
+
+  &__actions {
+    display: table-cell;
+    width: 20%;
+    text-align: right;
+    margin: 0;
+    vertical-align: top;
+
+    & > div {
+      display: inline-flex;
+      gap: 1rem;
+    }
+  }
+}
+
+.summary-list__row > * {
+  padding: 0.5rem 0;
+}
+
+.summary-list__row:last-of-type > * {
+  padding-bottom: 0;
+}
+
+.summary-list__row > :last-child {
+  padding-right: 0;
+}
