@@ -1,7 +1,7 @@
 import { FormEvent } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { FormSubmitContext, FormSectionHeader, FormValidationErrors, SummaryList, FormInput } from 'components';
-import { useDialog, useFormDialog, useFormField } from 'hooks';
+import { SummaryList, Form } from 'components';
+import { FormSubmitContext, useDialog, useFormDialog, useFormField } from 'hooks';
 import { ICONS } from 'icons';
 import { IPlushieInstagramAccount } from 'model/user.model';
 import { excludeMatchingIndex } from 'utils';
@@ -15,12 +15,12 @@ export default function PlushieInstagramAccountsSelector({ id, initialValue }: I
   return (
     <div className="form-field">
       <div id={id}></div>
-      <FormSectionHeader title="Plushie Instagram Accounts">
+      <Form.SectionHeader title="Plushie Instagram Accounts">
         <button className="icon-button" type="button" onClick={() => openAddDialog()}>
           <FontAwesomeIcon icon={ICONS.plus} />
           Add Account
         </button>
-      </FormSectionHeader>
+      </Form.SectionHeader>
       {value.length > 0 && (
         <SummaryList.Container>
           {value.map((acc, i) => (
@@ -48,7 +48,7 @@ export default function PlushieInstagramAccountsSelector({ id, initialValue }: I
           ))}
         </SummaryList.Container>
       )}
-      <FormValidationErrors showErrors={showErrors} validation={validation} />
+      <Form.ValidationErrors showErrors={showErrors} validation={validation} />
     </div>
   );
 
@@ -101,7 +101,7 @@ function PlushieInstagramDialog({ id, initialValue = '', existingAccounts }: IPl
   // Let the Username input own registration/validation; we just pass id+initialValue.
   // If duplicate checking across accounts is required, we’ll validate at the list level on save.
   return (
-    <FormInput.PlushieInstagramAccount
+    <Form.PlushieInstagramAccount
       id={id}
       initialValue={initialValue}
       label="Plushie Instagram Account"

@@ -9,7 +9,7 @@ import {
 } from 'hooks';
 
 /** Wrapper `Form` component that provides context so hooks can be used safely inside */
-export default function Form(props: IForm) {
+export default function FormOutlet(props: IForm) {
   return (
     <FormProvider>
       <FormContent {...props} />

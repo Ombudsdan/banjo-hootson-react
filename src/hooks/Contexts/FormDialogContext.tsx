@@ -1,6 +1,6 @@
 import { createContext, FormEvent } from 'react';
-import { FormSubmitContext } from 'components';
 import { IBaseDialog } from '.';
+import { FormSubmitContext } from 'hooks/Outlets';
 
 const FormDialogContext = createContext<IFormDialogContext | undefined>(undefined);
 

@@ -1,7 +1,7 @@
 import { InputHTMLAttributes } from 'react';
-import { FormValidationErrors } from 'components';
 import { useFormField } from 'hooks';
 import { CityValidator } from 'validators';
+import { Form } from 'components';
 
 export default function TownOrCityInput({ id, label, initialValue, hint, placeholder }: ITownOrCityFormInput) {
   const { value, setValue, setTouched, validation, showErrors } = useFormField({
@@ -24,7 +24,7 @@ export default function TownOrCityInput({ id, label, initialValue, hint, placeho
         onChange={e => setValue(e.target.value)}
         onBlur={() => setTouched(true)}
       />
-      <FormValidationErrors showErrors={showErrors} validation={validation} />
+      <Form.ValidationErrors showErrors={showErrors} validation={validation} />
     </div>
   );
 }

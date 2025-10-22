@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { FormValidationErrors } from 'components';
 import { LocationController } from 'controllers';
 import { useFormField } from 'hooks';
+import { Form } from 'components';
 import { ICountry } from 'model/country.model';
 
 export default function CountryFormInput({ id, label, initialValue, hint }: ICountryFormInput) {
@@ -29,7 +29,7 @@ export default function CountryFormInput({ id, label, initialValue, hint }: ICou
           </option>
         ))}
       </select>
-      <FormValidationErrors showErrors={showErrors} validation={validation} />
+      <Form.ValidationErrors showErrors={showErrors} validation={validation} />
     </div>
   );
 }

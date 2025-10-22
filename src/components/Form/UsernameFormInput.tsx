@@ -1,7 +1,7 @@
 import { useFormField } from 'hooks';
-import FormValidationErrors from '../FormValidationErrors';
 import { InstagramAccountValidator } from 'validators';
 import { IBaseInstagramInput, InstagramInputGroup } from 'framework';
+import { Form } from 'components';
 
 export default function UsernameFormInput({
   id,
@@ -28,7 +28,7 @@ export default function UsernameFormInput({
         validator={InstagramAccountValidator}
         placeholder={placeholder}
       />
-      <FormValidationErrors showErrors={showErrors} validation={validation} />
+      <Form.ValidationErrors showErrors={showErrors} validation={validation} />
     </div>
   );
 }

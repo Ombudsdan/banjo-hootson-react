@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BirthdayController } from 'controllers';
 import { IPlushieBirthdayFormData } from 'model/plushie-birthday.model';
-import { FormActionsContainer } from 'components';
+import { Form } from 'components';
 import { useValidationAlert, useHeading } from 'hooks';
 import { Validation, runValidators, firstErrorMessage } from 'utils';
 
@@ -184,11 +184,11 @@ export default function SubmitPlushieBirthdayPage() {
         </div>
       )}
 
-      <FormActionsContainer>
+      <Form.ActionsContainer>
         <button className="form__button form__button--primary" type="submit" disabled={submitting}>
           {submitting ? 'Submitting Birthday...' : 'Submit Birthday'}
         </button>
-      </FormActionsContainer>
+      </Form.ActionsContainer>
     </form>
   );
 }

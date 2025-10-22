@@ -1,25 +1,20 @@
-import { useMemo } from "react";
-import { generateClassName } from "utils";
+import { useMemo } from 'react';
+import { generateClassName } from 'utils';
 
-export default function PageNavigation({
-  tabs,
-  activeKey,
-  onSelect,
-}: IPageNavigation) {
+// TODO - This is going in the bin, don't bother refactoring it.
+
+export default function PageNavigation({ tabs, activeKey, onSelect }: IPageNavigation) {
   return (
     <nav className="page-navigation" aria-label="Page Tabs">
       <ul className="page-navigation__list">
-        {tabs.map((tab) => {
-          const isActive = useMemo(
-            () => tab.key === activeKey,
-            [tab.key, activeKey]
-          );
+        {tabs.map(tab => {
+          const isActive = useMemo(() => tab.key === activeKey, [tab.key, activeKey]);
 
           const className = useMemo(() => {
             return generateClassName([
-              "page-navigation__item",
-              isActive && "page-navigation__item--active",
-              tab.isDisabled && "page-navigation__item--disabled",
+              'page-navigation__item',
+              isActive && 'page-navigation__item--active',
+              tab.isDisabled && 'page-navigation__item--disabled'
             ]);
           }, [isActive, tab.isDisabled]);
 
@@ -28,7 +23,7 @@ export default function PageNavigation({
               <button
                 type="button"
                 className="page-navigation__button"
-                aria-current={isActive ? "page" : undefined}
+                aria-current={isActive ? 'page' : undefined}
                 disabled={!!tab.isDisabled}
                 onClick={() => onSelect?.(tab)}
               >

@@ -1,8 +1,8 @@
 import { useFormField } from 'hooks';
-import FormValidationErrors from '../FormValidationErrors';
 import { PlushieInstagramAccountValidator } from 'validators';
 import { IBaseInstagramInput, InstagramInputGroup } from 'framework';
 import { IPlushieInstagramAccount } from 'model/user.model';
+import { Form } from 'components';
 
 export default function PlushieInstagramAccountFormInput({
   id,
@@ -32,7 +32,7 @@ export default function PlushieInstagramAccountFormInput({
         args={getArgs()}
         placeholder={placeholder}
       />
-      <FormValidationErrors showErrors={showErrors} validation={validation} />
+      <Form.ValidationErrors showErrors={showErrors} validation={validation} />
     </div>
   );
 

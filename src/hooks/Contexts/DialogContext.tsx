@@ -1,5 +1,5 @@
-import { createContext, PropsWithChildren } from 'react';
 import { IDialogActionButtons } from 'components';
+import { createContext, PropsWithChildren } from 'react';
 
 const DialogContext = createContext<IDialogContext | undefined>(undefined);
 

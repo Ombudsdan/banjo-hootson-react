@@ -1,7 +1,7 @@
 import { FormEvent, useEffect, useState } from 'react';
-import { FormActionsContainer, Form, FormSubmitContext, FormInput } from 'components';
+import { Form } from 'components';
 import { UserController } from 'controllers';
-import { useHeading, usePageAlerts } from 'hooks';
+import { FormOutlet, FormSubmitContext, useHeading, usePageAlerts } from 'hooks';
 import { IUser } from 'model/user.model';
 
 const INPUT_ID = {
@@ -20,46 +20,43 @@ export default function ManageProfile() {
   useEffect(fetchUser, []);
 
   return (
-    <>
-      <Form onSubmit={onSubmit} onSubmitFailure={onSubmitFailure}>
-        <FormInput.EmailAddress
-          isReadonly={true}
-          id="email-address"
-          initialValue={user?.email || ''}
-          label="Email Address"
-          placeholder="Email Address"
-        />
-        <FormInput.TownOrCity
-          id={INPUT_ID.townOrCity}
-          initialValue={user?.city || ''}
-          label="Town or City"
-          placeholder="Town or City"
-          hint="For example: Sheffield"
-        />
-        <FormInput.Country
-          id={INPUT_ID.country}
-          initialValue={user?.country || ''}
-          label="Country"
-          hint="Your current country of residence"
-        />
-        <FormInput.Username
-          id={INPUT_ID.yourInstagramAccount}
-          initialValue={user?.humanInstagram || ''}
-          label="Your Instagram Account"
-          hint="Your human Instagram account"
-        />
-        <FormInput.PlushieInstagramAccounts
-          id={INPUT_ID.plushieAccounts}
-          initialValue={user?.plushieInstagramAccounts || []}
-        />
-        <FormActionsContainer>
-          <button type="submit" className="form__button form__button--primary">
-            Save Profile
-          </button>
-        </FormActionsContainer>
-      </Form>
-      <br />
-    </>
+    <FormOutlet onSubmit={onSubmit} onSubmitFailure={onSubmitFailure}>
+      <Form.EmailAddress
+        isReadonly={true}
+        id="email-address"
+        initialValue={user?.email || ''}
+        label="Email Address"
+        placeholder="Email Address"
+      />
+      <Form.TownOrCity
+        id={INPUT_ID.townOrCity}
+        initialValue={user?.city || ''}
+        label="Town or City"
+        placeholder="Town or City"
+        hint="For example: Sheffield"
+      />
+      <Form.Country
+        id={INPUT_ID.country}
+        initialValue={user?.country || ''}
+        label="Country"
+        hint="Your current country of residence"
+      />
+      <Form.Username
+        id={INPUT_ID.yourInstagramAccount}
+        initialValue={user?.humanInstagram || ''}
+        label="Your Instagram Account"
+        hint="Your human Instagram account"
+      />
+      <Form.PlushieInstagramAccounts
+        id={INPUT_ID.plushieAccounts}
+        initialValue={user?.plushieInstagramAccounts || []}
+      />
+      <Form.ActionsContainer>
+        <button type="submit" className="form__button form__button--primary">
+          Save Profile
+        </button>
+      </Form.ActionsContainer>
+    </FormOutlet>
   );
 
   function fetchUser() {

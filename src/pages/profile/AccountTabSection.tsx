@@ -1,5 +1,5 @@
 import { PageSectionContainer, PageContentContainer } from 'framework';
-import { FormSectionHeader, UserSubscriptionTierBadge } from 'components';
+import { Form, UserSubscriptionTierBadge } from 'components';
 import { useDialog } from 'hooks';
 import { DialogConfirm } from 'enums';
 
@@ -9,7 +9,7 @@ export default function AccountTabSection() {
     <div className="page-narrow">
       <PageContentContainer spacing="medium">
         <PageSectionContainer>
-          <FormSectionHeader title="My Subscription" />
+          <Form.SectionHeader title="My Subscription" />
           <div className="subscription-section">
             <div className="subscription-section__row">
               <label className="subscription-section__label">Current Subscription</label>
@@ -19,7 +19,7 @@ export default function AccountTabSection() {
         </PageSectionContainer>
 
         <PageSectionContainer>
-          <FormSectionHeader title="Delete Account" />
+          <Form.SectionHeader title="Delete Account" />
           <div className="delete-section">
             <p className="delete-section__text">Permanently delete your account and all associated data.</p>
             <button
