@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-  "dev": "cross-env NODE_ENV=development webpack serve --config webpack.config.cjs",
-  "build": "cross-env NODE_ENV=production tsc -b && webpack --mode production --config webpack.config.cjs",
+    "dev": "cross-env NODE_ENV=development webpack serve --config webpack.config.cjs",
+    "build": "cross-env NODE_ENV=production tsc -b && webpack --mode production --config webpack.config.cjs",
     "lint": "eslint ."
   },
   "dependencies": {

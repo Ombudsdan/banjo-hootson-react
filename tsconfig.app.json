@@ -4,11 +4,11 @@
     "target": "ES2022",
     "useDefineForClassFields": true,
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
-  "module": "NodeNext",
-  "skipLibCheck": true,
-  "moduleResolution": "NodeNext",
-  "allowImportingTsExtensions": true,
-  "noEmit": true,
+    "module": "NodeNext",
+    "skipLibCheck": true,
+    "moduleResolution": "NodeNext",
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
     "jsx": "react-jsx",
 
     /* Linting */
