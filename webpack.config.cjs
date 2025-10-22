@@ -49,7 +49,14 @@ module.exports = {
                 require.resolve("@babel/preset-env"),
                 { targets: "defaults", modules: false },
               ],
-              require.resolve("@babel/preset-react"),
+              [
+                require.resolve("@babel/preset-react"),
+                {
+                  runtime: "automatic",
+                  development: isDev,
+                  importSource: "react",
+                },
+              ],
               require.resolve("@babel/preset-typescript"),
             ],
           },
@@ -68,6 +75,12 @@ module.exports = {
     new webpack.DefinePlugin({
       __ENV__: JSON.stringify({
         API_URL: process.env.API_URL || "http://localhost:3000",
+        FIREBASE_API_KEY: process.env.FIREBASE_API_KEY || "",
+        FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN || "",
+        FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID || "",
+        FIREBASE_APP_ID: process.env.FIREBASE_APP_ID || "",
+        FIREBASE_MESSAGING_SENDER_ID:
+          process.env.FIREBASE_MESSAGING_SENDER_ID || "",
       }),
     }),
     isDev && new ReactRefreshWebpackPlugin(),
@@ -78,15 +91,13 @@ module.exports = {
     port: 5173,
     hot: true,
     open: false,
-    proxy: {
-      "/plushie-birthdays": {
+    proxy: [
+      {
+        context: ["/plushie-birthdays", "/users", "/location", "/health"],
         target: "http://localhost:3000",
         changeOrigin: true,
       },
-      "/users": { target: "http://localhost:3000", changeOrigin: true },
-      "/location": { target: "http://localhost:3000", changeOrigin: true },
-      "/health": { target: "http://localhost:3000", changeOrigin: true },
-    },
+    ],
   },
   performance: { hints: false },
 };

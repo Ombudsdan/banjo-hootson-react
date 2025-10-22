@@ -11,6 +11,11 @@ interface RequestOptions<TBody> {
 }
 
 export class HttpClient {
+  private static tokenProvider: (() => Promise<string | null>) | null = null;
+
+  static setTokenProvider(provider: () => Promise<string | null>) {
+    this.tokenProvider = provider;
+  }
   private static buildUrl(
     path: string,
     query?: RequestOptions<unknown>["query"]
@@ -33,10 +38,12 @@ export class HttpClient {
     const start =
       typeof performance !== "undefined" ? performance.now() : Date.now();
     console.debug("[HTTP] ->", method, url, body ? { body } : "");
+    const authHeader = this.tokenProvider ? await this.tokenProvider() : null;
     const res = await fetch(url, {
       method,
       headers: {
         "Content-Type": "application/json",
+        ...(authHeader ? { Authorization: `Bearer ${authHeader}` } : {}),
         ...headers,
       },
       body: body ? JSON.stringify(body) : undefined,
