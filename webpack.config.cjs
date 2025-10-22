@@ -88,7 +88,11 @@ module.exports = {
   devServer: {
     static: { directory: path.resolve(__dirname, "public") },
     historyApiFallback: true,
-    port: 5173,
+    port: process.env.PORT
+      ? Number(process.env.PORT)
+      : process.env.port
+      ? Number(process.env.port)
+      : 5173,
     hot: true,
     open: false,
     proxy: [
