@@ -7,6 +7,9 @@
 export * from './birthday-calendar.service';
 export { default as BirthdayCalendarService } from './birthday-calendar.service';
 
+export { default as FirebaseService } from './firebase.service';
+export * from './firebase.service';
+
 export * from './health.service';
 export { default as HealthService } from './health.service';
 

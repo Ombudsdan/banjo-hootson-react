@@ -1,7 +1,49 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.test.json" }
-  ]
+  "compilerOptions": {
+    "incremental": true,
+    "tsBuildInfoFile": "./.cache/tsbuildinfo",
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "types": ["vite/client", "vitest/globals", "@testing-library/jest-dom"],
+    "baseUrl": ".",
+    "paths": {
+      "builders": ["./src/builders/index.ts"],
+      "builders/*": ["./src/builders/*"],
+      "components": ["./src/components/index.ts"],
+      "components/*": ["./src/components/*"],
+      "controllers": ["./src/controllers/index.ts"],
+      "controllers/*": ["./src/controllers/*"],
+      "enums": ["./src/enums/index.ts"],
+      "enums/*": ["./src/enums/*"],
+      "env": ["./src/env/index.ts"],
+      "env/*": ["./src/env/*"],
+      "framework": ["./src/framework/index.ts"],
+      "framework/*": ["./src/framework/*"],
+      "hooks": ["./src/hooks/index.ts"],
+      "hooks/*": ["./src/hooks/*"],
+      "icons": ["./src/icons.ts"],
+      "layout": ["./src/layout/index.ts"],
+      "layout/*": ["./src/layout/*"],
+      "model/*": ["./src/model/*"],
+      "routes": ["./src/routes/index.ts"],
+      "routes/*": ["./src/routes/*"],
+      "services": ["./src/services/index.ts"],
+      "services/*": ["./src/services/*"],
+      "test": ["./src/test/index.ts"],
+      "test/*": ["./src/test/*"],
+      "utils": ["./src/utils/index.ts"],
+      "utils/*": ["./src/utils/*"],
+      "validators": ["./src/validators/index.ts"],
+      "validators/*": ["./src/validators/*"]
+    }
+  },
+  "include": ["src", "vite.config.ts", "webpack.config.cjs", "src/test/setupTests.ts"]
 }

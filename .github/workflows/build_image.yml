@@ -1,0 +1,150 @@
+name: Build Image
+
+on:
+  workflow_call:
+    inputs:
+      ENV:
+        description: 'Specify which env this is for. Possible values: production, development'
+        default: 'production'
+        required: false
+        type: string
+      API_URL:
+        description: 'URL of the API in use, for example: https://api.banjohootson.com, http://host.docker.internal:3000 or http://localhost:3000'
+        default: 'https://api.banjohootson.com'
+        required: false
+        type: string
+      CORS_ORIGIN:
+        description: 'Origin of this application, for example: https://banjohootson.com, http://host.docker.internal:8080 or http://localhost:8080'
+        default: 'https://banjohootson.com'
+        required: false
+        type: string
+      version:
+        description: "Possible values: 'dev', 'quality-checks', or a semantic-release version (e.g., '1.0.3')"
+        required: true
+        type: string
+      context:
+        description: 'Docker build context'
+        default: '.'
+        required: false
+        type: string
+      file:
+        description: 'Dockerfile path'
+        default: 'Dockerfile'
+        required: false
+        type: string
+      push:
+        description: 'Whether to push the built image'
+        default: true
+        required: false
+        type: boolean
+      run-image-scan:
+        description: 'Run only the image scan.'
+        required: false
+        type: boolean
+      tag_latest:
+        description: 'Also tag and push :latest alongside the version tag'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  compute_image_repository:
+    name: Compute Image Repository
+    runs-on: ubuntu-latest
+    outputs:
+      image_repository: ${{ steps.set.outputs.image }}
+    steps:
+      - name: Resolve image repository
+        id: set
+        run: |
+          REPO="ombudsdan/banjo-hootson-react"
+          echo "Using image repository: ${REPO}"
+          echo "image=${REPO}" >> "$GITHUB_OUTPUT"
+
+  publish_image:
+    name: Publish Image
+    needs: compute_image_repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU (for multi-arch)
+        uses: docker/setup-qemu-action@v3
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to registry (if credentials provided)
+        uses: docker/login-action@v3
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+          # Optional: specify a custom Docker registry (e.g., for GitHub Container Registry).
+          #  If DOCKER_REGISTRY is not set, login-action defaults to Docker Hub
+          DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+        with:
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_ACCESS_TOKEN }}
+          registry: ${{ env.DOCKER_REGISTRY }}
+
+      - name: Compute tags
+        id: compute_tags
+        run: |
+          REPO="${{ needs.compute_image_repository.outputs.image_repository }}"
+          VERSION="${{ inputs.version }}"
+          TAGS="${REPO}:${VERSION}"
+          if [ "${{ inputs.tag_latest }}" = "true" ]; then
+            TAGS="${TAGS},${REPO}:latest"
+          fi
+          echo "Computed TAGS=${TAGS}"
+          # Export as a single-line output (comma-separated list is supported by build-push-action)
+          echo "tags=${TAGS}" >> "$GITHUB_OUTPUT"
+
+      - name: Build (and optionally push) image
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ inputs.context }}
+          file: ${{ inputs.file }}
+          platforms: linux/amd64,linux/arm64
+          build-args: |
+            ENV=${{ inputs.ENV }}
+            NODE_ENV=${{ inputs.ENV }}
+            API_URL=${{ inputs.API_URL }}
+            CORS_ORIGIN=${{ inputs.CORS_ORIGIN }}
+            GOOGLE_ADSENSE_PUBLISHER_ID=${{ secrets.GOOGLE_ADSENSE_PUBLISHER_ID }}
+            GOOGLE_ADSENSE_TEST_SLOT=${{ secrets.GOOGLE_ADSENSE_TEST_SLOT }}
+          push: ${{ inputs.push }}
+          tags: ${{ steps.compute_tags.outputs.tags }}
+
+      - name: Output image ref
+        run: |
+          echo "Built tags:"
+          echo "${{ steps.compute_tags.outputs.tags }}"
+
+  run_image_scan:
+    if: inputs.run-image-scan
+    runs-on: ubuntu-latest
+    name: Image Scan
+    needs: [compute_image_repository, publish_image]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Image Scan
+        if: inputs.run-image-scan
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          trivy-config: trivy.yaml
+          severity: HIGH,CRITICAL
+          scan-type: image
+          image-ref: ${{ needs.compute_image_repository.outputs.image_repository }}:${{ inputs.version }}
+          output: image-scan-report.json
+
+      - name: Upload Image Scan Report
+        if: inputs.run-image-scan && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: image-scan-report
+          path: image-scan-report.json

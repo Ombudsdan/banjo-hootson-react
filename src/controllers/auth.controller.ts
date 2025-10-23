@@ -1,16 +1,14 @@
-import { HttpClientService } from 'services';
-import { FirebaseController, FirebaseUser, FirebaseUserCredential } from 'controllers';
+import { FirebaseService, FirebaseUser, FirebaseUserCredential, HttpClientService } from 'services';
 import { IAuthUser } from 'model/auth.model';
 
 export default class AuthController {
   static init() {
-    FirebaseController.init();
+    // Initialize Firebase asynchronously; then wire providers/listeners
+    FirebaseService.getAuth();
     // Provide initial token fetcher
-    HttpClientService.setTokenProvider(async () => await FirebaseController.getCurrentIdToken());
+    HttpClientService.setTokenProvider(async () => await FirebaseService.getCurrentIdToken());
     // Keep in sync when token changes
-    FirebaseController.onAuthTokenChange((token: string | null) => {
-      // Optional: could refresh client state or trigger re-fetches
-      // The HttpClient provider is always evaluated before each request
+    FirebaseService.onAuthTokenChange((token: string | null) => {
       if (!token) {
         // user signed out
       }
@@ -18,30 +16,30 @@ export default class AuthController {
   }
 
   static async getToken(): Promise<string | null> {
-    return FirebaseController.getCurrentIdToken();
+    return FirebaseService.getCurrentIdToken();
   }
 
-  static getCurrentUser(): IAuthUser | null {
-    const user = FirebaseController.getCurrentUser();
-    return user ? this.mapUser(user) : null;
+  static async getCurrentUser(): Promise<IAuthUser | null> {
+    const result = await FirebaseService.getCurrentUser();
+    return result ? this.mapUser(result) : null;
   }
 
   static async signInWithEmailPassword(email: string, password: string): Promise<ISignInResult> {
-    const result = await FirebaseController.signInWithEmailAndPassword(email, password);
+    const result = await FirebaseService.signInWithEmailAndPassword(email, password);
     return this.mapUserCredential(result);
   }
 
   static async signUpWithEmailPassword(email: string, password: string, displayName?: string): Promise<ISignInResult> {
-    const result = await FirebaseController.createUserWithEmailAndPassword(email, password, displayName);
+    const result = await FirebaseService.createUserWithEmailAndPassword(email, password, displayName);
     return this.mapUserCredential(result);
   }
 
   static async signOut(): Promise<void> {
-    await FirebaseController.signOut();
+    await FirebaseService.signOut();
   }
 
   static onAuthTokenChange(callback: (token: string | null) => void) {
-    return FirebaseController.onAuthTokenChange(callback);
+    return FirebaseService.onAuthTokenChange(callback);
   }
 
   private static mapUser(user: FirebaseUser): IAuthUser {

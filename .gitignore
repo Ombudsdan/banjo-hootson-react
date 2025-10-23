@@ -8,10 +8,14 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+coverage/
 dist
 dist-ssr
 *.local
 .npm-temp-cache
+*.tsbuildinfo
+.tsbuildinfo
+.cache/
 
 # Editor directories and files
 .vscode/*
@@ -24,5 +28,4 @@ dist-ssr
 *.sln
 *.sw?
 .env
-.env.development
-.env.production
+.env.docker

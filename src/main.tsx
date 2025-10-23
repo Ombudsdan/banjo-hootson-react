@@ -1,18 +1,22 @@
-import { Suspense, StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import { RouterProvider } from "react-router-dom";
-import { router } from "routes";
-import { AuthController, HealthController } from "controllers";
+import { Suspense, StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { RouterProvider } from 'react-router-dom';
+import { router } from 'routes';
+import { AuthController, HealthController } from 'controllers';
 
-import "./styles/index.scss";
+import './styles/index.scss';
 
-// Bootstrap non-UI wiring
-AuthController.init();
+// Bootstrap non-UI wiring (fail-safe so UI still mounts if init throws)
+try {
+  AuthController.init();
+} catch (e) {
+  console.error('[bootstrap] Auth init failed', e);
+}
 HealthController.ping()
-  .then((r) => console.info("[health]", r))
-  .catch((e) => console.warn("[health] failed", e));
+  .then(r => console.info('[health]', r))
+  .catch(e => console.warn('[health] failed', e));
 
-createRoot(document.getElementById("root")!).render(
+createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Suspense fallback={<div>Loading...</div>}>
       <RouterProvider router={router} />
@@ -21,4 +25,4 @@ createRoot(document.getElementById("root")!).render(
 );
 
 // Mark body as loaded after initial paint to trigger CSS fade-in
-requestAnimationFrame(() => document.body.classList.add("loaded"));
+requestAnimationFrame(() => document.body.classList.add('loaded'));

@@ -10,7 +10,17 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: [path.resolve(__dirname, 'src/test/setupTests.ts')],
     css: false,
-    globals: true
+    globals: true,
+    // % set to 0 until coverage is added
+    coverage: {
+      provider: 'v8',
+      thresholds: {
+        statements: 0,
+        branches: 0,
+        functions: 0,
+        lines: 0
+      }
+    }
   },
   esbuild: {
     jsx: 'automatic',

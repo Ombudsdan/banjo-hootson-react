@@ -1,0 +1,86 @@
+name: Quality Checks
+
+on:
+  push:
+    branches: [develop]
+  workflow_call:
+
+jobs:
+  quality_checks:
+    name: Lint • Typecheck • Test • Build • Vulnerabilities Scan • Config Scan • Secrets Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Lint
+        run: npm run lint
+
+      - name: Run Typecheck
+        run: npm run typecheck
+
+      - name: Run Unit Tests (with coverage)
+        run: npm test -- --coverage
+
+      - name: Upload Coverage Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage/
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload Production Build
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-checks-build
+          path: dist/
+
+      - name: Vulnerabilities Scan
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          trivy-config: trivy.yaml
+          severity: HIGH,CRITICAL
+          scan-type: fs
+          scanners: vuln
+          output: vulnerabilities-scan-report.json
+
+      - name: Config Scan
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          trivy-config: trivy.yaml
+          severity: HIGH,CRITICAL
+          scan-type: fs
+          scanners: config
+          output: config-scan-report.json
+
+      - name: Secrets Scan
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          trivy-config: trivy.yaml
+          severity: HIGH,CRITICAL
+          scan-type: fs
+          scanners: secret
+          output: secrets-scan-report.json
+
+      - name: Upload Scan Report(s)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: react-trivy-results
+          path: |
+            vulnerabilities-scan-report.json
+            config-scan-report.json
+            secrets-scan-report.json

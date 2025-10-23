@@ -1,0 +1,15 @@
+name: Build Dev Image
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build_dev_image:
+    uses: ./.github/workflows/build_image.yml
+    with:
+      version: dev
+      ENV: development
+      API_URL: 'http://localhost:3000'
+      CORS_ORIGIN: 'http://localhost:8080'
+      push: true
+    secrets: inherit

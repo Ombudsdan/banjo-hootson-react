@@ -1,17 +1,3 @@
 {
-  "compilerOptions": {
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
-    "target": "ES2023",
-    "lib": ["ES2023"],
-    "module": "NodeNext",
-    "skipLibCheck": true,
-    "moduleResolution": "NodeNext",
-    "noEmit": true,
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "types": ["node"]
-  },
-  "include": ["webpack.config.js", "vitest.config.ts"]
+  "extends": "./tsconfig.json"
 }

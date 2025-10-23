@@ -111,8 +111,7 @@ export function ExampleForm() {
       onSubmit={e => {
         e.preventDefault();
         setSubmitted(true);
-      }}
-    >
+      }}>
       ...
     </form>
   );
@@ -140,16 +139,8 @@ Use the page alerts service for transient or persistent success / info / warning
 Hook (via `usePageAlerts` from `src/hooks/usePageAlerts.ts`):
 
 ```ts
-const {
-  alerts,
-  addAlert,
-  dismissAlert,
-  dismissAll,
-  replaceAlerts,
-  updateAlert,
-  pauseAlertTimer,
-  resumeAlertTimer
-} = usePageAlerts();
+const { alerts, addAlert, dismissAlert, dismissAll, replaceAlerts, updateAlert, pauseAlertTimer, resumeAlertTimer } =
+  usePageAlerts();
 ```
 
 Core methods:
@@ -333,6 +324,7 @@ Migration status: All service and hook imports have been updated to use the new 
 
 - [ARCHITECTURE.md](./ARCHITECTURE.md)
 - Folder guides:
+
   - [auth](./src/auth/README.md)
   - [builders](./src/builders/README.md)
   - [components](./src/components/README.md)
@@ -345,3 +337,124 @@ Migration status: All service and hook imports have been updated to use the new 
   - [routes](./src/routes/README.md)
   - [services](./src/services/README.md)
   - [utils](./src/utils/README.md)
+
+  ## Docker + Nginx (local and prod)
+
+  This app ships with a simple, production‑ready container that serves the built SPA using Nginx.
+
+  - Two Nginx configs are used:
+    - `nginx.main.conf` → copied to `/etc/nginx/nginx.conf` (process‑wide settings). It sets:
+      - a writable PID path (`/tmp/nginx.pid`) so we can run as a non‑root user
+      - logging location
+      - the `http {}` block and `include /etc/nginx/conf.d/*.conf`
+    - `default.conf.template` → copied to `/etc/nginx/templates/default.conf.template` and rendered at container start to `/etc/nginx/conf.d/default.conf`. It configures:
+      - `listen ${PORT}` (dynamic; defaults to 8080 via `ENV PORT=8080` in the Dockerfile; platforms like Vercel override `PORT` at runtime)
+      - document root `/usr/share/nginx/html`
+      - SPA fallback: `try_files $uri /index.html`
+
+  Why non‑root? Many scanners flag containers that run as root. We use the built‑in `nginx` user, set a writable PID file, and chown log/runtime dirs so Nginx can start without elevated privileges.
+
+  Dev vs Prod images (local)
+
+  ```powershell
+  # Dev image (uses .env.development and rewrites API_URL to host.docker.internal for local API)
+  npm run docker:build:dev
+  npm run docker:start:dev
+  npm run docker:stop:dev
+
+  # Prod image (uses .env.production as-is)
+  npm run docker:build
+  npm run docker:start
+  npm run docker:stop
+  ```
+
+  Cloud hosting:
+
+  - This image is production‑capable as‑is for static hosting. Common platforms (Cloud Run, ECS/Fargate, ACI, AKS, etc.) can run it directly.
+  - TLS is typically terminated by the platform’s load balancer; if you need Nginx to terminate TLS, add an `ssl` server in `conf.d` and mount certs.
+  - Health checks: you can add a `HEALTHCHECK` to the Dockerfile or configure platform checks hitting `/`.
+  - Cache/security headers: for extra hardening/optimization, add headers in `default.conf` (e.g., `Cache-Control`, `X-Frame-Options`, `Content-Security-Policy`).
+  - Scaling: this is a stateless container; run multiple replicas behind a load balancer.
+
+  Note on file names: `default.conf.template` is the source template; the running container renders it to `conf.d/default.conf` on startup. `nginx.main.conf` is the main Nginx config.
+
+  Dynamic port (\$PORT) support:
+
+  - Dockerfile sets `ENV PORT=8080` as a sane local default. The official Nginx entrypoint renders `/etc/nginx/templates/default.conf.template` with `${PORT}` at startup.
+  - On platforms that inject `PORT` (Vercel, Cloud Run, Railway, etc.), that runtime value overrides the default automatically—no custom shell scripts required.
+  - `EXPOSE 8080` in the Dockerfile is informational metadata only; it doesn’t need to be dynamic and has no effect on platforms that inject `PORT`.
+
+  Local API from inside Docker (dev):
+
+  - Ensure your API CORS allows `http://localhost:8080` when testing via the container.
+
+  ### Environment variables (simple: .env files at build time)
+
+  This app uses a straightforward, build‑time approach:
+
+  - Webpack loads both `.env` and `.env.<NODE_ENV>` (e.g., `.env.production`).
+  - The values are injected at build time via `DefinePlugin` and bundled into the JS.
+  - No runtime `/env.js`, no entrypoint scripts, no Nginx custom routes.
+
+  Local development
+
+  - Put your dev values in `.env` or `.env.development`.
+  - `npm run start` uses `NODE_ENV=development` by default, so both files are read with `.env.development` overriding `.env`.
+
+  Production build
+
+  - Put public, client‑side config (e.g., Firebase web config, API base URL) in `.env.production`.
+  - `npm run build` uses `NODE_ENV=production`, so `.env.production` overrides `.env`.
+
+  Docker / CI / Cloud platforms
+
+  - When building the Docker image (multi‑stage), the build step runs `npm run build` inside the repo, so `.env.production` in the repo is picked up automatically.
+  - If you don’t want these values committed to the repo, set environment variables in the build environment (CI job, or the platform’s build settings) so the `npm run build` step sees them. No runtime injection is used.
+  - Many scanners warn on passing secrets via Docker `ARG/ENV`. The values used here (Firebase web config, API URL) are public client config, not secrets. If your scanner still flags them, add an allow‑list or set them via the CI environment instead of Docker build arguments.
+  - Platforms that inject a `PORT` env var are supported out‑of‑the‑box via the Nginx template.
+
+  Security note about client config
+
+  - The Firebase “client config” (apiKey, authDomain, projectId, appId, messagingSenderId) is intentionally public; it must be shipped to browsers. Protect data with Firebase Security Rules and server‑side checks.
+
+  Vercel (Docker) quick guidance
+
+  - Vercel’s Docker build does not automatically pass Project Environment Variables into `docker build`. The simplest path is to commit `.env.production` (for public client config only) so the build can succeed. Alternatively, configure your CI to build the image and push it to a registry, then deploy the built image to Vercel.
+
+## Git aliases
+
+To use Git aliases, you must first ensure that the git is configured to include `.gitconfig`. To do so, simply run:
+
+**Linux/macOS**
+
+```bash
+git config --local include.path "$(pwd)/.gitconfig"
+```
+
+**Windows Powershell**
+
+```powershell
+git config --local include.path "${PWD}/.gitconfig"
+```
+
+### `resetdevelop`
+
+**Command**: `git resetdevelop`
+
+Running `resetdevelop` will:
+
+- Checkout your local `develop` branch
+- Fetch the latest changes from `origin`
+- Hard reset your local `develop` to match the rebased `develop` on GitHub
+
+**Equivalent to running**:
+
+```bash
+git checkout develop
+git fetch origin
+git reset --hard origin/develop
+```
+
+**Note**: This will overwrite any uncommitted changes in develop. Use git stash first if needed.
+
+**Why this alias exists**: The `rebase-develop-against-main.yml` GitHub Action automatically rebases develop on top of main after each pull request merge. This alias ensures your local branch stays in sync with the canonical history.

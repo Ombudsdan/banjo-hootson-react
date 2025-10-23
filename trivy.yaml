@@ -1,0 +1,8 @@
+version: latest
+format: json
+scan-ref: .
+skip-dirs: node_modules
+ignore-unfixed: true
+exit-code: 1
+scan:
+  skip-version-check: true # Added to fix versioning mismatch warnings (eg. "Version 0.67.2 of Trivy is now available, current version is 0.65.0")

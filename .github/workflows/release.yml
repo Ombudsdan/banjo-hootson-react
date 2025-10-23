@@ -1,0 +1,65 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  run_all_quality_checks:
+    if: ${{ !startsWith(github.event.head_commit.message, 'chore(release):') }}
+    uses: ./.github/workflows/quality_checks.yml
+    secrets: inherit
+
+  release:
+    if: ${{ !startsWith(github.event.head_commit.message, 'chore(release):') }}
+    name: Run semantic-release
+    needs: run_all_quality_checks
+    runs-on: ubuntu-latest
+    outputs:
+      published: ${{ steps.semrel.outputs.published }}
+      version: ${{ steps.semrel.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # required for semantic-release
+          fetch-tags: true
+
+      - name: Cleanup orphan tags (force-push safety)
+        run: |
+          git fetch --tags --prune
+          # For each existing tag matching semantic-release format v* check reachability from HEAD
+          for tag in $(git tag -l 'v*'); do
+            commit=$(git rev-list -1 "$tag")
+            if ! git merge-base --is-ancestor "$commit" HEAD; then
+              echo "Orphan tag detected: $tag -> $commit (not reachable from HEAD). Deleting remote tag to allow re-tagging."
+              git push origin ":refs/tags/$tag" || echo "Failed to delete remote $tag (continuing)"
+              # Also delete local tag to avoid re-pushing it with --tags
+              git tag -d "$tag" || echo "Failed to delete local $tag (continuing)"
+            fi
+          done
+          git fetch --tags --prune
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run semantic-release
+        id: semrel
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release

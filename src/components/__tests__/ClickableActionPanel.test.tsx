@@ -21,8 +21,6 @@ const DEFAULT_EXTERNAL_PANEL: IClickableActionPanelConfig = {
   theme: ClickableActionPanelTheme.DEFAULT
 };
 
-const DEFAULT_PANEL_OPTION = ClickableActionPanelOption.CALENDAR;
-
 vi.mock('controllers', () => ({
   ClickableActionPanelController: {
     getPanelContent: (opt: ClickableActionPanelOptionType) => {
@@ -45,7 +43,7 @@ vi.mock('controllers', () => ({
 
 describe('ClickableActionPanel', () => {
   it('renders internal link as a router Link with theme class', () => {
-    new UnitTestUtils((<ClickableActionPanel option={ClickableActionPanelOption.CALENDAR} />));
+    new UnitTestUtils(<ClickableActionPanel option={ClickableActionPanelOption.CALENDAR} />);
     const link = screen.getByRole('link', { name: DEFAULT_INTERNAL_PANEL.text });
 
     expect(link).toHaveAttribute('href', DEFAULT_INTERNAL_PANEL.link);
@@ -54,7 +52,7 @@ describe('ClickableActionPanel', () => {
   });
 
   it('renders external link with target and rel attributes', () => {
-    new UnitTestUtils((<ClickableActionPanel option={ClickableActionPanelOption.INSTAGRAM} />));
+    new UnitTestUtils(<ClickableActionPanel option={ClickableActionPanelOption.INSTAGRAM} />);
     const link = screen.getByRole('link', { name: DEFAULT_EXTERNAL_PANEL.text });
 
     expect(link).toHaveAttribute('href', DEFAULT_EXTERNAL_PANEL.link);
@@ -63,7 +61,7 @@ describe('ClickableActionPanel', () => {
   });
 
   it('should return theme class ClickableActionPanelTheme.DEFAULT if option is CALENDAR', () => {
-    new UnitTestUtils((<ClickableActionPanel option={ClickableActionPanelOption.CALENDAR} />));
+    new UnitTestUtils(<ClickableActionPanel option={ClickableActionPanelOption.CALENDAR} />);
     const link = screen.getByRole('link', { name: DEFAULT_INTERNAL_PANEL.text });
 
     expect(link).toHaveClass('clickable-action-panel');
@@ -71,7 +69,7 @@ describe('ClickableActionPanel', () => {
   });
 
   it('should return theme class ClickableActionPanelTheme.DEFAULT if option is SUBMIT_BIRTHDAY', () => {
-    new UnitTestUtils((<ClickableActionPanel option={ClickableActionPanelOption.SUBMIT_BIRTHDAY} />));
+    new UnitTestUtils(<ClickableActionPanel option={ClickableActionPanelOption.SUBMIT_BIRTHDAY} />);
     const link = screen.getByRole('link', { name: DEFAULT_INTERNAL_PANEL.text });
 
     expect(link).toHaveClass('clickable-action-panel');
@@ -79,7 +77,7 @@ describe('ClickableActionPanel', () => {
   });
 
   it('should return theme class ClickableActionPanelTheme.DEFAULT if option is BEER', () => {
-    new UnitTestUtils((<ClickableActionPanel option={ClickableActionPanelOption.BEER} />));
+    new UnitTestUtils(<ClickableActionPanel option={ClickableActionPanelOption.BEER} />);
     const link = screen.getByRole('link', { name: DEFAULT_EXTERNAL_PANEL.text });
 
     expect(link).toHaveClass('clickable-action-panel');
@@ -87,7 +85,7 @@ describe('ClickableActionPanel', () => {
   });
 
   it('should return theme class ClickableActionPanelTheme.FACEBOOK if option is FACEBOOK', () => {
-    new UnitTestUtils((<ClickableActionPanel option={ClickableActionPanelOption.FACEBOOK} />));
+    new UnitTestUtils(<ClickableActionPanel option={ClickableActionPanelOption.FACEBOOK} />);
     const link = screen.getByRole('link', { name: DEFAULT_EXTERNAL_PANEL.text });
 
     expect(link).toHaveClass('clickable-action-panel');
@@ -95,7 +93,7 @@ describe('ClickableActionPanel', () => {
   });
 
   it('should return theme class ClickableActionPanelTheme.INSTAGRAM if option is INSTAGRAM', () => {
-    new UnitTestUtils((<ClickableActionPanel option={ClickableActionPanelOption.INSTAGRAM} />));
+    new UnitTestUtils(<ClickableActionPanel option={ClickableActionPanelOption.INSTAGRAM} />);
     const link = screen.getByRole('link', { name: DEFAULT_EXTERNAL_PANEL.text });
 
     expect(link).toHaveClass('clickable-action-panel');
@@ -103,7 +101,7 @@ describe('ClickableActionPanel', () => {
   });
 
   it('should return theme class ClickableActionPanelTheme.THREADS if option is THREADS', () => {
-    new UnitTestUtils((<ClickableActionPanel option={ClickableActionPanelOption.THREADS} />));
+    new UnitTestUtils(<ClickableActionPanel option={ClickableActionPanelOption.THREADS} />);
     const link = screen.getByRole('link', { name: DEFAULT_EXTERNAL_PANEL.text });
 
     expect(link).toHaveClass('clickable-action-panel');

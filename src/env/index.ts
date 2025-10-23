@@ -1,19 +1,5 @@
-export interface IEnv {
-  API_URL: string;
-  FIREBASE_API_KEY: string;
-  FIREBASE_AUTH_DOMAIN: string;
-  FIREBASE_PROJECT_ID: string;
-  FIREBASE_APP_ID: string;
-  FIREBASE_MESSAGING_SENDER_ID: string;
-}
+import type { IEnvironment } from './types';
 
-declare const __ENV__: IEnv;
+declare const __ENV__: IEnvironment;
 
-export const env: IEnv = {
-  API_URL: __ENV__.API_URL,
-  FIREBASE_API_KEY: __ENV__.FIREBASE_API_KEY,
-  FIREBASE_AUTH_DOMAIN: __ENV__.FIREBASE_AUTH_DOMAIN,
-  FIREBASE_PROJECT_ID: __ENV__.FIREBASE_PROJECT_ID,
-  FIREBASE_APP_ID: __ENV__.FIREBASE_APP_ID,
-  FIREBASE_MESSAGING_SENDER_ID: __ENV__.FIREBASE_MESSAGING_SENDER_ID,
-};
+export const env: IEnvironment = __ENV__;

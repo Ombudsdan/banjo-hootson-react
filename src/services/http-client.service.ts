@@ -15,6 +15,7 @@ export default class HttpClientService {
   static setTokenProvider(provider: () => Promise<string | null>) {
     this.tokenProvider = provider;
   }
+
   private static buildUrl(path: string, query?: RequestOptions<unknown>['query']) {
     const url = new URL(path, env.API_URL);
     if (query) {
@@ -32,7 +33,8 @@ export default class HttpClientService {
 
     console.debug('[HTTP] ->', method, url, body ? { body } : '');
 
-    const authHeader = this.tokenProvider ? await this.tokenProvider() : null;
+    // Only fetch a token when the request explicitly requires auth to avoid recursion
+    const authHeader = options.requireAuth && this.tokenProvider ? await this.tokenProvider() : null;
 
     if (options.requireAuth && !authHeader) this.throwError('No authentication token available', 401);
 
@@ -82,9 +84,10 @@ export default class HttpClientService {
       const isAuthRoute = currentPath.startsWith('/login') || currentPath.startsWith('/signup');
       if (!isAuthRoute) {
         if (res.status === 401 && currentPath !== '/login') {
-          window.location.assign('/login?expired=1');
+          // Replace the current history entry to avoid stale back/forward navigation containing expired param
+          window.location.replace('/login?expired=1');
         } else if (res.status === 403 && currentPath !== '/unauthorized') {
-          window.location.assign('/unauthorized');
+          window.location.replace('/unauthorized');
         }
       }
     } catch {
