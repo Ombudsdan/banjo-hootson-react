@@ -1,0 +1,14 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BUILD_ENV: development
+        DOCKER_LOCAL: 1
+    ports:
+      - "${DOCKER_COMPOSE_PORT:-8081}:8080"
+    
+    env_file:
+      - .env
+    restart: unless-stopped

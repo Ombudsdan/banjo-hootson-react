@@ -1,0 +1,9 @@
+# Run unit tests, lint, and type-check, but don't block commit on failure
+echo "🔍 Running pre-commit quality checks..."
+
+npm run verify-lock ||  { echo "⚠️ Dependency verification failed. Run 'npm install' and commit the lockfile."; exit 1; }
+npm test || echo "⚠️ Tests failed (commit not blocked)"
+npm run lint || echo "⚠️ Lint errors (commit not blocked)"
+npm run typecheck || echo "⚠️ Type errors detected (commit not blocked)"
+
+echo "✅ Pre-commit checks complete. Proceeding with commit."

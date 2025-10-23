@@ -2,27 +2,64 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const webpack = require("webpack");
-require("dotenv").config();
 
-const isDev = process.env.NODE_ENV !== "production";
+require("dotenv").config();
+const fs = require("fs");
+const envFile = path.resolve(__dirname, `.env.${process.env.NODE_ENV}`);
+if (fs.existsSync(envFile)) {
+  require("dotenv").config({ path: envFile });
+}
+
+const IS_DEV = process.env.NODE_ENV !== "production";
+
+const PORT = Number(process.env.PORT || process.env.VITE_PORT || '5173');
+
+const IS_DOCKER_LOCAL = process.env.DOCKER_LOCAL === '1';
+const LOCAL_API_HOST = IS_DOCKER_LOCAL ? 'http://host.docker.internal' : 'http://localhost';
+
+const ENV = {
+  API_URL:
+    process.env.API_URL || process.env.VITE_API_URL || `${LOCAL_API_HOST}:3000`,
+  CORS_ORIGIN:
+    process.env.CORS_ORIGIN || process.env.VITE_CORS_ORIGIN || `http://localhost:${PORT}`,
+  FIREBASE_API_KEY:
+    process.env.FIREBASE_API_KEY || process.env.VITE_FIREBASE_API_KEY || "",
+  FIREBASE_AUTH_DOMAIN:
+    process.env.FIREBASE_AUTH_DOMAIN || process.env.VITE_FIREBASE_AUTH_DOMAIN || "",
+  FIREBASE_PROJECT_ID:
+    process.env.FIREBASE_PROJECT_ID || process.env.VITE_FIREBASE_PROJECT_ID || "",
+  FIREBASE_STORAGE_BUCKET:
+    process.env.FIREBASE_STORAGE_BUCKET || process.env.VITE_FIREBASE_STORAGE_BUCKET || "",
+  FIREBASE_APP_ID:
+    process.env.FIREBASE_APP_ID || process.env.VITE_FIREBASE_APP_ID || "",
+  FIREBASE_MESSAGING_SENDER_ID:
+    process.env.FIREBASE_MESSAGING_SENDER_ID || process.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
+  FIREBASE_MEASUREMENT_ID:
+    process.env.FIREBASE_MEASUREMENT_ID || process.env.VITE_FIREBASE_MEASUREMENT_ID || "",
+  GOOGLE_ADSENSE_PUBLISHER_ID:
+    process.env.GOOGLE_ADSENSE_PUBLISHER_ID || process.env.VITE_GOOGLE_ADSENSE_PUBLISHER_ID || "",
+  GOOGLE_ADSENSE_TEST_SLOT: 
+    process.env.GOOGLE_ADSENSE_TEST_SLOT || process.env.VITE_GOOGLE_ADSENSE_TEST_SLOT || "",
+  PORT,
+};
 
 /** @type {import('webpack').Configuration} */
 module.exports = {
-  mode: isDev ? "development" : "production",
+  mode: IS_DEV ? "development" : "production",
   entry: path.resolve(__dirname, "src", "main.tsx"),
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: isDev
+    filename: IS_DEV
       ? "assets/js/[name].js"
       : "assets/js/[name].[contenthash:8].js",
-    chunkFilename: isDev
+    chunkFilename: IS_DEV
       ? "assets/js/[name].chunk.js"
       : "assets/js/[name].[contenthash:8].chunk.js",
     assetModuleFilename: "assets/media/[name][ext]",
     clean: true,
     publicPath: "/",
   },
-  devtool: isDev ? "eval-source-map" : "source-map",
+  devtool: IS_DEV ? "eval-source-map" : "source-map",
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".jsx"],
     alias: {
@@ -51,7 +88,7 @@ module.exports = {
         use: {
           loader: "babel-loader",
           options: {
-            plugins: [isDev && require.resolve("react-refresh/babel")].filter(
+            plugins: [IS_DEV && require.resolve("react-refresh/babel")].filter(
               Boolean
             ),
             presets: [
@@ -63,7 +100,7 @@ module.exports = {
                 require.resolve("@babel/preset-react"),
                 {
                   runtime: "automatic",
-                  development: isDev,
+                  development: IS_DEV,
                   importSource: "react",
                 },
               ],
@@ -104,26 +141,14 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({ template: path.resolve(__dirname, "index.html") }),
     new webpack.DefinePlugin({
-      __ENV__: JSON.stringify({
-        API_URL: process.env.API_URL || "http://localhost:3000",
-        FIREBASE_API_KEY: process.env.FIREBASE_API_KEY || "",
-        FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN || "",
-        FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID || "",
-        FIREBASE_APP_ID: process.env.FIREBASE_APP_ID || "",
-        FIREBASE_MESSAGING_SENDER_ID:
-          process.env.FIREBASE_MESSAGING_SENDER_ID || "",
-      }),
+      __ENV__: JSON.stringify(ENV),
     }),
-    isDev && new ReactRefreshWebpackPlugin(),
+    IS_DEV && new ReactRefreshWebpackPlugin(),
   ].filter(Boolean),
   devServer: {
     static: { directory: path.resolve(__dirname, "public") },
     historyApiFallback: true,
-    port: process.env.PORT
-      ? Number(process.env.PORT)
-      : process.env.port
-      ? Number(process.env.port)
-      : 5173,
+    port: process.env.PORT ? Number(process.env.PORT) : 5173,
     hot: true,
     open: false,
     proxy: [

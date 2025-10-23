@@ -1,0 +1,20 @@
+name: Run All Quality Checks
+
+on:
+  push:
+    branches: [develop]
+  pull_request:
+    branches: [main, develop, feature/**]
+  workflow_call:
+
+jobs:
+  run_all_quality_checks:
+    uses: ./.github/workflows/quality_checks.yml
+    with:
+      run-lint: true
+      run-typecheck: true
+      run-unit-tests: true
+      run-vulnerabilities-scan: true
+      run-config-scan: true
+      run-secrets-scan: true
+    secrets: inherit

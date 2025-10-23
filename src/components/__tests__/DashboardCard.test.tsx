@@ -16,7 +16,7 @@ describe('DashboardCard', () => {
 
     const button = screen.getByRole('button');
     expect(button).toHaveTextContent('Profile');
-    expect(screen.getByTitle('Manage your profile')).toBeInTheDocument();
+    expect(screen.getByText('Manage your profile')).toBeInTheDocument();
     expect(button).not.toBeDisabled();
 
     button.click();

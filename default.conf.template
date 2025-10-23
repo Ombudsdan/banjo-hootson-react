@@ -1,0 +1,20 @@
+## Server (site) configuration for the SPA.
+## Rendered from this template at container start by envsubst (nginx official image).
+## Listens on ${PORT}; Dockerfile sets a default of 8080, and platforms like Vercel override PORT at runtime.
+
+server {
+    # Unprivileged port by default; dynamic via ${PORT}
+    listen ${PORT};
+
+    # Serve compiled assets from the standard html directory
+    root /usr/share/nginx/html;
+    index index.html;
+
+    # SPA fallback: if the requested file doesn't exist, serve index.html
+    location / {
+        try_files $uri /index.html;
+    }
+
+    # Optional: reduce noise for favicon requests
+    location = /favicon.ico { log_not_found off; access_log off; }
+}

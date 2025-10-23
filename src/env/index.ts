@@ -9,11 +9,13 @@ export interface IEnv {
 
 declare const __ENV__: IEnv;
 
+const buildEnv: Partial<IEnv> = typeof __ENV__ !== 'undefined' ? (__ENV__ as IEnv) : ({} as Partial<IEnv>);
+
 export const env: IEnv = {
-  API_URL: __ENV__.API_URL,
-  FIREBASE_API_KEY: __ENV__.FIREBASE_API_KEY,
-  FIREBASE_AUTH_DOMAIN: __ENV__.FIREBASE_AUTH_DOMAIN,
-  FIREBASE_PROJECT_ID: __ENV__.FIREBASE_PROJECT_ID,
-  FIREBASE_APP_ID: __ENV__.FIREBASE_APP_ID,
-  FIREBASE_MESSAGING_SENDER_ID: __ENV__.FIREBASE_MESSAGING_SENDER_ID,
+  API_URL: buildEnv.API_URL ?? '',
+  FIREBASE_API_KEY: buildEnv.FIREBASE_API_KEY ?? '',
+  FIREBASE_AUTH_DOMAIN: buildEnv.FIREBASE_AUTH_DOMAIN ?? '',
+  FIREBASE_PROJECT_ID: buildEnv.FIREBASE_PROJECT_ID ?? '',
+  FIREBASE_APP_ID: buildEnv.FIREBASE_APP_ID ?? '',
+  FIREBASE_MESSAGING_SENDER_ID: buildEnv.FIREBASE_MESSAGING_SENDER_ID ?? ''
 };
