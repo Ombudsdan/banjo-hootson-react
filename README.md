@@ -345,3 +345,41 @@ Migration status: All service and hook imports have been updated to use the new 
   - [routes](./src/routes/README.md)
   - [services](./src/services/README.md)
   - [utils](./src/utils/README.md)
+
+## Git aliases
+
+To use Git aliases, you must first ensure that the git is configured to include `.gitconfig`. To do so, simply run:
+
+**Linux/macOS**
+
+```bash
+git config --local include.path "$(pwd)/.gitconfig"
+```
+
+**Windows Powershell**
+
+```powershell
+git config --local include.path "${PWD}/.gitconfig"
+```
+
+### `resetdevelop`
+
+**Command**: `git resetdevelop`
+
+Running `resetdevelop` will:
+
+- Checkout your local `develop` branch
+- Fetch the latest changes from `origin`
+- Hard reset your local `develop` to match the rebased `develop` on GitHub
+
+**Equivalent to running**:
+
+```bash
+git checkout develop
+git fetch origin
+git reset --hard origin/develop
+```
+
+**Note**: This will overwrite any uncommitted changes in develop. Use git stash first if needed.
+
+**Why this alias exists**: The `rebase-develop-against-main.yml` GitHub Action automatically rebases develop on top of main after each pull request merge. This alias ensures your local branch stays in sync with the canonical history.

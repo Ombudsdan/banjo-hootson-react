@@ -1,0 +1,2 @@
+[alias]
+    resetdevelop = !git checkout develop && git fetch origin && git reset --hard origin/develop
