@@ -1,0 +1,62 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  run_quality_checks:
+    uses: ./.github/workflows/run_all_quality_checks.yml
+    secrets: inherit
+
+  release:
+    name: Run semantic-release
+    needs: run_quality_checks
+    runs-on: ubuntu-latest
+    outputs:
+      published: ${{ steps.semrel.outputs.published }}
+      version: ${{ steps.semrel.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # required for semantic-release
+          fetch-tags: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run semantic-release
+        id: semrel
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node ./scripts/semantic-release.mjs
+
+  docker_publish:
+    name: Docker Publish
+    needs: [run_quality_checks, release]
+    if: needs.release.outputs.published == 'true'
+    uses: ./.github/workflows/build_image.yml
+    with:
+      version: ${{ needs.release.outputs.version }}
+      build_env: production
+      is_for_local_use: '0'
+      push: true
+      run-image-scan: false
+      tag_latest: true
+    secrets: inherit

@@ -1,0 +1,15 @@
+name: Build Dev Image
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build_dev_image:
+    uses: ./.github/workflows/build_image.yml
+    with:
+      version: dev
+      build_env: development
+      is_for_local_use: '1'
+      push: true
+      run-image-scan: false
+    secrets: inherit

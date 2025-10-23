@@ -1,0 +1,21 @@
+name: Run Build and Scan Image
+
+on:
+  push:
+    branches: [develop]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  run_build_image_scan:
+    name: Build and Scan image
+    uses: ./.github/workflows/build_image.yml
+    with:
+      version: quality-checks
+      build_env: production
+      is_for_local_use: 0
+      push: true
+      run-image-scan: true
+    secrets: inherit

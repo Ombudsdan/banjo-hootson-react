@@ -1,0 +1,11 @@
+name: Outdated Dependencies Check
+on:
+  schedule:
+    - cron: '0 9 * * 1' # every Monday at 09:00 UTC
+
+jobs:
+  run_checks:
+    uses: ./.github/workflows/quality-checks.yml
+    with:
+      run-outdated-dependencies-check: true
+    secrets: inherit

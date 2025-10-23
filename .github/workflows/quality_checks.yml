@@ -1,0 +1,133 @@
+name: Quality Checks
+
+on:
+  workflow_call:
+    inputs:
+      run-outdated-dependencies-check:
+        description: 'Run only the outdated dependencies check.'
+        required: false
+        type: boolean
+      run-lint:
+        description: 'Run only the lint checks.'
+        required: false
+        type: boolean
+      run-typecheck:
+        description: 'Run only the typecheck.'
+        required: false
+        type: boolean
+      run-unit-tests:
+        description: 'Run only the unit tests (with coverage).'
+        required: false
+        type: boolean
+      run-vulnerabilities-scan:
+        description: 'Run only a vulnerabilities scan.'
+        required: false
+        type: boolean
+      run-config-scan:
+        description: 'Run only a config scan.'
+        required: false
+        type: boolean
+      run-secrets-scan:
+        description: 'Run only a secrets scan.'
+        required: false
+        type: boolean
+
+jobs:
+  quality_checks:
+    name: Lint • Typecheck • Test • Build • Vulnerabilities Scan • Config Scan • Secrets Scan
+    runs-on: ubuntu-latest
+    env:
+      INCLUDES_SCANS: ${{ inputs.run-vulnerabilities-scan || inputs.run-config-scan || inputs.run-secrets-scan }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Check for Outdated Dependencies
+        if: inputs.run-outdated-dependencies-check
+        run: npm outdated --json > outdated-dependency-report.json || true # `|| true` prevents failure if outdated packages exist
+
+      - name: Upload Outdated Dependencies Report
+        if: inputs.run-outdated-dependencies-check && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: outdated-dependency-report
+          path: outdated-dependency-report.json
+
+      - name: Run Lint
+        if: inputs.run-lint
+        run: npm run lint
+
+      - name: Run Typecheck
+        if: inputs.run-typecheck
+        run: npm run typecheck
+
+      - name: Run Unit Tests (with coverage)
+        if: inputs.run-unit-tests
+        run: npm test -- --coverage
+
+      - name: Upload Coverage Report
+        if: inputs.run-unit-tests && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage/
+
+      - name: Build
+        if: env.INCLUDES_SCANS
+        run: npm run build
+
+      - name: Upload Production Build
+        if: env.INCLUDES_SCANS && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-checks-build
+          path: dist/
+
+      - name: Vulnerabilities Scan
+        if: inputs.run-vulnerabilities-scan
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          trivy-config: trivy.yaml
+          severity: HIGH,CRITICAL
+          scan-type: fs
+          scanners: vuln
+          output: vulnerabilities-scan-report.json
+
+      - name: Config Scan
+        if: inputs.run-config-scan
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          trivy-config: trivy.yaml
+          severity: HIGH,CRITICAL
+          scan-type: fs
+          scanners: config
+          output: config-scan-report.json
+
+      - name: Secrets Scan
+        if: inputs.run-secrets-scan
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          trivy-config: trivy.yaml
+          severity: HIGH,CRITICAL
+          scan-type: fs
+          scanners: secret
+          output: secrets-scan-report.json
+
+      - name: Upload Scan Report(s)
+        if: (env.INCLUDES_SCANS) && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: react-trivy-results
+          path: |
+            vulnerabilities-scan-report.json
+            config-scan-report.json
+            secrets-scan-report.json
