@@ -1,4 +1,4 @@
-name: Rebase Develop against Main after Push to Main
+name: Rebase 'develop' against 'main' after pushing to 'main'
 
 on:
   push:
@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  sync-develop:
+  rebase_develop_against_main:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
