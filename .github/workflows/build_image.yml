@@ -43,8 +43,8 @@ on:
         type: boolean
 
 jobs:
-  compute_image_repo:
-    name: Compute image repository
+  compute_image_repository:
+    name: Compute Image Repository
     runs-on: ubuntu-latest
     outputs:
       image_repository: ${{ steps.set.outputs.image }}
@@ -56,9 +56,9 @@ jobs:
           echo "Using image repository: ${REPO}"
           echo "image=${REPO}" >> "$GITHUB_OUTPUT"
 
-  publish_quality_checks_image:
-    name: Publish quality-checks image
-    needs: compute_image_repo
+  publish_image:
+    name: Publish Image
+    needs: compute_image_repository
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -83,10 +83,28 @@ jobs:
           password: ${{ env.DOCKER_ACCESS_TOKEN }}
           registry: ${{ env.DOCKER_REGISTRY }}
 
+      - name: Create .env.production for build (public config only)
+        shell: bash
+        run: |
+          cat > .env.production << 'EOF'
+          API_URL=${{ vars.API_URL || secrets.API_URL }}
+          CORS_ORIGIN=${{ vars.CORS_ORIGIN || secrets.CORS_ORIGIN }}
+          FIREBASE_API_KEY=${{ vars.FIREBASE_API_KEY || secrets.FIREBASE_API_KEY }}
+          FIREBASE_AUTH_DOMAIN=${{ vars.FIREBASE_AUTH_DOMAIN || secrets.FIREBASE_AUTH_DOMAIN }}
+          FIREBASE_PROJECT_ID=${{ vars.FIREBASE_PROJECT_ID || secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_STORAGE_BUCKET=${{ vars.FIREBASE_STORAGE_BUCKET || secrets.FIREBASE_STORAGE_BUCKET }}
+          FIREBASE_APP_ID=${{ vars.FIREBASE_APP_ID || secrets.FIREBASE_APP_ID }}
+          FIREBASE_MESSAGING_SENDER_ID=${{ vars.FIREBASE_MESSAGING_SENDER_ID || secrets.FIREBASE_MESSAGING_SENDER_ID }}
+          FIREBASE_MEASUREMENT_ID=${{ vars.FIREBASE_MEASUREMENT_ID || secrets.FIREBASE_MEASUREMENT_ID }}
+          GOOGLE_ADSENSE_PUBLISHER_ID=${{ vars.GOOGLE_ADSENSE_PUBLISHER_ID || secrets.GOOGLE_ADSENSE_PUBLISHER_ID }}
+          GOOGLE_ADSENSE_TEST_SLOT=${{ vars.GOOGLE_ADSENSE_TEST_SLOT || secrets.GOOGLE_ADSENSE_TEST_SLOT }}
+          EOF
+          echo "Created .env.production (values will be baked into the bundle)."
+
       - name: Compute tags
         id: compute_tags
         run: |
-          REPO="${{ needs.compute_image_repo.outputs.image_repository }}"
+          REPO="${{ needs.compute_image_repository.outputs.image_repository }}"
           VERSION="${{ inputs.version }}"
           TAGS="${REPO}:${VERSION}"
           if [ "${{ inputs.tag_latest }}" = "true" ]; then
@@ -117,8 +135,8 @@ jobs:
   run_image_scan:
     if: inputs.run-image-scan
     runs-on: ubuntu-latest
-    name: Run image scan
-    needs: [compute_image_repo, publish_quality_checks_image]
+    name: Image Scan
+    needs: [compute_image_repository, publish_image]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -130,7 +148,7 @@ jobs:
           trivy-config: trivy.yaml
           severity: HIGH,CRITICAL
           scan-type: image
-          image-ref: ${{ needs.compute_image_repo.outputs.image_repository }}:${{ inputs.version }}
+          image-ref: ${{ needs.compute_image_repository.outputs.image_repository }}:${{ inputs.version }}
           output: image-scan-report.json
 
       - name: Upload Image Scan Report

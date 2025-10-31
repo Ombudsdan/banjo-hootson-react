@@ -9,7 +9,8 @@ export interface IEnv {
 
 declare const __ENV__: IEnv;
 
-const buildEnv: Partial<IEnv> = typeof __ENV__ !== 'undefined' ? (__ENV__ as IEnv) : ({} as Partial<IEnv>);
+const buildEnv: Partial<IEnv> =
+  typeof __ENV__ !== 'undefined' ? (__ENV__ as IEnv) : ({} as Partial<IEnv>);
 
 export const env: IEnv = {
   API_URL: buildEnv.API_URL ?? '',

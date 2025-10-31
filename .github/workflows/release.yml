@@ -19,7 +19,7 @@ jobs:
     secrets: inherit
 
   release:
-    name: semantic-release
+    name: Run semantic-release
     needs: run_quality_checks
     runs-on: ubuntu-latest
     outputs:
@@ -48,7 +48,7 @@ jobs:
         run: node ./scripts/semantic-release.mjs
 
   docker_publish:
-    name: Docker publish (versioned tag)
+    name: Docker Publish
     needs: [run_quality_checks, release]
     if: needs.release.outputs.published == 'true'
     uses: ./.github/workflows/build_image.yml
