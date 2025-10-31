@@ -1,20 +1,22 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { TownOrCityInput } from 'components';
-import { renderWithProviders } from 'test';
+import { UnitTestUtils } from 'test';
 
 const ID = 'city';
 
 describe('TownOrCityInput', () => {
   it('renders label, hint and placeholder; shows error when invalid on blur', async () => {
-    renderWithProviders(
-      <TownOrCityInput
-        id={ID}
-        initialValue=""
-        label="Town or City"
-        hint="For example: Sheffield"
-        placeholder="Town or City"
-      />,
+    new UnitTestUtils(
+      (
+        <TownOrCityInput
+          id={ID}
+          initialValue=""
+          label="Town or City"
+          hint="For example: Sheffield"
+          placeholder="Town or City"
+        />
+      ),
       { withForm: true }
     );
 

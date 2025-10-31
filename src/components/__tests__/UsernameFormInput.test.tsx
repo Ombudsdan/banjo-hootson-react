@@ -1,14 +1,14 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { UsernameFormInput } from 'components';
-import { renderWithProviders } from 'test';
+import { UnitTestUtils } from 'test';
 
 const ID = 'username';
 
 describe('UsernameFormInput', () => {
   it('renders group with prefix and strips leading @, shows error on invalid', async () => {
-    renderWithProviders(
-      <UsernameFormInput id={ID} initialValue="" label="Your Instagram Account" placeholder="Username" />,
+    new UnitTestUtils(
+      (<UsernameFormInput id={ID} initialValue="" label="Your Instagram Account" placeholder="Username" />),
       { withForm: true }
     );
 
