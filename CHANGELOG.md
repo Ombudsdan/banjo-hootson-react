@@ -1,3 +1,7 @@
+## <small>1.0.1 (2025-10-31)</small>
+
+* fix: renamed job outputs ([3eb65b4](https://github.com/Ombudsdan/banjo-hootson-react/commit/3eb65b4))
+
 ## 1.0.0 (2025-10-31)
 
 * fix: attempted fix for semantic-release ([6b28cfd](https://github.com/Ombudsdan/banjo-hootson-react/commit/6b28cfd))
