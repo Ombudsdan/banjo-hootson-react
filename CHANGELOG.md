@@ -1,3 +1,22 @@
+# 1.0.0 (2025-11-09)
+
+
+### Bug Fixes
+
+* post-migration fixes, tidy-up and tweaks ([6a72e21](https://github.com/Ombudsdan/banjo-hootson-react/commit/6a72e2181657966360de921d5b0d4e46790a5882))
+
+
+### Features
+
+* copilot assisted | migration from angular to react | components ([635aa62](https://github.com/Ombudsdan/banjo-hootson-react/commit/635aa62d6574d9dc68417a3341b397221bfb1587))
+* copilot assisted | migration from angular to react | environment setup ([6f6cd07](https://github.com/Ombudsdan/banjo-hootson-react/commit/6f6cd07f213d0f209d323df84f9f3e68ac4acea3))
+* copilot assisted | migration from angular to react | pages ([e3baef3](https://github.com/Ombudsdan/banjo-hootson-react/commit/e3baef365b1347e93b803391247423cb374499f6))
+* copilot assisted | migration from angular to react | scss ([af9b4e7](https://github.com/Ombudsdan/banjo-hootson-react/commit/af9b4e77db5ebc9a4b25f648d6e421f31d931b9b))
+* copilot assisted | migration from angular to react | services and controllers ([01361f9](https://github.com/Ombudsdan/banjo-hootson-react/commit/01361f9f588b84e09ca34e338bd307da61a60410))
+* copilot assisted | migration from angular to react | types and interfaces ([64bd743](https://github.com/Ombudsdan/banjo-hootson-react/commit/64bd743a4970afa1f665c017ff36f629243b7be5))
+* implemented hooks for backdrops, dialogs, form, form inputs, form dialogs and reworked dialog hook ([26758ca](https://github.com/Ombudsdan/banjo-hootson-react/commit/26758ca4a2b45e6e3f5cc6feeb849c9531ffcbbc))
+* implemented hooks for header, alert and page validation alerts ([9818117](https://github.com/Ombudsdan/banjo-hootson-react/commit/9818117ac15d0b9e26af0f5fcdad30c3c40a77c2))
+
 ## 1.0.0 (2025-10-31)
 
 * fix: attempted fix for semantic-release ([b1bd543](https://github.com/Ombudsdan/banjo-hootson-react/commit/b1bd543))
