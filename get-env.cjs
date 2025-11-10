@@ -5,7 +5,6 @@ module.exports = env => {
 
   return {
     API_URL: env.API_URL || 'http://localhost:3000',
-    CORS_ORIGIN: env.CORS_ORIGIN || `http://localhost:${PORT}`,
     GOOGLE_ADSENSE_PUBLISHER_ID: env.GOOGLE_ADSENSE_PUBLISHER_ID || '',
     GOOGLE_ADSENSE_TEST_SLOT: env.GOOGLE_ADSENSE_TEST_SLOT || '',
     PORT

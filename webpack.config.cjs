@@ -59,7 +59,9 @@ module.exports = {
                 require.resolve('@babel/preset-react'),
                 {
                   runtime: 'automatic',
-                  development: IS_DEV,
+                  // Only enable dev JSX transform when actually running the dev server.
+                  // This prevents jsxDEV from leaking into static builds (dev or prod).
+                  development: ENABLE_REACT_REFRESH,
                   importSource: 'react'
                 }
               ],

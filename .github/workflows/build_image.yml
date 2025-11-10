@@ -13,11 +13,6 @@ on:
         default: 'https://api.banjohootson.com'
         required: false
         type: string
-      CORS_ORIGIN:
-        description: 'Origin of this application, for example: https://banjohootson.com, http://host.docker.internal:8080 or http://localhost:8080'
-        default: 'https://banjohootson.com'
-        required: false
-        type: string
       version:
         description: "Possible values: 'dev', 'quality-checks', or a semantic-release version (e.g., '1.0.3')"
         required: true
@@ -112,7 +107,6 @@ jobs:
             ENV=${{ inputs.ENV }}
             NODE_ENV=${{ inputs.ENV }}
             API_URL=${{ inputs.API_URL }}
-            CORS_ORIGIN=${{ inputs.CORS_ORIGIN }}
             GOOGLE_ADSENSE_PUBLISHER_ID=${{ secrets.GOOGLE_ADSENSE_PUBLISHER_ID }}
             GOOGLE_ADSENSE_TEST_SLOT=${{ secrets.GOOGLE_ADSENSE_TEST_SLOT }}
           push: ${{ inputs.push }}

@@ -10,6 +10,5 @@ jobs:
       version: dev
       ENV: development
       API_URL: 'http://localhost:3000'
-      CORS_ORIGIN: 'http://localhost:8080'
       push: true
     secrets: inherit
