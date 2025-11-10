@@ -1,5 +1,5 @@
-@use "./variables";
-@use "./mixins";
+@use './variables';
+@use './mixins';
 
 :root {
   font-size: 16px;
@@ -33,4 +33,9 @@ body.loaded main {
 
 .page-narrow {
   @include mixins.page-narrow;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: variables.$font-weight-bold;
 }

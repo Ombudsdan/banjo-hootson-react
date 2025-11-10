@@ -2,15 +2,15 @@ import { FirebaseService, FirebaseUser, FirebaseUserCredential, HttpClientServic
 import { IAuthUser } from 'model/auth.model';
 
 export default class AuthController {
-  static init() {
-    // Initialize Firebase asynchronously; then wire providers/listeners
-    FirebaseService.getAuth();
+  static async init() {
+    // Initialize Firebase asynchronously; await so callers can observe failures
+    await FirebaseService.getAuth();
     // Provide initial token fetcher
     HttpClientService.setTokenProvider(async () => await FirebaseService.getCurrentIdToken());
     // Keep in sync when token changes
     FirebaseService.onAuthTokenChange((token: string | null) => {
       if (!token) {
-        // user signed out
+        // user signed out (optional hook)
       }
     });
   }

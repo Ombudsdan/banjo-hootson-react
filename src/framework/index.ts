@@ -51,3 +51,6 @@ export { default as DialogContainer } from './DialogContainer';
 
 export * from './DialogTitle';
 export { default as DialogTitle } from './DialogTitle';
+
+export * from './ErrorBoundary';
+export { default as ErrorBoundary } from './ErrorBoundary';

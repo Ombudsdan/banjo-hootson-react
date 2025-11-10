@@ -14,6 +14,7 @@ const ManageProfilePage = lazy(() => import('../pages/ManageProfile'));
 const LoginPage = lazy(() => import('../pages/LoginPage'));
 const SignupPage = lazy(() => import('../pages/SignupPage'));
 const UnauthorizedPage = lazy(() => import('../pages/UnauthorizedPage'));
+const ErrorPage = lazy(() => import('../pages/ErrorPage'));
 const SubmitPlushieBirthdayPage = lazy(() => import('../pages/SubmitPlushieBirthdayPage'));
 const SubmitPlushieBirthdayConfirmationPage = lazy(() => import('../pages/SubmitPlushieBirthdayConfirmationPage'));
 const ViewPlushieBirthdaysPage = lazy(() => import('../pages/ViewPlushieBirthdaysPage'));
@@ -23,6 +24,7 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <DefaultLayout />,
+    errorElement: <ErrorPage />,
     children: [
       { index: true, element: <HomePage /> },
       { path: 'calendar', element: <CalendarPage /> },

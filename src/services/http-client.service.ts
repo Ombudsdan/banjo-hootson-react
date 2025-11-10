@@ -38,27 +38,45 @@ export default class HttpClientService {
 
     if (options.requireAuth && !authHeader) this.throwError('No authentication token available', 401);
 
-    const res = await fetch(url, {
-      method,
-      headers: {
-        'Content-Type': 'application/json',
-        ...(authHeader ? { Authorization: `Bearer ${authHeader}` } : {}),
-        ...headers
-      },
-      body: body ? JSON.stringify(body) : undefined,
-      credentials: withCredentials ? 'include' : 'omit'
-    });
+    let res: Response | null = null;
+    try {
+      res = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          ...(authHeader ? { Authorization: `Bearer ${authHeader}` } : {}),
+          ...headers
+        },
+        body: body ? JSON.stringify(body) : undefined,
+        credentials: withCredentials ? 'include' : 'omit'
+      });
+    } catch (networkError) {
+      console.error('[HTTP] network error', method, url, networkError);
+      // Throw a unified error; mark as NETWORK_ERROR so UI can present friendlier copy
+      this.throwError('Network error', undefined, e => {
+        (e as MyError & { code?: string; cause?: unknown }).code = 'NETWORK_ERROR';
+        (e as MyError & { cause?: unknown }).cause = networkError;
+      });
+    }
+    if (!res) {
+      // Defensive (TypeScript narrowing); will never reach due to throw above
+      this.throwError('No response', undefined, e => {
+        (e as MyError & { code?: string }).code = 'NETWORK_ERROR';
+      });
+      // following line is to satisfy TS control flow
+      res = null as unknown as Response;
+    }
 
-    const text = await res.text();
+    const text = await res!.text();
     const data: unknown = text ? JSON.parse(text) : (text as unknown);
     const elapsed = Math.round((typeof performance !== 'undefined' ? performance.now() : Date.now()) - start);
-    const statusInfo = `${res.status} ${res.statusText}`;
+    const statusInfo = `${res!.status} ${res!.statusText}`;
 
-    if (!res.ok) {
-      if (typeof window !== 'undefined' && (res.status === 401 || res.status === 403))
-        this.handleUnauthorisedResponse(res);
+    if (!res!.ok) {
+      if (typeof window !== 'undefined' && (res!.status === 401 || res!.status === 403))
+        this.handleUnauthorisedResponse(res!);
 
-      this.throwError(`HTTP ${res.status}: ${res.statusText}`, res.status, error => {
+      this.throwError(`HTTP ${res!.status}: ${res!.statusText}`, res!.status, error => {
         error.body = data;
         console.error('[HTTP] x', method, url, statusInfo, {
           elapsedMs: elapsed,
@@ -113,4 +131,4 @@ interface RequestOptions<TBody> {
   withCredentials?: boolean;
 }
 
-type MyError = Error & { status?: number; body?: unknown };
+type MyError = Error & { status?: number; body?: unknown; code?: string };
