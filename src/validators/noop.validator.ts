@@ -10,6 +10,8 @@ import BaseValidator from './base.validator';
  * @extends BaseValidator
  */
 export default class NoopValidator extends BaseValidator {
+  protected static _inputLabel = 'No operation';
+
   protected static errorMessageMap: Map<string, string> = new Map();
 
   static validate() {

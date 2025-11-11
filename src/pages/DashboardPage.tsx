@@ -35,22 +35,15 @@ export default function DashboardPage() {
       title: 'My Profile',
       description: 'Manage your profile settings',
       // action: () => navigate({ pathname: "/profile", search: "?tab=PROFILE" }),
-      action: () => navigate({ pathname: '/manage-profile' }),
+      action: () => navigate({ pathname: '/profile' }),
       icon: ICONS.user
     },
     {
       key: 'ACCOUNT_SETTINGS',
       title: 'Account Settings',
       description: 'Manage your account preferences',
-      action: () => navigate({ pathname: '/profile', search: '?tab=ACCOUNT' }),
+      action: () => navigate({ pathname: '/account' }),
       icon: ICONS.userGear
-    },
-    {
-      key: 'PREFERENCES',
-      title: 'Preferences',
-      description: 'Manage your user preferences',
-      action: () => navigate({ pathname: '/profile', search: '?tab=PREFERENCES' }),
-      icon: ICONS.listCheck
     }
   ];
 

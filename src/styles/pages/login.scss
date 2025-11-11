@@ -1,6 +1,14 @@
-@use "sass:color";
-@use "../variables";
-@use "../mixins";
+@use 'sass:color';
+@use '../variables';
+@use '../mixins';
+
+.sign-up-section {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 1rem auto 0;
+  justify-content: center;
+}
 
 .login-page {
   display: flex;

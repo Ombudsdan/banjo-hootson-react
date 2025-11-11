@@ -2,13 +2,14 @@ import { ValidationMessageService, ValidationRuleService } from 'services';
 import { BaseValidator } from '.';
 import { isValidRegex } from 'utils';
 
-const INPUT_LABEL = 'City name';
 const MAX_CHAR_LENGTH = 80;
 
 export default class CityValidator extends BaseValidator {
+  protected static _inputLabel = 'City name';
+
   static readonly errorMessageMap = new Map<TownOrCityValidatorKey, string>([
-    ['hasValidTownOrCityCharacters', `${INPUT_LABEL} contains invalid characters.`],
-    ['isValidMaxLength', ValidationMessageService.isValidMaxLength(INPUT_LABEL, MAX_CHAR_LENGTH)]
+    ['hasValidTownOrCityCharacters', `${this.inputLabel} contains invalid characters.`],
+    ['isValidMaxLength', ValidationMessageService.isValidMaxLength(this.inputLabel, MAX_CHAR_LENGTH)]
   ]);
 
   static validate(value: string) {

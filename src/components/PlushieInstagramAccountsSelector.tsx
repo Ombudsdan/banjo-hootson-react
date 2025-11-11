@@ -7,20 +7,30 @@ import { IPlushieInstagramAccount } from 'model/user.model';
 import { excludeMatchingIndex } from 'utils';
 import { DialogConfirm } from 'enums';
 import { PlushieInstagramAccountFormInput } from 'components';
+import { PlushieInstagramAccountListValidator } from 'validators';
 
 /**
  * Composite control to manage a list of plushie Instagram accounts.
  * Provides add/edit/remove via dialogs and updates the bound array value.
  */
-export default function PlushieInstagramAccountsSelector({ id, initialValue }: IPlushieInstagramAccountsSelector) {
-  const { value, setValue, showErrors, validation } = useFormField({ id, initialValue });
+export default function PlushieInstagramAccountsSelector({
+  id,
+  initialValue,
+  isRequired
+}: IPlushieInstagramAccountsSelector) {
+  const { value, setValue, showErrors, validation } = useFormField({
+    id,
+    initialValue,
+    validator: PlushieInstagramAccountListValidator,
+    isRequired
+  });
   const { openDialog } = useDialog();
   const { openFormDialog, closeFormDialog } = useFormDialog();
 
   return (
     <div className="form-field">
       <div id={id}></div>
-      <FormSectionHeader title="Plushie Instagram Accounts">
+      <FormSectionHeader title="Plushie Instagram Accounts" isRequired={isRequired}>
         <button className="icon-button" type="button" onClick={() => openAddDialog()}>
           <FontAwesomeIcon icon={ICONS.plus} />
           Add Account
@@ -36,16 +46,14 @@ export default function PlushieInstagramAccountsSelector({ id, initialValue }: I
                   type="button"
                   className="icon-button"
                   aria-label="Edit account"
-                  onClick={() => openEditDialog(i)}
-                >
+                  onClick={() => openEditDialog(i)}>
                   <FontAwesomeIcon icon={ICONS.edit} />
                 </button>
                 <button
                   type="button"
                   className="icon-button"
                   aria-label="Remove account"
-                  onClick={() => openRemoveDialog(i)}
-                >
+                  onClick={() => openRemoveDialog(i)}>
                   <FontAwesomeIcon icon={ICONS.trash} />
                 </button>
               </SummaryList.Actions>
@@ -119,6 +127,7 @@ function PlushieInstagramDialog({ id, initialValue = '', existingAccounts }: IPl
 interface IPlushieInstagramAccountsSelector {
   id: string;
   initialValue: IPlushieInstagramAccount[];
+  isRequired?: boolean;
 }
 
 /** Props for {@link PlushieInstagramDialog}. */

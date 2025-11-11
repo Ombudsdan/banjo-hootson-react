@@ -2,6 +2,7 @@ import { useEffect, useMemo } from 'react';
 import { useForm, useInputValidation } from '.';
 import { BaseValidator, IValidation, NoopValidator } from 'validators';
 import { isEmpty, ValidationErrorRecord } from 'utils';
+import { ValidationMessageService } from 'services';
 
 /**
  * React hook that registers a form field with the global `useForm` context,
@@ -40,13 +41,13 @@ export function useFormField<TValue = string>({
   initialValue,
   validator,
   args,
-  additionalValidators = []
+  additionalValidators = [],
+  isRequired = false
 }: IUseFormField<TValue>) {
   const { fields, setField, touched, setTouched, isSubmitted, setFieldValidation, setFields } = useForm();
 
   // Seed or update initial value when provided from outside (e.g., after async load)
   // - If the field is not yet set, set it to initialValue
-  // - If the field is unset/empty and the user hasn't touched it, apply initialValue updates
   useEffect(() => {
     const curr = fields[id];
     const hasTouched = !!touched[id];
@@ -69,7 +70,25 @@ export function useFormField<TValue = string>({
   const stableArgs = useMemo(() => args, [argsKey]);
 
   // Run validation on the current value
-  const primaryValidation: IValidation = useInputValidation(value, effectivePrimaryValidator, stableArgs);
+  const baseValidation: IValidation = useInputValidation(value, effectivePrimaryValidator, stableArgs);
+
+  // Inject required error if flagged and current value is empty & validator did not already mark required
+  const primaryValidation: IValidation = useMemo(() => {
+    const alreadyHasRequired = !!baseValidation.errors?.isRequired;
+    // Treat boolean false as an "empty" value for required semantics (e.g., unchecked checkbox)
+    const isValueEmpty = isEmpty(value) || (typeof value === 'boolean' && value === false);
+    if (!isRequired || !isValueEmpty || alreadyHasRequired) return baseValidation;
+
+    const nextErrors = { ...(baseValidation.errors || {}), isRequired: true };
+    const nextMessages = [...(baseValidation.errorMessages || [])];
+
+    const requiredMessage = effectivePrimaryValidator.inputLabel
+      ? ValidationMessageService.isRequired(effectivePrimaryValidator.inputLabel)
+      : 'This field is required.';
+    nextMessages.unshift(requiredMessage);
+
+    return { errors: nextErrors, errorMessages: nextMessages };
+  }, [isRequired, baseValidation, value, effectivePrimaryValidator]);
 
   // Merge primary + additional validators in a readable way
   const additionalCount = additionalValidators.length;
@@ -88,15 +107,15 @@ export function useFormField<TValue = string>({
   }, [id, errorsKey, messagesKey, setFieldValidation, validator, additionalCount]);
 
   const isTouched = !!touched[id];
-  const showErrors = useMemo(() => (isSubmitted || isTouched) && validation.errorMessages.length > 0, [
-    isSubmitted,
-    isTouched,
-    validation.errorMessages
-  ]);
+  const showErrors = useMemo(
+    () => (isSubmitted || isTouched) && validation.errorMessages.length > 0,
+    [isSubmitted, isTouched, validation.errorMessages]
+  );
 
   return {
     value,
     setValue: (newValue: TValue) => setField(id, newValue),
+    getValue: (id: string) => fields[id] as TValue,
     touched,
     setTouched: (newValue: boolean) => setTouched(id, newValue),
     validation,
@@ -160,6 +179,8 @@ interface IUseFormField<TValue> {
   validator?: typeof BaseValidator;
   additionalValidators?: Array<typeof BaseValidator>;
   args?: UseFormFieldArgsRecord;
+  /** When true marks the field required without needing a dedicated validator rule */
+  isRequired?: boolean;
 }
 
 export type UseFormFieldArgsRecord = Record<string, unknown>;

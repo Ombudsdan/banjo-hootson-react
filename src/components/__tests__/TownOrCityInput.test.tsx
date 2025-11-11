@@ -1,15 +1,15 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { TownOrCityInput } from 'components';
+import { TownOrCityFormInput } from 'components';
 import { UnitTestUtils } from 'test';
 
 const ID = 'city';
 
-describe('TownOrCityInput', () => {
+describe('TownOrCityFormInput', () => {
   it('renders label, hint and placeholder; shows error when invalid on blur', async () => {
     new UnitTestUtils(
       (
-        <TownOrCityInput
+        <TownOrCityFormInput
           id={ID}
           initialValue=""
           label="Town or City"

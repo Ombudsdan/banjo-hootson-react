@@ -7,18 +7,19 @@ import { ICountry } from 'model/country.model';
 /**
  * Country selector bound to the form state. Populates countries via LocationController.
  */
-export default function CountryFormInput({ id, label, initialValue, hint }: ICountryFormInput) {
+export default function CountryFormInput({ id, label, initialValue, hint, isRequired }: ICountryFormInput) {
   const [countries, setCountries] = useState<ICountry[]>([]);
   const { value, setValue, setTouched, validation, showErrors } = useFormField({
     id,
-    initialValue
+    initialValue,
+    isRequired
   });
 
   useEffect(loadCountries, []);
 
   return (
     <div className="form-group">
-      <label className="form-group__label" htmlFor={id}>
+      <label className={`form-group__label ${isRequired ? 'form-group__label--required' : ''}`} htmlFor={id}>
         {label}
       </label>
       {hint && <div className="form-group__hint">{hint}</div>}
@@ -30,7 +31,7 @@ export default function CountryFormInput({ id, label, initialValue, hint }: ICou
           </option>
         ))}
       </select>
-  <FormValidationErrors showErrors={showErrors} validation={validation} />
+      <FormValidationErrors showErrors={showErrors} validation={validation} />
     </div>
   );
 
@@ -45,4 +46,5 @@ interface ICountryFormInput {
   initialValue: string;
   label: string;
   hint?: string;
+  isRequired?: boolean;
 }

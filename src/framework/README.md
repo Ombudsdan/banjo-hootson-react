@@ -117,7 +117,7 @@ import { Form } from "components";
 import { FormActionsContainer, FormSectionHeader, FormValidationErrors } from 'framework';
 
 <EmailAddressFormInput id="email" initialValue="" label="Email" placeholder="you@example.com" />
-<TownOrCityInput id="city" initialValue="" label="Town or City" placeholder="e.g. London" />
+<TownOrCityFormInput id="city" initialValue="" label="Town or City" placeholder="e.g. London" />
 <CountryFormInput id="country" initialValue="" label="Country" />
 
 // Plushie accounts

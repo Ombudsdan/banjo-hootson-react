@@ -2,7 +2,7 @@ import { useFormField } from 'hooks';
 import { PlushieInstagramAccountValidator } from 'validators';
 import { IPlushieInstagramAccount } from 'model/user.model';
 import { FormValidationErrors } from 'framework';
-import { IBaseInstagramInput, InstagramInputGroup } from 'components';
+import { IBaseInstagramInput, InstagramFormInput } from 'components';
 
 /**
  * Single plushie Instagram account input with duplicate checking against an existing list.
@@ -14,22 +14,24 @@ export default function PlushieInstagramAccountFormInput({
   initialValue = '',
   hint,
   placeholder = 'Plushie Instagram Account',
-  existingAccounts
+  existingAccounts,
+  isRequired
 }: IPlushieInstagramAccountFormInput) {
   const { validation, showErrors } = useFormField({
     id,
     initialValue,
     validator: PlushieInstagramAccountValidator,
-    args: getArgs()
+    args: getArgs(),
+    isRequired
   });
 
   return (
     <div className="form-group">
-      <label className="form-group__label" htmlFor={id}>
+      <label className={`form-group__label ${isRequired ? 'form-group__label--required' : ''}`} htmlFor={id}>
         {label}
       </label>
       {hint && <div className="form-group__hint">{hint}</div>}
-      <InstagramInputGroup
+      <InstagramFormInput
         id={id}
         initialValue={initialValue}
         validator={PlushieInstagramAccountValidator}

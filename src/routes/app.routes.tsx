@@ -5,14 +5,14 @@ import { RequireAuth } from 'routes';
 
 const HomePage = lazy(() => import('../pages/HomePage'));
 const CalendarPage = lazy(() => import('../pages/CalendarPage'));
-const ProfilePage = lazy(() => import('../pages/ProfilePage'));
 const NotFoundPage = lazy(() => import('../pages/NotFoundPage'));
 const AboutPage = lazy(() => import('../pages/AboutPage'));
 const ContactPage = lazy(() => import('../pages/ContactPage'));
 const DashboardPage = lazy(() => import('../pages/DashboardPage'));
 const ManageProfilePage = lazy(() => import('../pages/ManageProfile'));
+const AccountPage = lazy(() => import('../pages/AccountPage'));
 const LoginPage = lazy(() => import('../pages/LoginPage'));
-const SignupPage = lazy(() => import('../pages/SignupPage'));
+const SignUpPage = lazy(() => import('../pages/SignUpPage'));
 const UnauthorizedPage = lazy(() => import('../pages/UnauthorizedPage'));
 const ErrorPage = lazy(() => import('../pages/ErrorPage'));
 const SubmitPlushieBirthdayPage = lazy(() => import('../pages/SubmitPlushieBirthdayPage'));
@@ -42,15 +42,15 @@ export const router = createBrowserRouter([
         path: 'profile',
         element: (
           <RequireAuth>
-            <ProfilePage />
+            <ManageProfilePage />
           </RequireAuth>
         )
       },
       {
-        path: 'manage-profile',
+        path: 'account',
         element: (
           <RequireAuth>
-            <ManageProfilePage />
+            <AccountPage />
           </RequireAuth>
         )
       },
@@ -66,7 +66,7 @@ export const router = createBrowserRouter([
       },
       { path: 'unauthorized', element: <UnauthorizedPage /> },
       { path: 'login', element: <LoginPage /> },
-      { path: 'signup', element: <SignupPage /> },
+      { path: 'signup', element: <SignUpPage /> },
       { path: '*', element: <NotFoundPage /> }
     ]
   }

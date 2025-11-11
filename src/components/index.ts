@@ -15,27 +15,6 @@ export { default as DashboardCard } from './DashboardCard';
 export * from './ErrorCard';
 export { default as ErrorCard } from './ErrorCard';
 
-export * from './CountryFormInput';
-export { default as CountryFormInput } from './CountryFormInput';
-
-export * from './EmailAddressFormInput';
-export { default as EmailAddressFormInput } from './EmailAddressFormInput';
-
-export * from './InstagramInputGroup';
-export { default as InstagramInputGroup } from './InstagramInputGroup';
-
-export * from './PlushieInstagramAccountFormInput';
-export { default as PlushieInstagramAccountFormInput } from './PlushieInstagramAccountFormInput';
-
-export * from './PlushieInstagramAccountsSelector';
-export { default as PlushieInstagramAccountsSelector } from './PlushieInstagramAccountsSelector';
-
-export * from './TownOrCityInput';
-export { default as TownOrCityInput } from './TownOrCityInput';
-
-export * from './UsernameFormInput';
-export { default as UsernameFormInput } from './UsernameFormInput';
-
 export * from './Gallery';
 export { default as Gallery } from './Gallery';
 
@@ -50,3 +29,38 @@ export { default as PlushieBio } from './PlushieBio';
 
 export * from './UserSubscriptionTierBadge';
 export { default as UserSubscriptionTierBadge } from './UserSubscriptionTierBadge';
+
+// Form Inputs with Validation // ------------------------------------------------
+
+export * from './ConfirmPasswordFormInput';
+export { default as ConfirmPasswordFormInput } from './ConfirmPasswordFormInput';
+
+export * from './CountryFormInput';
+export { default as CountryFormInput } from './CountryFormInput';
+
+export * from './DisplayNameFormInput';
+export { default as DisplayNameFormInput } from './DisplayNameFormInput';
+
+export * from './EmailAddressFormInput';
+export { default as EmailAddressFormInput } from './EmailAddressFormInput';
+
+export * from './InstagramFormInput';
+export { default as InstagramFormInput } from './InstagramFormInput';
+
+export * from './PasswordFormInput';
+export { default as PasswordFormInput } from './PasswordFormInput';
+
+export * from './PlushieInstagramAccountFormInput';
+export { default as PlushieInstagramAccountFormInput } from './PlushieInstagramAccountFormInput';
+
+export * from './PlushieInstagramAccountsSelector';
+export { default as PlushieInstagramAccountsSelector } from './PlushieInstagramAccountsSelector';
+
+export * from './TermsAndConditionsFormInput';
+export { default as TermsAndConditionsFormInput } from './TermsAndConditionsFormInput';
+
+export * from './TownOrCityFormInput';
+export { default as TownOrCityFormInput } from './TownOrCityFormInput';
+
+export * from './UsernameFormInput';
+export { default as UsernameFormInput } from './UsernameFormInput';

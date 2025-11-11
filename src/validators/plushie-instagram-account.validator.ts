@@ -2,13 +2,14 @@ import { ValidationMessageService, ValidationRuleService } from 'services';
 import { isOriginalValue, isValueInArray } from 'utils';
 import { BaseValidator, InstagramAccountValidatorKey } from 'validators';
 
-const INPUT_LABEL = 'Instagram account username';
 const MAX_CHAR_LENGTH = 30;
 
 export default class PlushieInstagramAccountValidator extends BaseValidator {
+  protected static _inputLabel = 'Instagram account username';
+
   protected static errorMessageMap: Map<PlushieInstagramAccountValidatorKey, string> = new Map([
-    ['isValidUsername', ValidationMessageService.isValidUsername(INPUT_LABEL)],
-    ['isValidMaxLength', ValidationMessageService.isValidMaxLength(INPUT_LABEL, MAX_CHAR_LENGTH)],
+    ['isValidUsername', ValidationMessageService.isValidUsername(this.inputLabel)],
+    ['isValidMaxLength', ValidationMessageService.isValidMaxLength(this.inputLabel, MAX_CHAR_LENGTH)],
     ['isUniqueInstagramAccount', 'This Instagram username has already been added to your plushie accounts.']
   ]);
 

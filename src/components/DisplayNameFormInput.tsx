@@ -1,13 +1,13 @@
 import { InputHTMLAttributes } from 'react';
 import { useFormField } from 'hooks';
-import { EmailAddressValidator } from 'validators';
+import { DisplayNameValidator } from 'validators';
 import { FormValidationErrors } from 'framework';
 
 /**
- * Email address input with validation and inline error display.
- * Uses form context via useFormField and EmailAddressValidator.
+ * Display name input with validation and inline error display.
+ * Uses form context via useFormField and DisplayNameValidator.
  */
-export default function EmailAddressFormInput({
+export default function DisplayNameFormInput({
   id,
   initialValue,
   label,
@@ -15,11 +15,11 @@ export default function EmailAddressFormInput({
   placeholder,
   isReadonly,
   isRequired
-}: IEmailAddressFormInput) {
+}: IDisplayNameFormInput) {
   const { value, setValue, setTouched, validation, showErrors } = useFormField({
     id,
     initialValue,
-    validator: EmailAddressValidator,
+    validator: DisplayNameValidator,
     isRequired
   });
 
@@ -50,8 +50,8 @@ export default function EmailAddressFormInput({
   );
 }
 
-/** Props for {@link EmailAddressFormInput}. */
-interface IEmailAddressFormInput extends Pick<InputHTMLAttributes<HTMLInputElement>, 'placeholder'> {
+/** Props for {@link DisplayNameFormInput}. */
+interface IDisplayNameFormInput extends Pick<InputHTMLAttributes<HTMLInputElement>, 'placeholder'> {
   id: string;
   initialValue: string;
   label: string;

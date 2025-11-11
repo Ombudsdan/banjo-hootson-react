@@ -1,7 +1,7 @@
 import { useFormField } from 'hooks';
 import { InstagramAccountValidator } from 'validators';
 import { FormValidationErrors } from 'framework';
-import { IBaseInstagramInput, InstagramInputGroup } from 'components';
+import { IBaseInstagramInput, InstagramFormInput } from 'components';
 
 /**
  * Instagram username input with validation. Uses a prefixed input group and shows inline errors.
@@ -11,21 +11,23 @@ export default function UsernameFormInput({
   label,
   initialValue = '',
   hint,
-  placeholder = 'Username'
+  placeholder = 'Username',
+  isRequired
 }: IUsernameFormInput) {
   const { validation, showErrors } = useFormField({
     id,
     initialValue,
-    validator: InstagramAccountValidator
+    validator: InstagramAccountValidator,
+    isRequired
   });
 
   return (
     <div className="form-group">
-      <label className="form-group__label" htmlFor={id}>
+      <label className={`form-group__label ${isRequired ? 'form-group__label--required' : ''}`} htmlFor={id}>
         {label}
       </label>
       {hint && <div className="form-group__hint">{hint}</div>}
-      <InstagramInputGroup
+      <InstagramFormInput
         id={id}
         initialValue={initialValue}
         validator={InstagramAccountValidator}
@@ -40,4 +42,5 @@ export default function UsernameFormInput({
 interface IUsernameFormInput extends IBaseInstagramInput {
   label: string;
   hint?: string;
+  isRequired?: boolean;
 }

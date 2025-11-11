@@ -1,5 +1,5 @@
-@use "./variables";
-@use "./mixins";
+@use './variables';
+@use './mixins';
 
 $input-height: 3.7rem;
 $input-background-colour: variables.$colour-white;
@@ -192,10 +192,6 @@ $prefix-map: (
     font-weight: variables.$font-weight-semi-bold;
     color: variables.$colour-text;
     font-size: 0.9rem;
-    &--required::after {
-      content: ' *';
-      color: variables.$colour-orange;
-    }
   }
 
   &__checkbox-label {
@@ -232,6 +228,16 @@ $prefix-map: (
         outline: none;
       }
     }
+  }
+}
+
+.form-group__label,
+.form-field__label,
+.form-section-header__title,
+.terms-and-conditions-label {
+  &--required::after {
+    content: ' *';
+    color: variables.$colour-orange;
   }
 }
 

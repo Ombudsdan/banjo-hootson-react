@@ -13,6 +13,7 @@ import { isEmpty } from 'utils';
  */
 export default abstract class BaseValidator {
   protected static errorMessageMap: Map<string, string>;
+  protected static _inputLabel: string;
 
   /**
    * Executes validation checks based on a configuration record of validation flags.
@@ -35,6 +36,13 @@ export default abstract class BaseValidator {
 
     // Evaluate other validation rules
     return BaseValidator.evaluateValidation(config);
+  }
+
+  static get inputLabel(): string {
+    if (!this._inputLabel) {
+      throw new Error(`'inputLabel' has not been set in subclass.`);
+    }
+    return this._inputLabel;
   }
 
   /**

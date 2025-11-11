@@ -2,8 +2,6 @@ import { ValidationMessageService, ValidationRuleService } from 'services';
 import { getEmailParts, isValidRegex } from 'utils';
 import { BaseValidator } from 'validators';
 
-const INPUT_LABEL = 'Email address';
-
 /**
  * Maximum total length of an email address, including the local part,
  * the '@' symbol, and the domain part.
@@ -32,9 +30,11 @@ const DOMAIN_PART_MAX_CHAR_LENGTH = 255;
  * @extends BaseValidator
  */
 export default class EmailAddressValidator extends BaseValidator {
+  protected static _inputLabel = 'Email address';
+
   protected static errorMessageMap: Map<EmailAddressValidatorKey, string> = new Map([
-    ['isValidEmailAddress', `${INPUT_LABEL} is not valid.`],
-    ['isValidMaxLength', ValidationMessageService.isValidMaxLength(INPUT_LABEL, MAX_CHAR_LENGTH)]
+    ['isValidEmailAddress', `${this.inputLabel} is not valid.`],
+    ['isValidMaxLength', ValidationMessageService.isValidMaxLength(this.inputLabel, MAX_CHAR_LENGTH)]
   ]);
 
   static validate(value: string) {

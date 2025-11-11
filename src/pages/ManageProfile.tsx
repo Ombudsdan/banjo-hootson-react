@@ -7,7 +7,7 @@ import {
   CountryFormInput,
   EmailAddressFormInput,
   PlushieInstagramAccountsSelector,
-  TownOrCityInput,
+  TownOrCityFormInput,
   UsernameFormInput
 } from 'components';
 
@@ -34,8 +34,9 @@ export default function ManageProfile() {
         initialValue={user?.email || ''}
         label="Email Address"
         placeholder="Email Address"
+        isRequired
       />
-      <TownOrCityInput
+      <TownOrCityFormInput
         id={INPUT_ID.townOrCity}
         initialValue={user?.city || ''}
         label="Town or City"
@@ -57,6 +58,7 @@ export default function ManageProfile() {
       <PlushieInstagramAccountsSelector
         id={INPUT_ID.plushieAccounts}
         initialValue={user?.plushieInstagramAccounts || []}
+        isRequired
       />
       <FormActionsContainer>
         <button type="submit" className="form__button form__button--primary">

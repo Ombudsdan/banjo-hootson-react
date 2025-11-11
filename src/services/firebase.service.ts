@@ -51,7 +51,7 @@ export default class FirebaseService {
     password: string,
     displayName?: string
   ): Promise<UserCredential> {
-    const response = await HttpClientService.request<ILoginSession>({
+    const response = await HttpClientService.request<ILoginSession | { error: string; code?: string }>({
       path: '/firebase/createUserWithEmailAndPassword',
       method: 'POST',
       body: { email, password, displayName },
