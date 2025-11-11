@@ -17,10 +17,7 @@ const ROUTES = [
 ];
 
 function xmlEscape(s: string) {
-  return s
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 async function generate() {
@@ -31,7 +28,10 @@ async function generate() {
     urls.map(u => `  <url><loc>${xmlEscape(u)}</loc></url>`).join('\n') +
     `\n</urlset>\n`;
 
+  // The output path is derived from __dirname and static segments only
+  // eslint-disable-next-line security/detect-non-literal-fs-filename
   await fs.mkdir(DIST_DIR, { recursive: true });
+  // eslint-disable-next-line security/detect-non-literal-fs-filename
   await fs.writeFile(path.join(DIST_DIR, 'sitemap.xml'), xml, 'utf-8');
 
   console.info('Sitemap generated:', path.join(DIST_DIR, 'sitemap.xml'));

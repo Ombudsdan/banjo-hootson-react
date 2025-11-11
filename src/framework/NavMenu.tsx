@@ -112,8 +112,7 @@ export default function NavMenu() {
             ref={menuButtonRef}
             aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
             aria-expanded={mobileOpen}
-            aria-controls="nav-menu"
-          >
+            aria-controls="nav-menu">
             {/* Using text icon to avoid external icon deps */}☰
           </button>
 
@@ -125,8 +124,7 @@ export default function NavMenu() {
                 onClick={toggleDropdown}
                 aria-expanded={dropdownOpen}
                 aria-haspopup="true"
-                aria-controls="birthdays-menu"
-              >
+                aria-controls="birthdays-menu">
                 Plushie Birthdays
                 <span className={`nav__caret ${dropdownOpen ? 'nav__caret--open' : ''}`} aria-hidden>
                   ▾
@@ -165,8 +163,7 @@ export default function NavMenu() {
                 onClick={() => {
                   navigate(isAuthenticated ? '/dashboard' : '/login');
                   onNavigate();
-                }}
-              >
+                }}>
                 {isAuthenticated ? 'My Account' : 'Sign In'}
               </button>
             </li>

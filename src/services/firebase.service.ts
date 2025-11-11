@@ -56,9 +56,15 @@ export default class FirebaseService {
       method: 'POST',
       body: { email, password, displayName },
       withCredentials: true
-    }).catch(err => {
-      throw new Error(`Failed to create user: ${err.message}`);
+    }).catch((err: unknown) => {
+      // Surface server-provided code/message when available (HttpClientService includes body on errors)
+      const shaped = shapeHttpError(err);
+      FirebaseService.throwError(shaped.message || 'Failed to create user', shaped.code);
     });
+
+    if (isErrorEnvelope(response)) {
+      FirebaseService.throwError(response.error, response.code);
+    }
 
     const { user, token } = response as ILoginSession;
     return {
@@ -76,6 +82,12 @@ export default class FirebaseService {
       withCredentials: true
     });
   }
+
+  static throwError(errorMessage: string, code?: string) {
+    const error = new Error(errorMessage);
+    (error as Partial<CodedError>).code = code;
+    throw error;
+  }
 }
 
 export type { User as FirebaseUser };
@@ -84,4 +96,30 @@ export type { UserCredential as FirebaseUserCredential };
 interface ILoginSession {
   user: User;
   token: string;
+}
+
+interface ErrorEnvelope {
+  error: string;
+  code?: string;
+}
+
+interface CodedError extends Error {
+  code?: string;
+  body?: unknown;
+}
+
+function isErrorEnvelope(value: unknown): value is ErrorEnvelope {
+  if (!value || typeof value !== 'object' || !('error' in value)) return false;
+  const errVal = (value as Record<string, unknown>).error;
+  return typeof errVal === 'string';
+}
+
+function shapeHttpError(err: unknown): { message?: string; code?: string } {
+  if (!err) return {};
+  const anyErr = err as Partial<CodedError> & { body?: Partial<ErrorEnvelope> };
+  const body = anyErr.body as ErrorEnvelope | undefined;
+  return {
+    message: body?.error || anyErr.message,
+    code: anyErr.code || body?.code
+  };
 }
