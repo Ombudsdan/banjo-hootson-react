@@ -83,6 +83,7 @@ export default function ManageProfile() {
 
   async function onSubmit(_e: FormEvent<HTMLFormElement>, form: FormSubmitContext<IManageProfileFormFields>) {
     setLoadingScreen({ id: 'save-profile', message: 'Saving profile information' });
+
     const fields = form.getFormFields();
 
     await UserController.update({

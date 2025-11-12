@@ -19,27 +19,27 @@ export default class PlushieInstagramAccountValidator extends BaseValidator {
     return PlushieInstagramAccountValidator.executeValidation(value, {
       isValidUsername: ValidationRuleService.isValidUsername(value),
       isValidMaxLength: ValidationRuleService.isValidMaxLength(value, MAX_CHAR_LENGTH),
-      isUniqueInstagramAccount: isUniqueInstagramAccount(value, list, originalValue)
+      isUniqueInstagramAccount: PlushieInstagramAccountValidator.isUniqueInstagramAccount(value, list, originalValue)
     });
   }
-}
 
-/**
- * Checks whether a given Instagram username already exists in a list of existing usernames.
- *
- * Useful for preventing duplicate account entries during form validation or user registration.
- *
- * @private
- * @param value - The Instagram username to check for duplicates.
- * @param existingAccounts - An array of usernames to compare against.
- * @returns `true` if the username already exists in the array, otherwise `false`.
- */
-function isUniqueInstagramAccount(value: string, existingAccounts: string[], originalValue?: string): boolean {
-  // If the value matches the original (editing without change), treat as unique
-  if (isOriginalValue(value, originalValue)) return true;
+  /**
+   * Checks whether a given Instagram username already exists in a list of existing usernames.
+   *
+   * Useful for preventing duplicate account entries during form validation or user registration.
+   *
+   * @private
+   * @param value - The Instagram username to check for duplicates.
+   * @param existingAccounts - An array of usernames to compare against.
+   * @returns `true` if the username already exists in the array, otherwise `false`.
+   */
+  private static isUniqueInstagramAccount(value: string, existingAccounts: string[], originalValue?: string): boolean {
+    // If the value matches the original (editing without change), treat as unique
+    if (isOriginalValue(value, originalValue)) return true;
 
-  // Otherwise ensure it's not already in the list
-  return !isValueInArray(value, existingAccounts);
+    // Otherwise ensure it's not already in the list
+    return !isValueInArray(value, existingAccounts);
+  }
 }
 
 type PlushieInstagramAccountValidatorKey =

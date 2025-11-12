@@ -11,16 +11,13 @@ export default class ConfirmPasswordValidator extends BaseValidator {
   static validate(value: string, args?: { password: string }) {
     return ConfirmPasswordValidator.executeValidation(value, {
       isRequired: ValidationRuleService.isRequired(value),
-      isMatchingPassword: isMatchingPassword(value, args?.password ?? '')
+      isMatchingPassword: ConfirmPasswordValidator.isMatchingPassword(value, args?.password ?? '')
     });
   }
-}
 
-/**
- * Checks whether the confirmed password matches the original password.
- */
-function isMatchingPassword(value: string, password: string): boolean {
-  return value === password;
+  private static isMatchingPassword(value: string, password: string): boolean {
+    return value === password;
+  }
 }
 
 type ConfirmPasswordValidatorKey = 'isMatchingPassword' | keyof typeof ValidationRuleService;

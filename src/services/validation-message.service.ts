@@ -60,4 +60,16 @@ export default class ValidationMessageService {
   static isValidUsername(label: string): string {
     return `${label} must start with a letter and contain only letters, numbers, periods, and underscores.`;
   }
+
+  /**
+   * Returns a message indicating that the given field must contain only valid name characters.
+   *
+   * Valid characters include letters, numbers, spaces, hyphens, and apostrophes.
+   *
+   * @param label - The label or name of the field.
+   * @returns A string describing the valid name character requirement.
+   */
+  static hasValidNameCharacters(label: string): string {
+    return `${label} must only contain letters, numbers, spaces, hyphens, and apostrophes.`;
+  }
 }

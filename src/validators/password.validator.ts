@@ -23,37 +23,37 @@ export default class PasswordValidator extends BaseValidator {
       isRequired: ValidationRuleService.isRequired(value),
       isValidMinLength: ValidationRuleService.isValidMinLength(value, MIN_CHAR_LENGTH),
       isValidMaxLength: ValidationRuleService.isValidMaxLength(value, MAX_CHAR_LENGTH),
-      hasOneOfEachRequiredCharacter: hasOneOfEachRequiredCharacter(value),
-      hasOnlyPermittedCharacters: hasOnlyPermittedCharacters(value)
+      hasOneOfEachRequiredCharacter: PasswordValidator.hasOneOfEachRequiredCharacter(value),
+      hasOnlyPermittedCharacters: PasswordValidator.hasOnlyPermittedCharacters(value)
     });
   }
-}
 
-/**
- * Checks for at least one of each required character type: lowercase, uppercase, number, special character.
- *
- * City names across the world can include:
- * - At least one lowercase (?=.*[a-z])
- * - At least one uppercase (?=.*[A-Z])
- * - At least one number (?=.*\d)
- * - At least one special character (?=.*[^A-Za-z0-9])
- * - One or more characters (.+)
- */
-function hasOneOfEachRequiredCharacter(value: string): boolean {
-  return isValidRegex(value, /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/);
-}
+  /**
+   * Checks for at least one of each required character type: lowercase, uppercase, number, special character.
+   *
+   * City names across the world can include:
+   * - At least one lowercase (?=.*[a-z])
+   * - At least one uppercase (?=.*[A-Z])
+   * - At least one number (?=.*\d)
+   * - At least one special character (?=.*[^A-Za-z0-9])
+   * - One or more characters (.+)
+   */
+  private static hasOneOfEachRequiredCharacter(value: string): boolean {
+    return isValidRegex(value, /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/);
+  }
 
-/**
- * Checks that the password contains only permitted characters.
- *
- * City names across the world can include:
- * - Uppercase letters (A–Z)
- * - Lowercase letters (a–z)
- * - Numbers (0–9)
- * - Special characters: !@#$%^&*()_-+={}[]|\:;"'<>,.?/~`
- */
-function hasOnlyPermittedCharacters(value: string): boolean {
-  return isValidRegex(value, /^[A-Za-z0-9!@#$%^&*()_\-+={}[\]|\\:;"'<>,.?/~`]+$/);
+  /**
+   * Checks that the password contains only permitted characters.
+   *
+   * City names across the world can include:
+   * - Uppercase letters (A–Z)
+   * - Lowercase letters (a–z)
+   * - Numbers (0–9)
+   * - Special characters: !@#$%^&*()_-+={}[]|\:;"'<>,.?/~`
+   */
+  private static hasOnlyPermittedCharacters(value: string): boolean {
+    return isValidRegex(value, /^[A-Za-z0-9!@#$%^&*()_\-+={}[\]|\\:;"'<>,.?/~`]+$/);
+  }
 }
 
 type PasswordValidatorKey =

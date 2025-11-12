@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import { useForm, useInputValidation } from '.';
 import { BaseValidator, IValidation, NoopValidator } from 'validators';
-import { isEmpty, ValidationErrorRecord } from 'utils';
+import { isEmpty } from 'utils';
 import { ValidationMessageService } from 'services';
 
 /**
@@ -184,3 +184,5 @@ interface IUseFormField<TValue> {
 }
 
 export type UseFormFieldArgsRecord = Record<string, unknown>;
+
+type ValidationErrorRecord = Record<string, boolean>;

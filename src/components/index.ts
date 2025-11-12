@@ -50,11 +50,17 @@ export { default as InstagramFormInput } from './InstagramFormInput';
 export * from './PasswordFormInput';
 export { default as PasswordFormInput } from './PasswordFormInput';
 
+export * from './PlushieBirthDateFormInput';
+export { default as PlushieBirthDateFormInput } from './PlushieBirthDateFormInput';
+
 export * from './PlushieInstagramAccountFormInput';
 export { default as PlushieInstagramAccountFormInput } from './PlushieInstagramAccountFormInput';
 
 export * from './PlushieInstagramAccountsSelector';
 export { default as PlushieInstagramAccountsSelector } from './PlushieInstagramAccountsSelector';
+
+export * from './PlushieNameFormInput';
+export { default as PlushieNameFormInput } from './PlushieNameFormInput';
 
 export * from './TermsAndConditionsFormInput';
 export { default as TermsAndConditionsFormInput } from './TermsAndConditionsFormInput';

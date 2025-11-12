@@ -89,4 +89,32 @@ export default class ValidationRuleService {
   static isValidUsername(value: string): boolean {
     return isValidRegex(value, /^[@a-zA-Z0-9][a-zA-Z0-9_.-]*$/);
   }
+
+  /**
+   * Checks whether a given string contains only valid name characters.
+   *
+   * Valid characters include:
+   * - Uppercase and lowercase English letters (A–Z, a–z)
+   * - Digits (0–9)
+   * - Spaces
+   * - Hyphens (-)
+   * - Apostrophes (')
+   *
+   * @param value - The string to validate.
+   * @returns `true` if the string contains only valid characters; otherwise, `false`.
+   *
+   * @example
+   * ```ts
+   * ValidationRuleService.hasValidNameCharacters("Mr Fluffington");   // true — letters and space only
+   * ValidationRuleService.hasValidNameCharacters("O'Malley Jr");      // true — includes apostrophe and space
+   * ValidationRuleService.hasValidNameCharacters("Plushie-3000");     // true — includes hyphen and digits
+   *
+   * ValidationRuleService.hasValidNameCharacters("Mr. Fluffington");  // false — period (.) not allowed
+   * ValidationRuleService.hasValidNameCharacters("Fluff@Home");       // false — @ symbol not allowed
+   * ValidationRuleService.hasValidNameCharacters("Mr Fluffington!");  // false — exclamation mark not allowed
+   * ```
+   */
+  static hasValidNameCharacters(value: string): boolean {
+    return isValidRegex(value, /^[a-zA-Z0-9\s\-']+$/);
+  }
 }
