@@ -21,3 +21,6 @@ export { default as PageHeadingOutlet } from './PageHeadingOutlet';
 
 export * from './PageValidationAlertOutlet';
 export { default as PageValidationAlertOutlet } from './PageValidationAlertOutlet';
+
+export * from './LoadingScreenOutlet';
+export { default as LoadingScreenOutlet } from './LoadingScreenOutlet';

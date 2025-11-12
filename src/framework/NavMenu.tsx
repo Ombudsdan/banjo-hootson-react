@@ -164,7 +164,7 @@ export default function NavMenu() {
                   navigate(isAuthenticated ? '/dashboard' : '/login');
                   onNavigate();
                 }}>
-                {isAuthenticated ? 'My Account' : 'Sign In'}
+                {isAuthenticated ? 'My Dashboard' : 'Sign In'}
               </button>
             </li>
           </ul>

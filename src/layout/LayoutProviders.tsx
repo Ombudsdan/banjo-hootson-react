@@ -11,6 +11,7 @@ import {
   BackdropProvider,
   DialogProvider,
   FormDialogProvider,
+  LoadingScreenProvider,
   PageAlertProvider,
   PageContainerProvider,
   PageHeadingProvider,
@@ -22,13 +23,15 @@ const LayoutProviders: FC<LayoutProvidersProps> = ({ children }) => {
     <PageHeadingProvider>
       <PageValidationAlertProvider>
         <PageAlertProvider>
-          <BackdropProvider>
-            <FormDialogProvider>
-              <DialogProvider>
-                <PageContainerProvider>{children}</PageContainerProvider>
-              </DialogProvider>
-            </FormDialogProvider>
-          </BackdropProvider>
+          <LoadingScreenProvider>
+            <BackdropProvider>
+              <FormDialogProvider>
+                <DialogProvider>
+                  <PageContainerProvider>{children}</PageContainerProvider>
+                </DialogProvider>
+              </FormDialogProvider>
+            </BackdropProvider>
+          </LoadingScreenProvider>
         </PageAlertProvider>
       </PageValidationAlertProvider>
     </PageHeadingProvider>

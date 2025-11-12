@@ -1,7 +1,7 @@
 /* eslint sonarjs/no-hardcoded-passwords: off -- These are field IDs and labels, not secrets */
 import { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FormOutlet, FormSubmitContext, usePageHeading } from 'hooks';
+import { FormOutlet, FormSubmitContext, useLoadingScreen, usePageHeading } from 'hooks';
 import { FormActionsContainer } from 'framework';
 import { UserController, AuthController } from 'controllers';
 import usePageAlerts from 'hooks/usePageAlerts';
@@ -25,6 +25,7 @@ const INPUT_ID = {
 export default function SignupPage() {
   const navigate = useNavigate();
   const { addAlert } = usePageAlerts();
+  const { setLoadingScreen, dismissLoadingScreen } = useLoadingScreen();
 
   usePageHeading('Sign Up');
 
@@ -91,6 +92,8 @@ export default function SignupPage() {
       return;
     }
 
+    setLoadingScreen({ id: 'signup', message: 'Creating your account' });
+
     const emailAddress = (fields[INPUT_ID.emailAddress] as string) ?? '';
     const password = (fields[INPUT_ID.password] as string) ?? '';
     const displayName = (fields[INPUT_ID.displayName] as string) ?? '';
@@ -103,6 +106,7 @@ export default function SignupPage() {
     } catch (error: unknown) {
       const { message: finalMessage } = mapSignupError(error);
       addAlert(PageAlert.error(finalMessage, 'signup-error'));
+      dismissLoadingScreen('signup');
     }
   }
 

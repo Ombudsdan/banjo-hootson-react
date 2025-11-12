@@ -1,6 +1,6 @@
 import { FormEvent, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { FormOutlet, FormSubmitContext, usePageHeading } from 'hooks';
+import { FormOutlet, FormSubmitContext, useLoadingScreen, usePageHeading } from 'hooks';
 import { FormActionsContainer } from 'framework';
 import { UserController, AuthController } from 'controllers';
 import usePageAlerts from 'hooks/usePageAlerts';
@@ -18,6 +18,7 @@ export default function LoginPage() {
   const { search } = useLocation();
   const params = useMemo(() => new URLSearchParams(search), [search]);
   const { addAlert } = usePageAlerts();
+  const { setLoadingScreen, dismissLoadingScreen } = useLoadingScreen();
 
   useEffect(() => {
     const msg = params.get('message');
@@ -69,6 +70,7 @@ export default function LoginPage() {
     const password = (fields[INPUT_ID.password] as string) ?? '';
 
     try {
+      setLoadingScreen({ id: 'sign-in-loading', message: 'Signing in' });
       await AuthController.signInWithEmailPassword(emailAddress, password);
       await UserController.me();
       navigate('/dashboard');

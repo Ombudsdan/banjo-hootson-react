@@ -1,0 +1,87 @@
+@use 'sass:color';
+@use '../variables';
+
+.loading-screen {
+  position: fixed;
+  top: variables.$nav-height;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: variables.$colour-very-light;
+  z-index: 998; // Below backdrop and special nav-above-backdrop, above page content
+
+  &__content {
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    color: variables.$colour-text;
+    justify-content: center;
+  }
+
+  &__message {
+    margin: 0;
+    font-size: variables.$font-size-h2;
+    width: min(350px, calc(100vw - 48px));
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    white-space: normal;
+    word-break: normal;
+    overflow-wrap: normal;
+  }
+
+  &__dots {
+    display: inline-block;
+    width: 5ch; // Reserve space to prevent layout shift even when showing '. . .'
+    text-align: left;
+    white-space: nowrap;
+
+    &::after {
+      margin-left: 0.5ch;
+      content: '';
+      color: variables.$colour-orange;
+      animation: loading-dots 1.6s steps(1, end) infinite;
+    }
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Cycle '.', '..', '...' with a brief pause on '...'
+@keyframes loading-dots {
+  0% {
+    content: '';
+  }
+  25% {
+    content: '.';
+  }
+  50% {
+    content: '. .';
+  }
+  75% {
+    content: '. . .';
+  }
+  100% {
+    content: '. . .'; // hold for a short pause
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-screen__spinner {
+    animation: none;
+  }
+  .loading-screen__dots::after {
+    animation: none;
+    content: '...';
+  }
+}

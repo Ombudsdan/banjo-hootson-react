@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthController, UserController } from 'controllers';
-import { usePageHeading } from 'hooks';
+import { useLoadingScreen, usePageHeading } from 'hooks';
 import { PageContentContainer, PageSectionContainer } from 'framework';
 import { DashboardCard, UserSubscriptionTierBadge } from 'components';
 import { ICONS } from 'icons';
@@ -11,30 +11,13 @@ export default function DashboardPage() {
   const navigate = useNavigate();
   const [userProfile, setUserProfile] = useState<IUser | null>(null);
   const [isSigningOut, setIsSigningOut] = useState(false);
-
-  useEffect(() => {
-    UserController.me().then(u => setUserProfile(u));
-  }, []);
-
-  const onSignOut = async () => {
-    if (isSigningOut) return;
-    setIsSigningOut(true);
-    try {
-      await AuthController.signOut();
-      navigate('/login?loggedOut=1');
-    } catch {
-      navigate('/');
-    } finally {
-      setIsSigningOut(false);
-    }
-  };
+  const { setLoadingScreen, dismissLoadingScreen } = useLoadingScreen();
 
   const availableCards = [
     {
       key: 'PROFILE_SETTINGS',
       title: 'My Profile',
       description: 'Manage your profile settings',
-      // action: () => navigate({ pathname: "/profile", search: "?tab=PROFILE" }),
       action: () => navigate({ pathname: '/profile' }),
       icon: ICONS.user
     },
@@ -47,7 +30,14 @@ export default function DashboardPage() {
     }
   ];
 
-  usePageHeading('My Account');
+  useEffect(() => {
+    setLoadingScreen({ id: 'dashboard-loading', message: 'Loading your dashboard' });
+    UserController.me()
+      .then(u => setUserProfile(u))
+      .finally(dismissLoadingScreen);
+  }, []);
+
+  usePageHeading('My Dashboard');
 
   return (
     <PageContentContainer spacing="medium">
@@ -85,4 +75,17 @@ export default function DashboardPage() {
       )}
     </PageContentContainer>
   );
+
+  async function onSignOut() {
+    if (isSigningOut) return;
+    setIsSigningOut(true);
+    try {
+      await AuthController.signOut();
+      navigate('/login?loggedOut=1');
+    } catch {
+      navigate('/');
+    } finally {
+      setIsSigningOut(false);
+    }
+  }
 }

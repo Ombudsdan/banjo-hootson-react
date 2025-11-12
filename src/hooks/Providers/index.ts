@@ -10,6 +10,9 @@ export { default as FormDialogProvider } from './FormDialogProvider';
 export * from './FormProvider';
 export { default as FormProvider } from './FormProvider';
 
+export * from './LoadingScreenProvider';
+export { default as LoadingScreenProvider } from './LoadingScreenProvider';
+
 export * from './PageAlertProvider';
 export { default as PageAlertProvider } from './PageAlertProvider';
 

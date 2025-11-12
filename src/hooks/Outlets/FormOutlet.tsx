@@ -30,16 +30,8 @@ function FormContent<TFields extends object = FormFieldsRecord>({
   disablePageValidation
 }: IForm<TFields>) {
   const { dismissAllAlerts } = usePageAlerts();
-  const {
-    setIsSubmitted,
-    isSaving,
-    setIsSaving,
-    fields,
-    getFormFields,
-    touched,
-    isSubmitted,
-    fieldValidation
-  } = useForm<TFields>();
+  const { setIsSubmitted, isSaving, setIsSaving, fields, getFormFields, touched, isSubmitted, fieldValidation } =
+    useForm<TFields>();
   const { setValidationAlert, clearValidationAlert } = useValidationAlert();
 
   return <form onSubmit={submit}>{children}</form>;

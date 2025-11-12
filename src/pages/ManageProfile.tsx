@@ -1,7 +1,7 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { FormActionsContainer } from 'framework';
 import { UserController } from 'controllers';
-import { FormOutlet, FormSubmitContext, useHeading, usePageAlerts } from 'hooks';
+import { FormOutlet, FormSubmitContext, useHeading, useLoadingScreen, usePageAlerts } from 'hooks';
 import { IPlushieInstagramAccount, IUser } from 'model/user.model';
 import {
   CountryFormInput,
@@ -21,6 +21,7 @@ const INPUT_ID = {
 export default function ManageProfile() {
   useHeading({ heading: 'Manage Profile' });
   const { addAlert } = usePageAlerts();
+  const { setLoadingScreen, dismissLoadingScreen } = useLoadingScreen();
 
   const [user, setUser] = useState<IUser | null>(null);
 
@@ -69,20 +70,19 @@ export default function ManageProfile() {
   );
 
   function fetchUser() {
-    UserController.me().then(user => {
-      if (user) {
-        setUser(user);
-      } else {
+    UserController.me()
+      .then(user => setUser(user))
+      .catch(() => {
         addAlert({
           id: 'load-profile-error',
           variant: 'error',
           heading: 'Failed to load user profile. Please try again later.'
         });
-      }
-    });
+      });
   }
 
   async function onSubmit(_e: FormEvent<HTMLFormElement>, form: FormSubmitContext<IManageProfileFormFields>) {
+    setLoadingScreen({ id: 'save-profile', message: 'Saving profile information' });
     const fields = form.getFormFields();
 
     await UserController.update({
@@ -91,7 +91,7 @@ export default function ManageProfile() {
       country: fields[INPUT_ID.country] ?? user?.country ?? '',
       humanInstagram: fields[INPUT_ID.yourInstagramAccount] ?? user?.humanInstagram ?? '',
       plushieInstagramAccounts: fields[INPUT_ID.plushieAccounts] ?? user?.plushieInstagramAccounts ?? []
-    });
+    }).finally(() => dismissLoadingScreen('save-profile'));
 
     addAlert({
       id: 'save-profile-successful',

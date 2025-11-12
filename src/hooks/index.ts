@@ -31,6 +31,9 @@ export { default as useInputValidation } from './useInputValidation';
 export * from './useIsMobile';
 export { default as useIsMobile } from './useIsMobile';
 
+export * from './useLoadingScreen';
+export { default as useLoadingScreen } from './useLoadingScreen';
+
 export * from './usePageAlerts';
 export { default as usePageAlerts } from './usePageAlerts';
 

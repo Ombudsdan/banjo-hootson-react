@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import { AuthController, HealthController } from 'controllers';
 import { NavMenu, ScrollToTop, Footer } from 'framework';
@@ -8,10 +8,12 @@ import {
   PageAlertOutlet,
   PageContainerOutlet,
   PageHeadingOutlet,
+  LoadingScreenOutlet,
   BackdropOutlet,
   PageValidationAlertOutlet,
   FormDialogOutlet
 } from 'hooks';
+import { useLoadingScreen } from 'hooks';
 import LayoutProviders from './LayoutProviders';
 
 export default function DefaultLayout() {
@@ -36,10 +38,14 @@ export default function DefaultLayout() {
     };
   }, []);
 
+  // Note: Route change dismissal is handled within providers via RouteChangeLoadingReset below
+
   return (
     <LayoutProviders>
+      <RouteChangeLoadingReset />
       <NavMenu />
       <ScrollToTop />
+      <LoadingScreenOutlet />
       <BackdropOutlet />
       <DialogOutlet />
       <FormDialogOutlet />
@@ -61,4 +67,13 @@ export default function DefaultLayout() {
     withContext.context = context;
     reportAppError(withContext);
   }
+}
+
+function RouteChangeLoadingReset() {
+  const location = useLocation();
+  const { dismissLoadingScreen } = useLoadingScreen();
+  useEffect(() => {
+    dismissLoadingScreen();
+  }, [location.key, dismissLoadingScreen]);
+  return null;
 }
