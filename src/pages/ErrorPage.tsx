@@ -62,9 +62,17 @@ export default function ErrorPage(props: ErrorPageProps) {
   }
 
   function getContentFromNetworkError(err: unknown): Partial<IError> {
-    const error = err as CustomErrorProps;
+    const error = err as CustomErrorProps & { status?: number };
     const call = error?.context || error?.call;
     const isNetwork = error?.code === 'NETWORK_ERROR' || (error instanceof Error && error.message === 'Network error');
+
+    // Rate limiting / quota exceeded
+    if (error?.status === 429) {
+      return {
+        title: 'Rate limit reached',
+        message: 'The backend has temporarily exceeded its Firestore quota. Please wait a moment and try again.'
+      };
+    }
 
     if (!isNetwork) return {};
 

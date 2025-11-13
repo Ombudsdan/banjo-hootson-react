@@ -37,6 +37,7 @@ module.exports = {
       icons: path.resolve(__dirname, 'src/icons.ts'),
       layout: path.resolve(__dirname, 'src/layout'),
       model: path.resolve(__dirname, 'src/model'),
+      pages: path.resolve(__dirname, 'src/pages'),
       routes: path.resolve(__dirname, 'src/routes'),
       services: path.resolve(__dirname, 'src/services'),
       test: path.resolve(__dirname, 'src/test'),

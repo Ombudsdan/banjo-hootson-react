@@ -5,7 +5,7 @@ export const LoadingScreenContext = createContext<ILoadingScreenContext | undefi
 export default LoadingScreenContext;
 
 export interface ILoadingScreenContext {
-  open: boolean;
+  isOpen: boolean;
   message?: string;
   /**
    * Show the global loading screen. Returns the id used (useful if not provided).

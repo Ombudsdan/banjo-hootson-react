@@ -4,6 +4,9 @@
  *   import { HeadingProvider, PageAlertsProvider } from 'services';
  */
 
+export * from './auth.service';
+export { default as AuthService } from './auth.service';
+
 export * from './birthday-calendar.service';
 export { default as BirthdayCalendarService } from './birthday-calendar.service';
 

@@ -1,42 +1,31 @@
 import { IUser, UserUpdateProps } from 'model/user.model';
 import { UserService } from 'services';
-import { toISOString } from 'utils';
 
 export default class UserController {
   static async init(): Promise<IUser> {
     const user = await UserService.initUser();
-    return this.toUserProfile(user);
+    return UserService.convertUserToUserProfile(user);
   }
 
-  static async me(): Promise<IUser> {
-    const user = await UserService.getCurrentUser();
-    return this.toUserProfile(user);
+  static async getCurrentUserProfile(): Promise<IUser> {
+    return await UserService.getCurrentUser()
+      .then(user => {
+        if (!user) throw new Response('User not found', { status: 404 });
+        return UserService.convertUserToUserProfile(user);
+      })
+      .catch(error => {
+        if (error instanceof Response) throw error;
+        if (error instanceof Error) throw new Response(error.message, { status: 500 });
+        throw new Response('Failed to load user', { status: 500 });
+      });
   }
 
-  static async update(updates: UserUpdateProps): Promise<IUser> {
+  static async updateCurrentUser(updates: UserUpdateProps): Promise<IUser> {
     const user = await UserService.updateCurrentUser(updates);
-    return this.toUserProfile(user);
+    return UserService.convertUserToUserProfile(user);
   }
 
-  static delete(): Promise<{ message: string }> {
-    return UserService.deleteCurrentUser();
-  }
-
-  private static toUserProfile(user: IUser): IUser {
-    return {
-      uid: user.uid,
-      email: user.email,
-      subscriptionTier: user.subscriptionTier,
-      createdAt: toISOString(user.createdAt),
-      lastLogin: toISOString(user.lastLogin),
-      profile: {
-        displayName: user.profile?.displayName,
-        preferences: user.profile?.preferences
-      },
-      city: user.city || '',
-      country: user.country || '',
-      humanInstagram: user.humanInstagram || '',
-      plushieInstagramAccounts: user.plushieInstagramAccounts || []
-    };
+  static deleteUser(userId: string): Promise<{ message: string }> {
+    return UserService.deleteUser(userId);
   }
 }

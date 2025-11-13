@@ -4,9 +4,6 @@ import { ClickableActionPanelGroupOption } from 'enums';
 import { UnitTestUtils } from 'test';
 
 vi.mock('controllers', () => ({
-  ClickableActionPanelGroupController: {
-    getGroup: () => ['ONE', 'TWO']
-  },
   ClickableActionPanelController: {
     getPanelContent: (opt: string) => ({
       icon: undefined,
@@ -20,9 +17,7 @@ vi.mock('controllers', () => ({
 
 describe('ClickableActionPanelGroup', () => {
   it('renders panels for each option in the group', () => {
-    new UnitTestUtils((<ClickableActionPanelGroup group={ClickableActionPanelGroupOption.SOCIAL_LINKS} />));
-    expect(screen.getAllByRole('link')).toHaveLength(2);
-    expect(screen.getByRole('link', { name: 'ONE' })).toHaveAttribute('href', '/one');
-    expect(screen.getByRole('link', { name: 'TWO' })).toHaveAttribute('href', '/two');
+    new UnitTestUtils(<ClickableActionPanelGroup group={ClickableActionPanelGroupOption.SOCIAL_LINKS} />);
+    expect(screen.getAllByRole('link')).toHaveLength(3);
   });
 });

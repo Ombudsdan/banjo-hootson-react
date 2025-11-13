@@ -4,12 +4,6 @@ export * from './auth.controller';
 export { default as BirthdayController } from './birthday.controller';
 export * from './birthday.controller';
 
-export { default as ClickableActionPanelGroupController } from './clickable-action-panel-group.controller';
-export * from './clickable-action-panel-group.controller';
-
-export { default as ClickableActionPanelController } from './clickable-action-panel.controller';
-export * from './clickable-action-panel.controller';
-
 export { default as GalleryController } from './gallery.controller';
 export * from './gallery.controller';
 

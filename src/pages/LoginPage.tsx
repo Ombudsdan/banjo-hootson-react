@@ -18,29 +18,9 @@ export default function LoginPage() {
   const { search } = useLocation();
   const params = useMemo(() => new URLSearchParams(search), [search]);
   const { addAlert } = usePageAlerts();
-  const { setLoadingScreen, dismissLoadingScreen } = useLoadingScreen();
+  const { setLoadingScreen } = useLoadingScreen();
 
-  useEffect(() => {
-    const msg = params.get('message');
-    if (msg) displayCustomMessageAlert(msg, 'custom-login-message');
-
-    const possiblePageAlerts: SignInPageAlertMessageType[] = ['loggedOut', 'expired', 'deleted'];
-    const pageAlerts: Record<SignInPageAlertMessageType, boolean> = possiblePageAlerts.reduce((acc, key) => {
-      acc[key] = params.get(key) === '1';
-      return acc;
-    }, {} as Record<SignInPageAlertMessageType, boolean>);
-    const hasAlerts = Object.values(pageAlerts).some(v => v);
-
-    if (!hasAlerts) return;
-
-    const next = new URLSearchParams(params);
-
-    if (pageAlerts['loggedOut']) displaySignedOutAlert(next);
-    if (pageAlerts['expired']) displaySessionExpiredAlert(next);
-    if (pageAlerts['deleted']) displayAccountDeletedAlert(next);
-
-    if (hasAlerts) clearUrl(next);
-  }, [params, addAlert]);
+  useEffect(loadPageAlerts, [params, addAlert]);
 
   usePageHeading('Sign In');
 
@@ -72,7 +52,7 @@ export default function LoginPage() {
     try {
       setLoadingScreen({ id: 'sign-in-loading', message: 'Signing in' });
       await AuthController.signInWithEmailPassword(emailAddress, password);
-      await UserController.me();
+      await UserController.getCurrentUserProfile();
       navigate('/dashboard');
     } catch (error: unknown) {
       const { message } = mapSignInError(error);
@@ -116,6 +96,28 @@ export default function LoginPage() {
     }
 
     return { message, code };
+  }
+
+  function loadPageAlerts() {
+    const msg = params.get('message');
+    if (msg) displayCustomMessageAlert(msg, 'custom-login-message');
+
+    const possiblePageAlerts: SignInPageAlertMessageType[] = ['loggedOut', 'expired', 'deleted'];
+    const pageAlerts: Record<SignInPageAlertMessageType, boolean> = possiblePageAlerts.reduce((acc, key) => {
+      acc[key] = params.get(key) === '1';
+      return acc;
+    }, {} as Record<SignInPageAlertMessageType, boolean>);
+    const hasAlerts = Object.values(pageAlerts).some(v => v);
+
+    if (!hasAlerts) return;
+
+    const next = new URLSearchParams(params);
+
+    if (pageAlerts['loggedOut']) displaySignedOutAlert(next);
+    if (pageAlerts['expired']) displaySessionExpiredAlert(next);
+    if (pageAlerts['deleted']) displayAccountDeletedAlert(next);
+
+    if (hasAlerts) clearUrl(next);
   }
 
   function displayCustomMessageAlert(message: string, alertId: string) {

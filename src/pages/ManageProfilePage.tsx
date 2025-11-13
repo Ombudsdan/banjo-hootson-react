@@ -1,8 +1,8 @@
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent } from 'react';
 import { FormActionsContainer } from 'framework';
 import { UserController } from 'controllers';
 import { FormOutlet, FormSubmitContext, useHeading, useLoadingScreen, usePageAlerts } from 'hooks';
-import { IPlushieInstagramAccount, IUser } from 'model/user.model';
+import { IPlushieInstagramAccount } from 'model/user.model';
 import {
   CountryFormInput,
   EmailAddressFormInput,
@@ -10,6 +10,7 @@ import {
   TownOrCityFormInput,
   UsernameFormInput
 } from 'components';
+import { useLoaderDataFor } from 'routes';
 
 const INPUT_ID = {
   townOrCity: 'town-or-city-input',
@@ -19,13 +20,11 @@ const INPUT_ID = {
 } as const;
 
 export default function ManageProfile() {
-  useHeading({ heading: 'Manage Profile' });
   const { addAlert } = usePageAlerts();
   const { setLoadingScreen, dismissLoadingScreen } = useLoadingScreen();
+  const { user } = useLoaderDataFor(manageProfileLoader);
 
-  const [user, setUser] = useState<IUser | null>(null);
-
-  useEffect(fetchUser, []);
+  useHeading({ heading: 'Manage Profile' });
 
   return (
     <FormOutlet<IManageProfileFormFields> onSubmit={onSubmit} onSubmitFailure={onSubmitFailure}>
@@ -69,24 +68,12 @@ export default function ManageProfile() {
     </FormOutlet>
   );
 
-  function fetchUser() {
-    UserController.me()
-      .then(user => setUser(user))
-      .catch(() => {
-        addAlert({
-          id: 'load-profile-error',
-          variant: 'error',
-          heading: 'Failed to load user profile. Please try again later.'
-        });
-      });
-  }
-
   async function onSubmit(_e: FormEvent<HTMLFormElement>, form: FormSubmitContext<IManageProfileFormFields>) {
     setLoadingScreen({ id: 'save-profile', message: 'Saving profile information' });
 
     const fields = form.getFormFields();
 
-    await UserController.update({
+    await UserController.updateCurrentUser({
       ...user,
       city: fields[INPUT_ID.townOrCity] ?? user?.city ?? '',
       country: fields[INPUT_ID.country] ?? user?.country ?? '',
@@ -109,6 +96,10 @@ export default function ManageProfile() {
       messages: [...(err?.message || [])]
     });
   }
+}
+
+export async function manageProfileLoader() {
+  return await UserController.getCurrentUserProfile().then(user => ({ user }));
 }
 
 interface IManageProfileFormFields {

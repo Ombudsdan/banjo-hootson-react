@@ -1,4 +1,4 @@
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, useNavigation, useRevalidator } from 'react-router-dom';
 import { useEffect } from 'react';
 import { AuthController, HealthController } from 'controllers';
 import { NavMenu, ScrollToTop, Footer } from 'framework';
@@ -11,9 +11,9 @@ import {
   LoadingScreenOutlet,
   BackdropOutlet,
   PageValidationAlertOutlet,
-  FormDialogOutlet
+  FormDialogOutlet,
+  useLoadingScreen
 } from 'hooks';
-import { useLoadingScreen } from 'hooks';
 import LayoutProviders from './LayoutProviders';
 
 export default function DefaultLayout() {
@@ -42,6 +42,7 @@ export default function DefaultLayout() {
 
   return (
     <LayoutProviders>
+      <AuthRevalidateOnTokenChange />
       <RouteChangeLoadingReset />
       <NavMenu />
       <ScrollToTop />
@@ -71,9 +72,33 @@ export default function DefaultLayout() {
 
 function RouteChangeLoadingReset() {
   const location = useLocation();
-  const { dismissLoadingScreen } = useLoadingScreen();
+  const navigation = useNavigation();
+  const { dismissLoadingScreen, setLoadingScreen } = useLoadingScreen();
   useEffect(() => {
     dismissLoadingScreen();
   }, [location.key, dismissLoadingScreen]);
+
+  // Show a global loading overlay during router-driven navigations (including loader fetches)
+  useEffect(() => {
+    const isLoading = navigation.state === 'loading';
+    if (isLoading) setLoadingScreen({ id: 'route-loading', message: 'Loading page' });
+    else dismissLoadingScreen('route-loading');
+  }, [navigation.state, setLoadingScreen, dismissLoadingScreen]);
+  return null;
+}
+
+function AuthRevalidateOnTokenChange() {
+  const revalidator = useRevalidator();
+  useEffect(() => {
+    const unsub = AuthController.onAuthTokenChange(() => {
+      // Re-run loaders so authLoader can redirect or pages can refresh data
+      try {
+        revalidator.revalidate();
+      } catch {
+        // ignore
+      }
+    });
+    return () => unsub();
+  }, [revalidator]);
   return null;
 }

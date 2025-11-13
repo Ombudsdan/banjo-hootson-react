@@ -47,6 +47,9 @@ export { default as EmailAddressFormInput } from './EmailAddressFormInput';
 export * from './InstagramFormInput';
 export { default as InstagramFormInput } from './InstagramFormInput';
 
+export * from './LoadingScreen';
+export { default as LoadingScreen } from './LoadingScreen';
+
 export * from './PasswordFormInput';
 export { default as PasswordFormInput } from './PasswordFormInput';
 

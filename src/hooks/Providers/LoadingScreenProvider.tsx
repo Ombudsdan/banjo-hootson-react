@@ -5,7 +5,7 @@ import { setInert } from 'utils';
 const MIN_VISIBLE_MS = 1000; // minimum time to keep overlay visible to avoid flashes
 
 const LoadingScreenProvider = ({ children }: PropsWithChildren) => {
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState<string | undefined>(undefined);
 
   const idCounterRef = useRef(0);
@@ -40,18 +40,18 @@ const LoadingScreenProvider = ({ children }: PropsWithChildren) => {
   }, []);
 
   const contextValue = useMemo<IROMaybe<ILoadingScreenContext>>(
-    () => ({ open, message, setLoadingScreen, dismissLoadingScreen }),
-    [open, message, setLoadingScreen, dismissLoadingScreen]
+    () => ({ isOpen, message, setLoadingScreen, dismissLoadingScreen }),
+    [isOpen, message, setLoadingScreen, dismissLoadingScreen]
   );
 
-  useEffect(() => setInert(['main', 'footer'], open), [open]);
+  useEffect(() => setInert(['main', 'footer'], isOpen), [isOpen]);
 
   return <LoadingScreenContext.Provider value={contextValue}>{children}</LoadingScreenContext.Provider>;
 
   function updateStateFromItems() {
     const size = itemsRef.current.size;
     if (size === 0) return; // closure handled elsewhere to respect minimum duration
-    setOpen(true);
+    setIsOpen(true);
     // Show the most recently set message, if any
     const last = Array.from(itemsRef.current.values()).reduce((a, b) => (a.ts > b.ts ? a : b));
     setMessage(last.message);
@@ -76,7 +76,7 @@ const LoadingScreenProvider = ({ children }: PropsWithChildren) => {
   }
 
   function updateStateToClosed() {
-    setOpen(false);
+    setIsOpen(false);
     setMessage(undefined);
     visibleSinceRef.current = null;
   }

@@ -5,12 +5,15 @@ import { DialogConfirm } from 'enums';
 import { UserController } from 'controllers';
 import { useNavigate } from 'react-router-dom';
 import PageAlert from 'builders/page-alert.builder';
+import { useLoaderDataFor } from 'routes';
 
 export default function AccountPage() {
-  useHeading({ heading: 'Account' });
   const navigate = useNavigate();
   const { openDialog, closeDialog } = useDialog();
   const { addAlert } = usePageAlerts();
+  const { user } = useLoaderDataFor(accountLoader);
+
+  useHeading({ heading: 'Account' });
 
   return (
     <PageContentContainer spacing="medium">
@@ -19,7 +22,7 @@ export default function AccountPage() {
         <div className="subscription-section">
           <div className="subscription-section__row">
             <label className="subscription-section__label">Current Subscription</label>
-            <UserSubscriptionTierBadge />
+            <UserSubscriptionTierBadge tier={user.subscriptionTier} />
           </div>
         </div>
       </PageSectionContainer>
@@ -49,11 +52,15 @@ export default function AccountPage() {
   );
 
   function onDialogConfirm() {
-    UserController.delete()
+    UserController.deleteUser(user.uid)
       .catch(() => {
         closeDialog();
         addAlert(PageAlert.info('Failed to delete account. Please try again.', 'delete-account-failed'));
       })
       .then(() => navigate('/login?deleted=1'));
   }
+}
+
+export async function accountLoader() {
+  return await UserController.getCurrentUserProfile().then(user => ({ user }));
 }

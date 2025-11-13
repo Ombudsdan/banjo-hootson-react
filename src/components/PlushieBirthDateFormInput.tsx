@@ -23,7 +23,7 @@ export default function PlushieNameFormInput({
   return (
     <div className="form-group">
       <label className={`form-group__label ${isRequired ? 'form-group__label--required' : ''}`} htmlFor={id}>
-        Plushie Birth Date
+        {label ?? 'Plushie Birth Date'}
       </label>
       {hint && <div className="form-group__hint">{hint}</div>}
       <div className="form-row">

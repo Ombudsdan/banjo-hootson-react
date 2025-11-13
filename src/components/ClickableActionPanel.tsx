@@ -1,16 +1,22 @@
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ClickableActionPanelController, IClickableActionPanelConfig } from 'controllers';
 import { generateClassName } from 'utils';
-import { ClickableActionPanelOptionType } from 'enums';
+import {
+  ClickableActionPanelOption,
+  ClickableActionPanelOptionType,
+  ClickableActionPanelTheme,
+  ClickableActionPanelThemeType
+} from 'enums';
+import { ICONS } from 'icons';
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 
 /**
  * Clickable panel that navigates to an internal route or external URL based on the provided option.
  * Resolves display/content via the ClickableActionPanelController and renders appropriately styled link.
  */
 export default function ClickableActionPanel({ option }: IClickableActionPanel) {
-  const content = ClickableActionPanelController.getPanelContent(option);
+  const content = getPanelContent(option);
 
   const className = useMemo(() => {
     const theme = content?.theme;
@@ -53,6 +59,59 @@ function ClickableActionPanelBody({ icon, text }: IClickableActionPanelBody) {
   );
 }
 
+function getPanelContent(option: ClickableActionPanelOptionType): IClickableActionPanelConfig | undefined {
+  switch (option) {
+    case ClickableActionPanelOption.INSTAGRAM:
+      return {
+        icon: ICONS.instagram,
+        link: 'https://instagram.com/banjohootson',
+        text: 'Instagram',
+        isExternal: true,
+        theme: ClickableActionPanelTheme.INSTAGRAM
+      };
+    case ClickableActionPanelOption.FACEBOOK:
+      return {
+        icon: ICONS.facebook,
+        link: 'https://facebook.com/banjohootson',
+        text: 'Facebook',
+        isExternal: true,
+        theme: ClickableActionPanelTheme.FACEBOOK
+      };
+    case ClickableActionPanelOption.THREADS:
+      return {
+        icon: ICONS.threads,
+        link: 'https://threads.net/banjohootson',
+        text: 'Threads',
+        isExternal: true,
+        theme: ClickableActionPanelTheme.THREADS
+      };
+    case ClickableActionPanelOption.CALENDAR:
+      return {
+        icon: ICONS.calendar,
+        link: '/calendar',
+        text: 'Birthday Calendar',
+        theme: ClickableActionPanelTheme.DEFAULT
+      };
+    case ClickableActionPanelOption.SUBMIT_BIRTHDAY:
+      return {
+        icon: ICONS.submitBirthday,
+        link: '/calendar/submit',
+        text: 'Submit Birthday',
+        theme: ClickableActionPanelTheme.DEFAULT
+      };
+    case ClickableActionPanelOption.BEER:
+      return {
+        icon: ICONS.beer,
+        link: 'https://buymeacoffee.com/banjohootson',
+        text: 'Buy Me A Beer?',
+        isExternal: true,
+        theme: ClickableActionPanelTheme.DEFAULT
+      };
+    default:
+      return undefined;
+  }
+}
+
 /** Props for {@link ClickableActionPanel} */
 interface IClickableActionPanel {
   option: ClickableActionPanelOptionType;
@@ -66,3 +125,11 @@ interface IClickableActionPanelLink extends Pick<IClickableActionPanelConfig, 'l
 
 /** Props for {@link ClickableActionPanelBody} */
 type IClickableActionPanelBody = Pick<IClickableActionPanelConfig, 'icon' | 'text'>;
+
+export interface IClickableActionPanelConfig {
+  icon?: IconDefinition;
+  link: string;
+  text: string;
+  isExternal?: boolean;
+  theme?: ClickableActionPanelThemeType;
+}

@@ -13,7 +13,7 @@ const INPUT_ID = {
 
 export default function SubmitPlushieBirthdayPage() {
   const { addAlert } = usePageAlerts();
-  const { setLoadingScreen, dismissLoadingScreen } = useLoadingScreen();
+  const { setLoadingScreen } = useLoadingScreen();
   const navigate = useNavigate();
 
   useHeading({ heading: 'Submit a Birthday' });
