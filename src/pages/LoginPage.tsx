@@ -18,7 +18,7 @@ export default function LoginPage() {
   const { search } = useLocation();
   const params = useMemo(() => new URLSearchParams(search), [search]);
   const { addAlert } = usePageAlerts();
-  const { setLoadingScreen } = useLoadingScreen();
+  const { setLoadingScreen, dismissLoadingScreen } = useLoadingScreen();
 
   useEffect(loadPageAlerts, [params, addAlert]);
 
@@ -55,12 +55,14 @@ export default function LoginPage() {
       await UserController.getCurrentUserProfile();
       navigate('/dashboard');
     } catch (error: unknown) {
+      dismissLoadingScreen();
       const { message } = mapSignInError(error);
       addAlert(PageAlert.error(message, 'sign-in-error'));
     }
   }
 
   async function onSubmitFailure(err?: Error) {
+    dismissLoadingScreen();
     addAlert({
       id: 'sign-in-failed',
       variant: 'error',

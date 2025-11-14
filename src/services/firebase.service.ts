@@ -33,8 +33,6 @@ export default class FirebaseService {
       method: 'POST',
       body: { email, password },
       withCredentials: true
-    }).catch(err => {
-      throw new Error(`Failed to sign in: ${err.message}`);
     });
 
     const { user, token } = response as ILoginSession;
