@@ -7,6 +7,7 @@ export default class AuthController {
   private static _currentToken: string | null = null;
   private static _initializing = false;
   private static _initialized = false;
+  private static STORAGE_KEY = 'auth_token';
 
   static async init() {
     // Guard: avoid duplicate init or concurrent racing calls
@@ -18,21 +19,45 @@ export default class AuthController {
       // Initialize Firebase asynchronously; await so callers can observe failures
       await FirebaseService.getAuth();
 
-      // Provide initial token fetcher used for requireAuth requests
-      HttpClientService.setTokenProvider(async () => await FirebaseService.getCurrentIdToken());
+      // Attempt to hydrate token from persistent storage (survives page refresh)
+      try {
+        const stored = typeof window !== 'undefined' ? window.localStorage.getItem(this.STORAGE_KEY) : null;
+        if (stored) {
+          this._currentToken = stored;
+        }
+      } catch {
+        // ignore localStorage issues
+      }
+
+      // Provide token fetcher that prefers cached token and only performs a network fetch once if absent
+      HttpClientService.setTokenProvider(async () => {
+        // Prefer cached token
+        if (this._currentToken) return this._currentToken;
+        // Fallback to localStorage (may have been set on previous session)
+        try {
+          const stored = typeof window !== 'undefined' ? window.localStorage.getItem(this.STORAGE_KEY) : null;
+          if (stored) {
+            this._currentToken = stored;
+            return stored;
+          }
+        } catch {}
+        // Network snapshot (one attempt)
+        try {
+          const snapshot = await FirebaseService.getCurrentIdToken();
+          if (snapshot) {
+            this.notify(snapshot);
+            return snapshot;
+          }
+        } catch {}
+        return null;
+      });
 
       // Subscribe to token change endpoint (one-shot snapshot semantics on backend)
       FirebaseService.onAuthTokenChange((token: string | null) => {
         // Always notify once backend responds; if no token it represents signed-out state
         this.notify(token);
       });
-      // Fetch a snapshot directly (silently) in case backend change endpoint is delayed
-      try {
-        const snapshot = await FirebaseService.getCurrentIdToken();
-        this.notify(snapshot);
-      } catch {
-        // ignore snapshot failure (network etc.) – stays unauth until user acts
-      }
+      // No immediate snapshot fetch: token provider above will lazily perform one network call if needed.
     } finally {
       this._initializing = false;
       this._initialized = true;
@@ -103,6 +128,18 @@ export default class AuthController {
 
   private static notify(token: string | null) {
     this._currentToken = token;
+    // Persist or clear token in storage for session continuity across reloads
+    try {
+      if (typeof window !== 'undefined') {
+        if (token) {
+          window.localStorage.setItem(this.STORAGE_KEY, token);
+        } else {
+          window.localStorage.removeItem(this.STORAGE_KEY);
+        }
+      }
+    } catch {
+      // ignore storage failures
+    }
     for (const cb of this.subscribers) {
       try {
         cb(token);
