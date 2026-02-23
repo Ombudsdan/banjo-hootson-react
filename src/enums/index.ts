@@ -1,7 +1,5 @@
 export * from './alert-card-variant.enum';
 export * from './breakpoint.enum';
-export * from './clickable-action-panel-group-option.enum';
-export * from './clickable-action-panel-option.enum';
 export * from './clickable-action-panel-theme.enum';
 export * from './dialog-confirm.enum';
 export * from './heading-level.enum';

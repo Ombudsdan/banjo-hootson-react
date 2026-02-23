@@ -5,6 +5,7 @@ export const ClickableActionPanelTheme = createEnum({
   INSTAGRAM: 'instagram',
   FACEBOOK: 'facebook',
   THREADS: 'threads',
+  DISCORD: 'discord',
   DEFAULT: 'default'
 });
 

@@ -29,6 +29,7 @@ module.exports = {
     alias: {
       builders: path.resolve(__dirname, 'src/builders'),
       components: path.resolve(__dirname, 'src/components'),
+      consts: path.resolve(__dirname, 'src/consts'),
       controllers: path.resolve(__dirname, 'src/controllers'),
       enums: path.resolve(__dirname, 'src/enums/index.ts'),
       env: path.resolve(__dirname, 'src/env/index.ts'),

@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
-import { ClickableActionPanelGroup, Gallery } from 'components';
-import { Image, PageContentContainer, PageSectionContainer } from 'framework';
-import { GalleryController } from 'controllers';
+import { ClickableActionPanelGroup } from 'components';
+import { Image, PageContentContainer } from 'framework';
 import { usePageHeading } from 'hooks';
 import { ImageFrame, ImageUsage, PageHeadingTheme } from 'enums';
+import { ClickableActionPanelLink } from 'consts';
 
 export default function HomePage() {
   usePageHeading('Banjo Hootson', {
@@ -25,17 +25,17 @@ export default function HomePage() {
 
   return (
     <PageContentContainer spacing="medium">
-      <PageSectionContainer heading="Plushie Community">
-        <ClickableActionPanelGroup group={'community-links'} />
-      </PageSectionContainer>
-
-      <PageSectionContainer heading="Exploring the plushie world is my passion...">
-        <Gallery items={GalleryController.homeItems} />
-      </PageSectionContainer>
-
-      <PageSectionContainer heading="Come join me on my adventures!">
-        <ClickableActionPanelGroup group={'social-links'} />
-      </PageSectionContainer>
+      <ClickableActionPanelGroup
+        options={[
+          ClickableActionPanelLink.CALENDAR,
+          ClickableActionPanelLink.SUBMIT_BIRTHDAY,
+          ClickableActionPanelLink.BEER,
+          ClickableActionPanelLink.DISCORD,
+          ClickableActionPanelLink.INSTAGRAM,
+          ClickableActionPanelLink.FACEBOOK,
+          ClickableActionPanelLink.THREADS
+        ]}
+      />
     </PageContentContainer>
   );
 }

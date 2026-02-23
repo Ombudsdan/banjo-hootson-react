@@ -1,7 +1,7 @@
-@use "../variables";
-@use "../mixins";
-@use "sass:map";
-@use "sass:color";
+@use '../variables';
+@use '../mixins';
+@use 'sass:map';
+@use 'sass:color';
 
 .panel {
   border-radius: 12px;
@@ -23,22 +23,26 @@
 }
 
 $clickable-action-panels: (
-  "instagram": (
+  'instagram': (
     colour: variables.$colour-instagram,
-    text: variables.$colour-text,
+    text: variables.$colour-text
   ),
-  "facebook": (
+  'facebook': (
     colour: variables.$colour-facebook,
-    text: variables.$colour-text,
+    text: variables.$colour-text
   ),
-  "threads": (
+  'threads': (
     colour: variables.$colour-threads,
-    text: variables.$colour-text,
+    text: variables.$colour-text
   ),
-  "default": (
+  'discord': (
+    colour: variables.$colour-discord,
+    text: variables.$colour-text
+  ),
+  'default': (
     colour: variables.$colour-orange,
-    text: variables.$colour-text,
-  ),
+    text: variables.$colour-text
+  )
 );
 
 @each $variant, $clickable-action-panel-values in $clickable-action-panels {

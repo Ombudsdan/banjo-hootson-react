@@ -30,6 +30,7 @@ export default defineConfig({
     alias: {
       builders: path.resolve(__dirname, './src/builders'),
       components: path.resolve(__dirname, './src/components'),
+      consts: path.resolve(__dirname, './src/consts'),
       controllers: path.resolve(__dirname, './src/controllers'),
       enums: path.resolve(__dirname, './src/enums'),
       env: path.resolve(__dirname, './src/env'),

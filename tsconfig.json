@@ -19,6 +19,8 @@
       "builders/*": ["./src/builders/*"],
       "components": ["./src/components/index.ts"],
       "components/*": ["./src/components/*"],
+      "consts": ["src/consts/index.ts"],
+      "consts/*": ["src/consts/*"],
       "controllers": ["./src/controllers/index.ts"],
       "controllers/*": ["./src/controllers/*"],
       "enums": ["./src/enums/index.ts"],

@@ -1,5 +1,5 @@
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faFacebook, faInstagram, faThreads } from '@fortawesome/free-brands-svg-icons';
+import { faDiscord, faFacebook, faInstagram, faThreads } from '@fortawesome/free-brands-svg-icons';
 import {
   faBeer,
   faBirthdayCake,
@@ -19,6 +19,7 @@ library.add(
   faFacebook,
   faInstagram,
   faThreads,
+  faDiscord,
   faBeer,
   faBirthdayCake,
   faCalendarPlus,
@@ -36,6 +37,7 @@ export const ICONS = {
   instagram: faInstagram,
   facebook: faFacebook,
   threads: faThreads,
+  discord: faDiscord,
   calendar: faBirthdayCake,
   submitBirthday: faCalendarPlus,
   beer: faBeer,
